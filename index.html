@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orchard Management Dashboard</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍎</text></svg>">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f4f6f8;
+            color: #2d3748;
+            margin: 0;
+            padding: 0;
+            line-height: 1.5;
+        }
+        header {
+            background-color: #1b4332;
+            color: white;
+            padding: 16px 20px;
+            border-bottom: 4px solid #40916c;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        @media (min-width: 768px) {
+            header {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+        header h1 {
+            margin: 0;
+            font-size: 18pt;
+            font-weight: 700;
+        }
+        header p {
+            margin: 2px 0 0 0;
+            font-size: 9.5pt;
+            color: #b7e4c7;
+        }
+        .header-controls {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+        }
+        .last-updated {
+            font-size: 8pt;
+            color: #b7e4c7;
+            font-weight: 500;
+        }
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 16px;
+        }
+        .user-tag-bar {
+            background: #e2e8f0;
+            padding: 8px 14px;
+            border-radius: 6px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 9pt;
+        }
+        .user-tag-bar input {
+            padding: 4px 8px;
+            font-size: 9pt;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+        }
+        .filter-section {
+            background-color: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .filter-label { font-size: 10pt; font-weight: 600; color: #4a5568; }
+        .filter-select {
+            padding: 6px 12px;
+            font-size: 10pt;
+            border-radius: 4px;
+            border: 1px solid #cbd5e1;
+            background-color: #f8fafc;
+            color: #334155;
+            cursor: pointer;
+        }
+        .tabs {
+            display: flex;
+            background-color: #e2e8f0;
+            border-radius: 8px;
+            padding: 4px;
+            margin-bottom: 20px;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            flex: 1;
+            min-width: 110px;
+            background: none;
+            border: none;
+            padding: 10px 8px;
+            font-size: 10pt;
+            font-weight: 600;
+            color: #4a5568;
+            cursor: pointer;
+            border-radius: 6px;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+        .tab-btn.active {
+            background-color: white;
+            color: #1b4332;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .tab-content {
+            display: none;
+            background: white;
+            padding: 20px 16px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        }
+        .tab-content.active { display: block; }
+        .section-header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #edf2f7;
+            padding-bottom: 8px;
+            margin-bottom: 16px;
+        }
+        h2 { font-size: 14pt; color: #1b4332; margin: 0; }
+        h3 {
+            font-size: 12pt;
+            color: #2c5282;
+            margin: 24px 0 10px 0;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 4px;
+        }
+        .card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 14px;
+            margin-bottom: 14px;
+        }
+        .card-title { font-weight: 700; font-size: 11pt; color: #2d3748; margin-bottom: 6px; }
+        .card-meta { font-size: 9.5pt; color: #718096; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+        .card-body { font-size: 10pt; color: #4a5568; }
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 8.5pt;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .badge-bearing { background-color: #d8f3dc; color: #1b4332; }
+        .badge-established { background-color: #cfe2ff; color: #084298; }
+        .badge-new { background-color: #e2e8f0; color: #475569; }
+        .badge-pest { background-color: #f8d7da; color: #842029; }
+        .badge-irrigation { background-color: #e0f2fe; color: #0369a1; }
+        .badge-nutrition { background-color: #fef3c7; color: #92400e; }
+        .badge-soil { background-color: #ffedd5; color: #c2410c; }
+        .badge-tag { background-color: #e2e8f0; color: #334155; border: 1px solid #cbd5e1; font-weight: 600; text-transform: none; }
+        .user-tag { background-color: #e0e7ff; color: #3730a3; padding: 2px 6px; border-radius: 4px; font-size: 8pt; font-weight: bold; }
+        
+        .table-responsive { width: 100%; overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 9pt; text-align: left; }
+        th {
+            background-color: #f1f5f9;
+            color: #475569;
+            font-weight: 600;
+            padding: 8px 6px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        td { padding: 8px 6px; border-bottom: 1px solid #edf2f7; vertical-align: middle; }
+        tr:hover { background-color: #f8fafc; }
+
+        .chart-container { margin: 20px 0; }
+        .chart-row { display: table; width: 100%; margin-bottom: 12px; }
+        .chart-label { display: table-cell; width: 30%; font-weight: 600; font-size: 10pt; vertical-align: middle; }
+        .chart-bar-wrapper { display: table-cell; width: 55%; vertical-align: middle; padding-right: 10px; }
+        .chart-bar { height: 24px; background: linear-gradient(90deg, #52b788, #40916c); border-radius: 4px; position: relative; }
+        .chart-value { display: table-cell; width: 15%; font-size: 10pt; font-weight: bold; text-align: right; vertical-align: middle; color: #1b4332; }
+
+        .unified-timeline-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px 14px;
+            margin: 15px 0 30px 0;
+        }
+        .timeline-row-item { display: flex; margin-bottom: 10px; }
+        .grid-side-label { width: 22%; font-weight: 600; font-size: 10pt; color: #334155; padding-right: 10px; display: flex; align-items: center; }
+        .grid-main-content { width: 78%; position: relative; }
+        .timeline-track-lane { width: 100%; height: 26px; background-color: #e2e8f0; border-radius: 4px; position: relative; }
+        .timeline-span-bar {
+            position: absolute;
+            height: 100%;
+            background: linear-gradient(90deg, #f59e0b, #d97706);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 8.5pt;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding: 0 4px;
+        }
+        .timeline-span-bar.pear { background: linear-gradient(90deg, #84cc16, #65a30d); }
+        .timeline-span-bar.zero-load { background: #cbd5e1 !important; color: #475569 !important; font-weight: normal; }
+
+        .shared-axis-line {
+            display: flex;
+            width: 100%;
+            border-top: 2px solid #64748b;
+            border-bottom: 2px solid #64748b;
+            background-color: #cbd5e1;
+            padding: 4px 0;
+            color: #1e293b;
+            font-size: 9pt;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .axis-tick-label { flex: 1; text-align: center; }
+
+        .inverted-volume-gantry { display: flex; width: 100%; height: 140px; align-items: flex-start; position: relative; }
+        .volume-vertical-column { flex: 1; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; position: relative; padding: 0 6px; }
+        .inverted-vol-bar { width: 100%; background: linear-gradient(180deg, #3182ce, #1a365d); border-bottom-left-radius: 6px; border-bottom-right-radius: 6px; transition: height 0.3s ease; }
+        .inverted-vol-bar.peak-surge { background: linear-gradient(180deg, #2b6cb0, #0f172a); }
+        .vol-numerical-tag { font-size: 8.5pt; font-weight: bold; color: #2b6cb0; margin-top: 4px; text-align: center; }
+
+        .btn-action {
+            background-color: #40916c;
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 4px;
+            font-size: 9.5pt;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.15s ease;
+        }
+        .btn-action:hover { background-color: #1b4332; }
+        .btn-secondary { background-color: #64748b; }
+        .btn-secondary:hover { background-color: #475569; }
+        .btn-danger { background-color: #9b2c2c; }
+        .btn-danger:hover { background-color: #742a2a; }
+
+        .controls-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 12px;
+            background: #f8fafc;
+            padding: 14px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+            margin-bottom: 16px;
+        }
+        .control-group { display: flex; flex-direction: column; gap: 4px; }
+        .control-group label { font-size: 9pt; font-weight: 600; color: #4a5568; }
+        .control-group input, .control-group select { padding: 6px 10px; font-size: 9.5pt; border: 1px solid #cbd5e1; border-radius: 4px; }
+        
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 8px;
+            background: white;
+            border: 1px solid #cbd5e1;
+            padding: 10px;
+            border-radius: 4px;
+            max-height: 180px;
+            overflow-y: auto;
+        }
+        .checkbox-item { display: flex; align-items: center; gap: 6px; font-size: 9pt; }
+        
+        .plot-wrapper {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 24px;
+            height: 400px;
+            width: 100%;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            align-items: center; justify-content: center;
+            z-index: 1000;
+            padding: 12px;
+        }
+        .modal.active { display: flex; }
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 500px;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+</head>
+<body>
+
+    <header>
+        <div>
+            <h1>🍎 Orchard Tactical Dashboard</h1>
+            <p>14-Tree Tactical Management Framework</p>
+        </div>
+        <div class="header-controls">
+            <span id="last-updated-display" class="last-updated">Last Synced: Loading...</span>
+            <button class="btn-action btn-secondary" onclick="forceReloadLatest()">🔄 Load Latest</button>
+            <button class="btn-action" id="save-file-btn" onclick="saveDashboardToFile()">💾 Save &amp; Sync</button>
+            <button class="btn-action btn-secondary" onclick="openSettingsModal()">⚙️ Utilities</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="user-tag-bar">
+            <strong>Operator Name:</strong>
+            <input type="text" id="active-user-name" placeholder="Enter your name" onchange="saveUserName()">
+            <span style="color: #64748b; font-size: 8.5pt;">(Entries will be tagged with this operator identity)</span>
+        </div>
+
+        <div class="filter-section">
+            <span class="filter-label">Filter Tree Age Category:</span>
+            <select id="ageFilter" class="filter-select" onchange="applyAgeFilter()">
+                <option value="all">All Trees (14 Total)</option>
+                <option value="bearing">Mature / Bearing (4+ yrs)</option>
+                <option value="established">Established (1-2 yrs)</option>
+                <option value="new">Newly Planted (0 yrs / Whips)</option>
+            </select>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab(event, 'inventory')">Inventory &amp; Phenology</button>
+            <button class="tab-btn" onclick="switchTab(event, 'growth')">Metrics</button>
+            <button class="tab-btn" onclick="switchTab(event, 'harvest')">Harvest</button>
+            <button class="tab-btn" onclick="switchTab(event, 'harvest_timeline')">Harvest Timeline</button>
+            <button class="tab-btn" onclick="switchTab(event, 'logs')">Logs &amp; Observations</button>
+            <button class="tab-btn" onclick="switchTab(event, 'abundances')">Abundances</button>
+            <button class="tab-btn" onclick="switchTab(event, 'schedules')">Treatment Schedules</button>
+        </div>
+
+        <!-- TAB 1: INVENTORY -->
+        <div id="inventory" class="tab-content active">
+            <div class="section-header-container">
+                <h2>Master Tree Inventory</h2>
+            </div>
+            <h3>Add / Edit Master Cultivar</h3>
+            <div class="controls-grid" id="inventoryFormGrid">
+                <input type="hidden" id="editInventoryIndex" value="-1">
+                <div class="control-group">
+                    <label>Cultivar Name *</label>
+                    <input type="text" id="invCultivar">
+                </div>
+                <div class="control-group">
+                    <label>Age Class *</label>
+                    <select id="invAgeCat">
+                        <option value="bearing">Mature / Bearing (4+ yrs)</option>
+                        <option value="established">Established (1-2 yrs)</option>
+                        <option value="new">Newly Planted (0 yrs)</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>Year Planted</label>
+                    <input type="text" id="invYearPlanted">
+                </div>
+                <div class="control-group">
+                    <label>Age at Planting</label>
+                    <input type="text" id="invAgeAtPlanting">
+                </div>
+                <div class="control-group">
+                    <label>Rootstock</label>
+                    <input type="text" id="invRootstock">
+                </div>
+                <div class="control-group">
+                    <label>Est. Load</label>
+                    <input type="text" id="invLoad">
+                </div>
+                <div class="control-group">
+                    <label>Bags Hung</label>
+                    <input type="text" id="invBags">
+                </div>
+                <div class="control-group">
+                    <label>Chart Color</label>
+                    <input type="color" id="invColor" value="#1b4332" style="height: 38px;">
+                </div>
+                <div class="control-group" style="grid-column: 1 / -1;">
+                    <label>Tactical Directives</label>
+                    <textarea id="invDirectives" rows="2"></textarea>
+                </div>
+                <div class="control-group" style="grid-column: 1 / -1; display:flex; gap:8px;">
+                    <button class="btn-action" id="saveInventoryBtn" onclick="saveInventoryRecord()">Save Cultivar</button>
+                    <button class="btn-action btn-secondary" id="cancelInventoryBtn" style="display:none;" onclick="resetInventoryForm()">Cancel</button>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table id="orchardTable">
+                    <thead>
+                        <tr>
+                            <th>Cultivar</th>
+                            <th>Planted</th>
+                            <th>Age</th>
+                            <th>Height</th>
+                            <th>Fruit Dia.</th>
+                            <th>Rootstock</th>
+                            <th>Est. Load</th>
+                            <th>Act. Load</th>
+                            <th>Bags</th>
+                            <th>Directives</th>
+                            <th style="text-align: right;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inventoryTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- TAB 2: METRICS -->
+        <div id="growth" class="tab-content">
+            <h2>Tree Metrics &amp; Growth Tracking</h2>
+            <div class="controls-grid">
+                <div class="control-group">
+                    <label>Create Metric Name</label>
+                    <input type="text" id="newMetricName" placeholder="e.g. Trunk Caliper">
+                </div>
+                <div class="control-group">
+                    <label>Unit</label>
+                    <input type="text" id="newMetricUnit" placeholder="e.g. mm">
+                </div>
+                <div class="control-group" style="justify-content: flex-end;">
+                    <button class="btn-action" onclick="addNewMetricFromBuilder()">Create Metric</button>
+                </div>
+            </div>
+
+            <h3>Log Measurement Entry</h3>
+            <div class="controls-grid" id="growthFormGrid">
+                <input type="hidden" id="editGrowthIndex" value="-1">
+                <div class="control-group">
+                    <label>Date</label>
+                    <input type="date" id="entryDate">
+                </div>
+                <div class="control-group">
+                    <label>Select Tree</label>
+                    <select id="entryTree"></select>
+                </div>
+                <div id="dynamicObservationInputs" style="display: contents;"></div>
+                <div class="control-group" style="grid-column: 1 / -1; display: flex; gap: 8px;">
+                    <button class="btn-action" id="saveGrowthBtn" onclick="addMeasurementRecord()">Log Measurement</button>
+                    <button class="btn-action btn-secondary" id="cancelGrowthBtn" style="display:none;" onclick="resetGrowthForm()">Cancel</button>
+                </div>
+            </div>
+
+            <div id="activeGraphsContainer"></div>
+
+            <h3>Measurement History</h3>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr id="growthTableHeaderRow"></tr>
+                    </thead>
+                    <tbody id="growthTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- TAB 3: HARVEST -->
+        <div id="harvest" class="tab-content">
+            <h2>Actual Harvest Logs</h2>
+            <div class="controls-grid" id="harvestFormGrid">
+                <input type="hidden" id="editHarvestIndex" value="-1">
+                <div class="control-group">
+                    <label>Harvest Date *</label>
+                    <input type="date" id="harvestDate">
+                </div>
+                <div class="control-group">
+                    <label>Cultivar *</label>
+                    <select id="harvestCultivar"></select>
+                </div>
+                <div class="control-group">
+                    <label>Quantity (# apples) *</label>
+                    <input type="number" id="harvestQuantity" min="0">
+                </div>
+                <div class="control-group" style="grid-column: 1 / -1; display:flex; gap:8px;">
+                    <button class="btn-action" id="saveHarvestBtn" onclick="saveHarvestLog()">Log Harvest</button>
+                    <button class="btn-action btn-secondary" id="cancelHarvestBtn" style="display:none;" onclick="resetHarvestForm()">Cancel</button>
+                </div>
+            </div>
+
+            <h3>Recorded Harvest Logs</h3>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Cultivar</th>
+                            <th>Yield</th>
+                            <th>Logged By</th>
+                            <th style="text-align: right;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="harvestTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- TAB 4: HARVEST TIMELINE -->
+        <div id="harvest_timeline" class="tab-content">
+            <h2>Unified Harvest Matrix &amp; Load Projections</h2>
+            <div class="unified-timeline-box">
+                <div id="dynamicTimelineRowsContainer"></div>
+                <div class="timeline-row-item" style="margin-top: 15px;">
+                    <div class="grid-side-label">HARVEST CALENDAR</div>
+                    <div class="grid-main-content">
+                        <div class="shared-axis-line">
+                            <div class="axis-tick-label">Late Aug</div>
+                            <div class="axis-tick-label">Early Sept</div>
+                            <div class="axis-tick-label">Mid Sept</div>
+                            <div class="axis-tick-label">Late Sept</div>
+                            <div class="axis-tick-label">Early Oct</div>
+                            <div class="axis-tick-label">Mid Oct</div>
+                            <div class="axis-tick-label">Late Oct</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="timeline-row-item">
+                    <div class="grid-side-label" style="align-self: flex-start; margin-top: 10px;">
+                        <strong>EST. WEEKLY YIELD</strong>
+                    </div>
+                    <div class="grid-main-content">
+                        <div class="inverted-volume-gantry" id="invertedVolumeGantry"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 5: FIELD LOGS -->
+        <div id="logs" class="tab-content">
+            <h2>Chronological Field Logs</h2>
+            <div class="filter-section">
+                <span class="filter-label">Filter Logs by Cultivar Tag:</span>
+                <select id="logCultivarFilter" class="filter-select" onchange="renderLogs()"></select>
+            </div>
+
+            <h3>Add / Edit Field Log Entry</h3>
+            <div class="controls-grid" id="logFormGrid">
+                <input type="hidden" id="editLogIndex" value="-1">
+                <div class="control-group">
+                    <label>Log Date</label>
+                    <input type="text" id="newLogDate">
+                </div>
+                <div class="control-group">
+                    <label>Title / Summary</label>
+                    <input type="text" id="newLogTitle">
+                </div>
+                <div class="control-group">
+                    <label>Category</label>
+                    <select id="newLogType">
+                        <option value="Growth &amp; Orchard Status">Growth &amp; Orchard Status</option>
+                        <option value="Growth Metrics">Growth Metrics</option>
+                        <option value="Pest Management">Pest Management</option>
+                        <option value="Soil Management">Soil Management</option>
+                        <option value="Irrigation">Irrigation</option>
+                        <option value="Nutrition">Nutrition</option>
+                        <option value="Mature / Bearing">Mature / Bearing</option>
+                        <option value="General Observation">General Observation</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>Age Class</label>
+                    <select id="newLogAge">
+                        <option value="all">All Trees</option>
+                        <option value="bearing">Bearing</option>
+                        <option value="established">Established</option>
+                        <option value="new">Newly Planted</option>
+                    </select>
+                </div>
+                <div class="control-group" style="grid-column: 1 / -1;">
+                    <label>Cultivar Tags</label>
+                    <div class="checkbox-grid" id="logCultivarCheckboxes"></div>
+                </div>
+                <div class="control-group" style="grid-column: 1 / -1;">
+                    <label>Observations &amp; Details</label>
+                    <textarea id="newLogBody" rows="4"></textarea>
+                </div>
+                <div class="control-group" style="grid-column: 1 / -1; display: flex; gap: 8px;">
+                    <button class="btn-action" id="saveLogBtn" onclick="saveLogEntry()">Add Log Entry</button>
+                    <button class="btn-action btn-secondary" id="cancelLogBtn" style="display: none;" onclick="resetLogForm()">Cancel</button>
+                </div>
+            </div>
+
+            <h3>Recorded Logs History</h3>
+            <div id="logsContainer"></div>
+        </div>
+
+        <!-- TAB 6: ABUNDANCES -->
+        <div id="abundances" class="tab-content">
+            <h2>Verified 2026 Crop Abundance Spectrum</h2>
+            <div id="abundanceChart" class="chart-container"></div>
+            <h3>Edit Cultivar Abundance Values</h3>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Cultivar</th>
+                            <th>Age Class</th>
+                            <th>Ripening Window</th>
+                            <th>Est. Load</th>
+                            <th>Bags Hung</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="abundanceTableBody"></tbody>
+                </table>
+            </div>
+            <div id="abundanceBaselineSummary" style="margin-top: 16px; padding: 12px; background: #e2e8f0; border-radius: 6px;"></div>
+        </div>
+
+        <!-- TAB 7: SCHEDULES -->
+        <div id="schedules" class="tab-content">
+            <h2>Upcoming Schedules &amp; Action Targets</h2>
+            <div class="card" data-age="new">
+                <div class="card-title">CLASS: NEWLY PLANTED (0 YRS / WHIPS)</div>
+                <div class="card-body">Black Oxford, SnowSweet, NY 414-1, Williams' Pride (Whip) - Soil armor and root booster drench priority.</div>
+            </div>
+            <div class="card" data-age="established">
+                <div class="card-title">CLASS: ESTABLISHED (1 - 2 YRS)</div>
+                <div class="card-body">Sansa, Seckel, Williams' Pride (Older), Liberty, Sundance - Nitrogen cutoff and canopy training.</div>
+            </div>
+            <div class="card" data-age="bearing">
+                <div class="card-title">CLASS: MATURE / BEARING (4+ YRS)</div>
+                <div class="card-body">Freedom, NY-35, Enterprise, Novamac, Galarina - Pest defense, hornet lure trapping, and deep soaks.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- UTILITIES MODAL -->
+    <div class="modal" id="settings-modal">
+        <div class="modal-content">
+            <h2>⚙️ Dashboard Utilities &amp; Archiving</h2>
+            <hr style="margin: 12px 0;">
+            <h3>1. Archive Current Season</h3>
+            <div style="display:flex; gap:8px; margin-bottom:12px;">
+                <input type="text" id="archive-name" placeholder="e.g. 2026_season" style="flex:1;">
+                <button class="btn-action" onclick="archiveCurrentSeason()">Archive JSON</button>
+            </div>
+            <h3>2. Load Historical Dataset</h3>
+            <div style="display:flex; gap:8px; margin-bottom:12px;">
+                <input type="file" id="load-json-file" accept=".json" style="flex:1;">
+                <button class="btn-action btn-secondary" onclick="loadHistoricalFile()">Load File</button>
+            </div>
+            <h3>3. Reset / Clear Active Data</h3>
+            <button class="btn-action btn-danger" onclick="confirmResetAllData()">Reset Data</button>
+            <div style="text-align: right; margin-top: 16px;">
+                <button class="btn-action btn-secondary" onclick="closeSettingsModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // GLOBAL DATA STATE
+        let state = {
+            lastUpdated: "Loading...",
+            inventoryData: [],
+            metricsRegistry: [],
+            activeGraphKeys: [],
+            growthData: [],
+            harvestLogsData: [],
+            logsData: []
+        };
+
+        let chartInstances = {};
+        const WORKER_URL = "https://orchard-dashboard-sync.joseph-roscioli.workers.dev";
+
+        function getUserName() {
+            return localStorage.getItem('orchard_user') || 'Anonymous';
+        }
+
+        function saveUserName() {
+            const val = document.getElementById('active-user-name').value.trim();
+            if (val) localStorage.setItem('orchard_user', val);
+        }
+
+        // --- DECOUPLED DATA FETCHING & SYNC ---
+        async function fetchRepoData() {
+            try {
+                const res = await fetch('./data.json?v=' + new Date().getTime());
+                if (!res.ok) throw new Error("Failed fetching data.json");
+                const data = await res.json();
+
+                state = {
+                    lastUpdated: data.lastUpdated || new Date().toISOString().replace('T', ' ').slice(0, 16),
+                    inventoryData: data.inventoryData || [],
+                    metricsRegistry: data.metricsRegistry || [],
+                    activeGraphKeys: data.activeGraphKeys || [],
+                    growthData: data.growthData || [],
+                    harvestLogsData: data.harvestLogsData || [],
+                    logsData: data.logsData || []
+                };
+
+                saveLocalState();
+                renderAll();
+            } catch (err) {
+                console.warn("Cloud sync read failed, reading from local cache:", err);
+                loadLocalState();
+            }
+        }
+
+        function saveLocalState() {
+            localStorage.setItem('orchard_state', JSON.stringify(state));
+            document.getElementById('last-updated-display').innerText = `Last Synced: ${state.lastUpdated}`;
+        }
+
+        function loadLocalState() {
+            const stored = localStorage.getItem('orchard_state');
+            if (stored) state = JSON.parse(stored);
+            document.getElementById('last-updated-display').innerText = `Last Synced: ${state.lastUpdated || 'Offline'}`;
+            renderAll();
+        }
+
+        function saveState() {
+            saveLocalState();
+            renderAll();
+        }
+
+        async function saveDashboardToFile() {
+            const btn = document.getElementById('save-file-btn');
+            if (!btn || btn.disabled) return;
+
+            try {
+                const now = new Date();
+                state.lastUpdated = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+
+                btn.innerText = "⏳ Syncing...";
+                btn.disabled = true;
+
+                const res = await fetch(WORKER_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ data: state })
+                });
+
+                const resData = await res.json().catch(() => ({}));
+                if (!res.ok || resData.error) throw new Error(resData.error || `HTTP ${res.status}`);
+
+                saveState();
+                btn.innerText = "✅ Committed!";
+            } catch (err) {
+                console.error("Cloudflare Worker Sync Error:", err);
+                alert("Sync failed: " + err.message);
+                btn.innerText = "❌ Sync Failed";
+            } finally {
+                setTimeout(() => {
+                    btn.innerText = "💾 Save & Sync";
+                    btn.disabled = false;
+                }, 3000);
+            }
+        }
+
+        function forceReloadLatest() { fetchRepoData(); }
+
+        // UTILITIES & MODAL
+        function openSettingsModal() { document.getElementById('settings-modal').classList.add('active'); }
+        function closeSettingsModal() { document.getElementById('settings-modal').classList.remove('active'); }
+        
+        function archiveCurrentSeason() {
+            const name = document.getElementById('archive-name').value.trim() || 'orchard_archive';
+            const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = `${name}.json`;
+            link.click();
+        }
+
+        function loadHistoricalFile() {
+            const input = document.getElementById('load-json-file');
+            if (!input.files || !input.files[0]) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    state = JSON.parse(e.target.result);
+                    saveState();
+                    closeSettingsModal();
+                } catch(err) { alert("Invalid JSON file."); }
+            };
+            reader.readAsText(input.files[0]);
+        }
+
+        function confirmResetAllData() {
+            if (confirm("Reset active dataset?")) {
+                state = { lastUpdated: new Date().toISOString(), inventoryData: [], metricsRegistry: [], activeGraphKeys: [], growthData: [], harvestLogsData: [], logsData: [] };
+                saveState();
+                closeSettingsModal();
+            }
+        }
+
+        // APP RENDER ROUTINES
+        function renderAll() {
+            renderInventoryTable();
+            renderGrowthTabUI();
+            renderHarvestLogs();
+            renderLogs();
+            renderAbundances();
+            renderHarvestTimeline();
+        }
+
+        function switchTab(e, tabId) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            if (e && e.currentTarget) e.currentTarget.classList.add('active');
+        }
+
+        // LOGIC & IMPLEMENTATION FOR DASHBOARD MODULES
+        function calculateActualLoad(cultivarName) {
+            return state.harvestLogsData.filter(h => h.cultivar === cultivarName).reduce((sum, h) => sum + (parseInt(h.quantity)||0), 0);
+        }
+
+        function renderInventoryTable() {
+            const tbody = document.getElementById('inventoryTableBody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+            state.inventoryData.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                tr.setAttribute('data-age', item.ageCat || 'all');
+                tr.innerHTML = `
+                    <td><strong>${item.cultivar}</strong></td>
+                    <td>${item.yearPlanted || '—'}</td>
+                    <td>${item.ageAtPlanting || '—'}</td>
+                    <td>—</td><td>—</td>
+                    <td>${item.rootstock}</td>
+                    <td>${item.load}</td>
+                    <td><strong>${calculateActualLoad(item.cultivar)}</strong></td>
+                    <td>${item.bags}</td>
+                    <td>${item.directives}</td>
+                    <td style="text-align: right;">
+                        <button class="btn-action" onclick="deleteInventoryRecord(${index})">🗑️</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+            applyAgeFilter();
+        }
+
+        function saveInventoryRecord() {
+            const cultivar = document.getElementById('invCultivar').value.trim();
+            if (!cultivar) return;
+            state.inventoryData.push({
+                cultivar,
+                ageCat: document.getElementById('invAgeCat').value,
+                yearPlanted: document.getElementById('invYearPlanted').value,
+                ageAtPlanting: document.getElementById('invAgeAtPlanting').value,
+                rootstock: document.getElementById('invRootstock').value,
+                load: document.getElementById('invLoad').value,
+                bags: document.getElementById('invBags').value,
+                color: document.getElementById('invColor').value,
+                directives: document.getElementById('invDirectives').value
+            });
+            resetInventoryForm();
+            saveState();
+        }
+
+        function deleteInventoryRecord(index) {
+            state.inventoryData.splice(index, 1);
+            saveState();
+        }
+
+        function resetInventoryForm() {
+            document.getElementById('invCultivar').value = '';
+            document.getElementById('invDirectives').value = '';
+        }
+
+        function renderGrowthTabUI() {
+            const select = document.getElementById('entryTree');
+            if (!select) return;
+            select.innerHTML = state.inventoryData.map(i => `<option value="${i.cultivar}">${i.cultivar}</option>`).join('');
+
+            const tbody = document.getElementById('growthTableBody');
+            tbody.innerHTML = '';
+            state.growthData.forEach((g, idx) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td>${g.date}</td><td><strong>${g.tree}</strong></td><td><span class="user-tag">${g.loggedBy || 'Anon'}</span></td>`;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function addMeasurementRecord() {
+            const tree = document.getElementById('entryTree').value;
+            const date = document.getElementById('entryDate').value;
+            if (!tree || !date) return;
+            state.growthData.push({ date, tree, loggedBy: getUserName() });
+            saveState();
+        }
+
+        function saveHarvestLog() {
+            const date = document.getElementById('harvestDate').value;
+            const cultivar = document.getElementById('harvestCultivar').value;
+            const quantity = parseInt(document.getElementById('harvestQuantity').value);
+            if (!date || !cultivar || isNaN(quantity)) return;
+            state.harvestLogsData.unshift({ date, cultivar, quantity, loggedBy: getUserName() });
+            saveState();
+        }
+
+        function renderHarvestLogs() {
+            const select = document.getElementById('harvestCultivar');
+            if (select) select.innerHTML = state.inventoryData.map(i => `<option value="${i.cultivar}">${i.cultivar}</option>`).join('');
+            const tbody = document.getElementById('harvestTableBody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+            state.harvestLogsData.forEach((h, idx) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td>${h.date}</td><td><strong>${h.cultivar}</strong></td><td>${h.quantity}</td><td><span class="user-tag">${h.loggedBy || 'Anon'}</span></td><td style="text-align:right;"><button class="btn-action btn-danger" onclick="deleteHarvestLog(${idx})">🗑️</button></td>`;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function deleteHarvestLog(idx) { state.harvestLogsData.splice(idx, 1); saveState(); }
+
+        function saveLogEntry() {
+            const date = document.getElementById('newLogDate').value;
+            const title = document.getElementById('newLogTitle').value;
+            const body = document.getElementById('newLogBody').value;
+            if (!date || !title) return;
+            state.logsData.unshift({ date, title, body, loggedBy: getUserName(), type: document.getElementById('newLogType').value, age: document.getElementById('newLogAge').value });
+            saveState();
+        }
+
+        function renderLogs() {
+            const container = document.getElementById('logsContainer');
+            if (!container) return;
+            container.innerHTML = '';
+            state.logsData.forEach(log => {
+                const div = document.createElement('div');
+                div.className = 'card';
+                div.setAttribute('data-age', log.age || 'all');
+                div.innerHTML = `<div class="card-title">${log.date} - ${log.title}</div><div class="card-meta"><span class="user-tag">${log.loggedBy || 'Anon'}</span> • ${log.type}</div><div class="card-body">${log.body}</div>`;
+                container.appendChild(div);
+            });
+            applyAgeFilter();
+        }
+
+        function renderAbundances() {
+            const tbody = document.getElementById('abundanceTableBody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+            state.inventoryData.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td>${item.cultivar}</td><td>${item.ageCat}</td><td>—</td><td>${item.load}</td><td>${item.bags}</td><td>Synced</td>`;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function renderHarvestTimeline() {
+            const container = document.getElementById('dynamicTimelineRowsContainer');
+            if (!container) return;
+            container.innerHTML = '';
+            state.inventoryData.forEach(item => {
+                const row = document.createElement('div');
+                row.className = 'timeline-row-item';
+                row.setAttribute('data-age', item.ageCat || 'all');
+                row.innerHTML = `<div class="grid-side-label">${item.cultivar}</div><div class="grid-main-content"><div class="timeline-track-lane"><div class="timeline-span-bar" style="left: 20%; width: 30%; background:${item.color}">${item.load}</div></div></div>`;
+                container.appendChild(row);
+            });
+        }
+
+        function applyAgeFilter() {
+            const val = document.getElementById('ageFilter').value;
+            document.querySelectorAll('[data-age]').forEach(el => {
+                const age = el.getAttribute('data-age');
+                el.style.display = (val === 'all' || age === 'all' || age === val) ? '' : 'none';
+            });
+        }
+
+        window.addEventListener('load', () => {
+            const savedUser = getUserName();
+            if (savedUser) document.getElementById('active-user-name').value = savedUser;
+            fetchRepoData();
+        });
+    </script>
+</body>
+</html>

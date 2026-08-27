@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Orchard Management Dashboard</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍎</text></svg>">
+    <title>Orchard Management Dashboard - 2026</title>
     <style>
         *, *::before, *::after { box-sizing: border-box; }
         body {
@@ -18,37 +17,44 @@
         header {
             background-color: #1b4332;
             color: white;
-            padding: 16px 20px;
+            padding: 20px 16px;
+            text-align: center;
             border-bottom: 4px solid #40916c;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        @media (min-width: 768px) {
-            header {
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: center;
-            }
+            position: relative;
         }
         header h1 {
             margin: 0;
-            font-size: 18pt;
+            font-size: 20pt;
             font-weight: 700;
+            letter-spacing: -0.5px;
         }
         header p {
-            margin: 2px 0 0 0;
-            font-size: 9.5pt;
+            margin: 5px 0 0 0;
+            font-size: 11pt;
             color: #b7e4c7;
         }
-        .header-controls {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 8px;
+        .header-save-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #2b6cb0;
+            color: white;
+            border: 1px solid #63b3ed;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 9.5pt;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+            transition: background-color 0.15s ease, transform 0.05s ease;
         }
-        .last-updated {
-            font-size: 8pt;
+        .header-save-btn:hover { background-color: #2c5282; }
+        .header-save-btn:active { transform: scale(0.98); }
+        .sync-status {
+            position: absolute;
+            top: 25px;
+            left: 20px;
+            font-size: 9pt;
             color: #b7e4c7;
             font-weight: 500;
         }
@@ -173,8 +179,8 @@
         .badge-soil { background-color: #ffedd5; color: #c2410c; }
         .badge-tag { background-color: #e2e8f0; color: #334155; border: 1px solid #cbd5e1; font-weight: 600; text-transform: none; }
         .user-tag { background-color: #e0e7ff; color: #3730a3; padding: 2px 6px; border-radius: 4px; font-size: 8pt; font-weight: bold; }
-        
-        .table-responsive { width: 100%; overflow-x: auto; }
+
+        .table-responsive { width: 100%; overflow-x: visible; }
         table { width: 100%; border-collapse: collapse; font-size: 9pt; text-align: left; }
         th {
             background-color: #f1f5f9;
@@ -182,10 +188,23 @@
             font-weight: 600;
             padding: 8px 6px;
             border-bottom: 2px solid #e2e8f0;
+            white-space: normal;
+            word-wrap: break-word;
         }
-        td { padding: 8px 6px; border-bottom: 1px solid #edf2f7; vertical-align: middle; }
+        td { 
+            padding: 8px 6px; 
+            border-bottom: 1px solid #edf2f7; 
+            vertical-align: middle; 
+            white-space: normal; 
+            word-wrap: break-word; 
+        }
         tr:hover { background-color: #f8fafc; }
 
+        #orchardTable th, #orchardTable td {
+            font-size: 8.5pt;
+            padding: 6px 4px;
+        }
+        
         .chart-container { margin: 20px 0; }
         .chart-row { display: table; width: 100%; margin-bottom: 12px; }
         .chart-label { display: table-cell; width: 30%; font-weight: 600; font-size: 10pt; vertical-align: middle; }
@@ -235,15 +254,17 @@
             font-size: 9pt;
             font-weight: 700;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         .axis-tick-label { flex: 1; text-align: center; }
 
         .inverted-volume-gantry { display: flex; width: 100%; height: 140px; align-items: flex-start; position: relative; }
         .volume-vertical-column { flex: 1; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; position: relative; padding: 0 6px; }
-        .inverted-vol-bar { width: 100%; background: linear-gradient(180deg, #3182ce, #1a365d); border-bottom-left-radius: 6px; border-bottom-right-radius: 6px; transition: height 0.3s ease; }
+        .inverted-vol-bar { width: 100%; background: linear-gradient(180deg, #3182ce, #1a365d); border-bottom-left-radius: 6px; border-bottom-right-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: height 0.3s ease; }
         .inverted-vol-bar.peak-surge { background: linear-gradient(180deg, #2b6cb0, #0f172a); }
-        .vol-numerical-tag { font-size: 8.5pt; font-weight: bold; color: #2b6cb0; margin-top: 4px; text-align: center; }
-
+        .vol-numerical-tag { font-size: 8.5pt; font-weight: bold; color: #2b6cb0; margin-top: 4px; white-space: nowrap; text-align: center; }
+        .vol-numerical-tag.peak-text { color: #1a365d; font-weight: 800; }
+        
         .btn-action {
             background-color: #40916c;
             color: white;
@@ -253,13 +274,44 @@
             font-size: 9.5pt;
             font-weight: 600;
             cursor: pointer;
+            display: inline-block;
+            text-decoration: none;
             transition: background-color 0.15s ease;
         }
         .btn-action:hover { background-color: #1b4332; }
-        .btn-secondary { background-color: #64748b; }
-        .btn-secondary:hover { background-color: #475569; }
-        .btn-danger { background-color: #9b2c2c; }
-        .btn-danger:hover { background-color: #742a2a; }
+        .btn-csv { background-color: #2b6cb0; }
+        .btn-csv:hover { background-color: #2c5282; }
+        .btn-autoscale {
+            background-color: #64748b;
+            color: white;
+            border: none;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 7.5pt;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.15s ease;
+        }
+        .btn-autoscale:hover { background-color: #475569; }
+
+        .btn-close-x {
+            background: #e53e3e;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            font-size: 12px;
+            font-weight: bold;
+            line-height: 20px;
+            text-align: center;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.15s;
+        }
+        .btn-close-x:hover { background: #c53030; }
 
         .controls-grid {
             display: grid;
@@ -272,9 +324,12 @@
             margin-bottom: 16px;
         }
         .control-group { display: flex; flex-direction: column; gap: 4px; }
-        .control-group label { font-size: 9pt; font-weight: 600; color: #4a5568; }
+        .control-group label { font-size: 9pt; font-weight: 600; color: #4a5568; display: flex; justify-content: space-between; align-items: center; }
         .control-group input, .control-group select { padding: 6px 10px; font-size: 9.5pt; border: 1px solid #cbd5e1; border-radius: 4px; }
         
+        .control-group-span-2 { grid-column: span 2; }
+        @media (max-width: 600px) { .control-group-span-2 { grid-column: span 1; } }
+
         .checkbox-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -286,34 +341,61 @@
             max-height: 180px;
             overflow-y: auto;
         }
-        .checkbox-item { display: flex; align-items: center; gap: 6px; font-size: 9pt; }
-        
+        .checkbox-item { display: flex; align-items: center; gap: 6px; font-size: 9pt; color: #334155; cursor: pointer; }
+        .checkbox-item input[type="checkbox"] { cursor: pointer; }
+
+        .date-range-picker-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            padding: 4px 8px;
+        }
+        .date-range-picker-container input[type="date"] {
+            border: none !important;
+            padding: 4px !important;
+            font-size: 9pt !important;
+            outline: none !important;
+            flex: 1;
+            min-width: 0;
+            background: transparent;
+        }
+        .date-range-sublabel { font-size: 8pt; color: #64748b; font-weight: 600; text-transform: uppercase; }
+
         .plot-wrapper {
             background: #ffffff;
             border: 1px solid #cbd5e1;
             border-radius: 6px;
             padding: 12px;
             margin-bottom: 24px;
+            position: relative;
+            resize: both;
+            overflow: auto;
+            width: 100%;
             height: 400px;
-            width: 100%;
+            min-width: 300px;
+            min-height: 200px;
         }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5);
-            align-items: center; justify-content: center;
-            z-index: 1000;
-            padding: 12px;
+        .plot-wrapper canvas { width: 100% !important; height: 100% !important; }
+        .graph-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e2e8f0;
+            margin: 24px 0 10px 0;
+            padding-bottom: 4px;
         }
-        .modal.active { display: flex; }
-        .modal-content {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            width: 100%;
-            max-width: 500px;
+        .graph-card-header h3 { margin: 0; border: none; padding: 0; }
+        
+        .abundance-edit-input {
+            width: 100px;
+            padding: 4px 8px;
+            font-size: 9.5pt;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            font-weight: 600;
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -322,23 +404,17 @@
 <body>
 
     <header>
-        <div>
-            <h1>🍎 Orchard Tactical Dashboard</h1>
-            <p>14-Tree Tactical Management Framework</p>
-        </div>
-        <div class="header-controls">
-            <span id="last-updated-display" class="last-updated">Last Synced: Loading...</span>
-            <button class="btn-action btn-secondary" onclick="forceReloadLatest()">🔄 Load Latest</button>
-            <button class="btn-action" id="save-file-btn" onclick="saveDashboardToFile()">💾 Save &amp; Sync</button>
-            <button class="btn-action btn-secondary" onclick="openSettingsModal()">⚙️ Utilities</button>
-        </div>
+        <span class="sync-status" id="last-updated-display">Last Synced: Loading...</span>
+        <h1>Orchard Tactical Dashboard</h1>
+        <p>14-Tree Management Framework • August 2026 State</p>
+        <button class="header-save-btn" id="save-file-btn" onclick="saveDashboardFile()">💾 Save &amp; Sync</button>
     </header>
 
     <div class="container">
         <div class="user-tag-bar">
-            <strong>Operator Name:</strong>
-            <input type="text" id="active-user-name" placeholder="Enter your name" onchange="saveUserName()">
-            <span style="color: #64748b; font-size: 8.5pt;">(Entries will be tagged with this operator identity)</span>
+            <strong>Operator Identity:</strong>
+            <input type="text" id="active-user-name" placeholder="Joe" onchange="saveUserName()">
+            <span style="color: #64748b; font-size: 8.5pt;">(Tagged automatically on measurement &amp; harvest entries)</span>
         </div>
 
         <div class="filter-section">
@@ -352,8 +428,8 @@
         </div>
 
         <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab(event, 'inventory')">Inventory &amp; Phenology</button>
-            <button class="tab-btn" onclick="switchTab(event, 'growth')">Metrics</button>
+            <button class="tab-btn" onclick="switchTab(event, 'inventory')">Inventory &amp; Phenology</button>
+            <button class="tab-btn active" onclick="switchTab(event, 'growth')">Metrics</button>
             <button class="tab-btn" onclick="switchTab(event, 'harvest')">Harvest</button>
             <button class="tab-btn" onclick="switchTab(event, 'harvest_timeline')">Harvest Timeline</button>
             <button class="tab-btn" onclick="switchTab(event, 'logs')">Logs &amp; Observations</button>
@@ -361,20 +437,21 @@
             <button class="tab-btn" onclick="switchTab(event, 'schedules')">Treatment Schedules</button>
         </div>
 
-        <!-- TAB 1: INVENTORY -->
-        <div id="inventory" class="tab-content active">
+        <div id="inventory" class="tab-content">
             <div class="section-header-container">
-                <h2>Master Tree Inventory</h2>
+                <h2>Master Tree Inventory (14 Whips &amp; Trees)</h2>
+                <button class="btn-action btn-csv" onclick="exportOrchardToCSV()">Export Orchard Metrics (CSV)</button>
             </div>
+
             <h3>Add / Edit Master Cultivar</h3>
-            <div class="controls-grid" id="inventoryFormGrid">
+            <div class="controls-grid" id="inventoryFormGrid" style="background: #eef2f7; border: 1px dashed #2b6cb0;">
                 <input type="hidden" id="editInventoryIndex" value="-1">
                 <div class="control-group">
-                    <label>Cultivar Name *</label>
-                    <input type="text" id="invCultivar">
+                    <label for="invCultivar">Cultivar Name *</label>
+                    <input type="text" id="invCultivar" placeholder="e.g. Honeycrisp">
                 </div>
                 <div class="control-group">
-                    <label>Age Class *</label>
+                    <label for="invAgeCat">Age Class *</label>
                     <select id="invAgeCat">
                         <option value="bearing">Mature / Bearing (4+ yrs)</option>
                         <option value="established">Established (1-2 yrs)</option>
@@ -382,54 +459,79 @@
                     </select>
                 </div>
                 <div class="control-group">
-                    <label>Year Planted</label>
-                    <input type="text" id="invYearPlanted">
+                    <label for="invYearPlanted">Year Planted</label>
+                    <input type="text" id="invYearPlanted" placeholder="e.g. 2021">
                 </div>
                 <div class="control-group">
-                    <label>Age at Planting</label>
-                    <input type="text" id="invAgeAtPlanting">
+                    <label for="invAgeAtPlanting">Age at Planting</label>
+                    <input type="text" id="invAgeAtPlanting" placeholder="e.g. 2 yrs / Whip">
                 </div>
                 <div class="control-group">
-                    <label>Rootstock</label>
-                    <input type="text" id="invRootstock">
+                    <label for="invRootstock">Rootstock</label>
+                    <input type="text" id="invRootstock" placeholder="e.g. Dwarf G.11">
+                </div>
+                
+                <div class="control-group control-group-span-2">
+                    <label>Est. Bloom Window Range</label>
+                    <div class="date-range-picker-container">
+                        <span class="date-range-sublabel">Start:</span>
+                        <input type="date" id="invBloomStart" title="Bloom Start Date">
+                        <span style="font-size: 9pt; color: #94a3b8; font-weight: bold;">→</span>
+                        <span class="date-range-sublabel">End:</span>
+                        <input type="date" id="invBloomEnd" title="Bloom End Date">
+                    </div>
+                </div>
+
+                <div class="control-group control-group-span-2">
+                    <label>Est. Ripening Window Range</label>
+                    <div class="date-range-picker-container">
+                        <span class="date-range-sublabel">Start:</span>
+                        <input type="date" id="invRipeningStart" title="Ripening Start Date">
+                        <span style="font-size: 9pt; color: #94a3b8; font-weight: bold;">→</span>
+                        <span class="date-range-sublabel">End:</span>
+                        <input type="date" id="invRipeningEnd" title="Ripening End Date">
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label for="invLoad">Est. Load</label>
+                    <input type="text" id="invLoad" placeholder="e.g. 125-175">
                 </div>
                 <div class="control-group">
-                    <label>Est. Load</label>
-                    <input type="text" id="invLoad">
+                    <label for="invBags">Bags Hung</label>
+                    <input type="text" id="invBags" placeholder="e.g. 200">
                 </div>
                 <div class="control-group">
-                    <label>Bags Hung</label>
-                    <input type="text" id="invBags">
-                </div>
-                <div class="control-group">
-                    <label>Chart Color</label>
-                    <input type="color" id="invColor" value="#1b4332" style="height: 38px;">
+                    <label for="invColor">Chart Line Color</label>
+                    <input type="color" id="invColor" value="#1b4332" style="height: 38px; padding: 2px;">
                 </div>
                 <div class="control-group" style="grid-column: 1 / -1;">
-                    <label>Tactical Directives</label>
-                    <textarea id="invDirectives" rows="2"></textarea>
+                    <label for="invDirectives">Tactical Directives &amp; Action Items</label>
+                    <textarea id="invDirectives" rows="2" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px; font-family: inherit; font-size: 9.5pt;" placeholder="Enter tactical directives for this variety..."></textarea>
                 </div>
-                <div class="control-group" style="grid-column: 1 / -1; display:flex; gap:8px;">
-                    <button class="btn-action" id="saveInventoryBtn" onclick="saveInventoryRecord()">Save Cultivar</button>
-                    <button class="btn-action btn-secondary" id="cancelInventoryBtn" style="display:none;" onclick="resetInventoryForm()">Cancel</button>
+                <div class="control-group" style="justify-content: flex-end; flex-direction: row; align-items: flex-end; gap: 8px; grid-column: 1 / -1;">
+                    <button class="btn-action" id="saveInventoryBtn" onclick="saveInventoryRecord()" style="background-color: #2b6cb0;">Save Cultivar to Master Inventory</button>
+                    <button class="btn-action" id="cancelInventoryBtn" onclick="resetInventoryForm()" style="background-color: rgb(100, 116, 139); display: none;">Cancel Edit</button>
                 </div>
             </div>
 
-            <div class="table-responsive">
+            <div class="table-responsive" style="margin-top: 16px;">
                 <table id="orchardTable">
                     <thead>
                         <tr>
-                            <th>Cultivar</th>
-                            <th>Planted</th>
-                            <th>Age</th>
-                            <th>Height</th>
-                            <th>Fruit Dia.</th>
-                            <th>Rootstock</th>
-                            <th>Est. Load</th>
-                            <th>Act. Load</th>
-                            <th>Bags</th>
-                            <th>Directives</th>
-                            <th style="text-align: right;">Actions</th>
+                            <th style="width: 8%;">Cultivar</th>
+                            <th style="width: 5%;">Planted</th>
+                            <th style="width: 6%;">Age at Plant</th>
+                            <th style="width: 5%;">Height</th>
+                            <th style="width: 5%;">Fruit Dia.</th>
+                            <th style="width: 8%;">Rootstock</th>
+                            <th style="width: 8%;">Est. Bloom</th>
+                            <th style="width: 8%;">Est. Ripening</th>
+                            <th style="width: 5%;">Est. Load</th>
+                            <th style="width: 4%;">Act. Load</th>
+                            <th style="width: 4%;">Bags</th>
+                            <th style="width: 27%;">Tactical Directives &amp; Action Items</th>
+                            <th style="width: 7%; text-align: right;">Actions</th>
                         </tr>
                     </thead>
                     <tbody id="inventoryTableBody"></tbody>
@@ -437,44 +539,55 @@
             </div>
         </div>
 
-        <!-- TAB 2: METRICS -->
-        <div id="growth" class="tab-content">
-            <h2>Tree Metrics &amp; Growth Tracking</h2>
-            <div class="controls-grid">
+        <div id="growth" class="tab-content active">
+            <h2>Tree Metrics &amp; Time Series Tracking</h2>
+            <p style="font-size: 10pt; color: #4a5568; margin-bottom: 16px;">
+                Interactive visualization and logging of tree growth parameters. Create new metrics, choose which graphs to display, and view observation fields for active logged metrics.
+            </p>
+
+            <h3>Metric Management &amp; Graph Builder</h3>
+            <div class="controls-grid" style="background: #eef2f7; border: 1px dashed #2b6cb0;">
                 <div class="control-group">
-                    <label>Create Metric Name</label>
-                    <input type="text" id="newMetricName" placeholder="e.g. Trunk Caliper">
+                    <label for="newMetricName">Create New Metric</label>
+                    <input type="text" id="newMetricName" placeholder="e.g. Trunk Diameter">
                 </div>
                 <div class="control-group">
-                    <label>Unit</label>
-                    <input type="text" id="newMetricUnit" placeholder="e.g. mm">
+                    <label for="newMetricUnit">Unit (e.g. in, cm, mm)</label>
+                    <input type="text" id="newMetricUnit" placeholder="e.g. inches">
                 </div>
-                <div class="control-group" style="justify-content: flex-end;">
-                    <button class="btn-action" onclick="addNewMetricFromBuilder()">Create Metric</button>
+                <div class="control-group" style="justify-content: flex-end; align-items: flex-end;">
+                    <button class="btn-action" onclick="addNewMetricFromBuilder()" style="background-color: #2b6cb0;">Create Metric</button>
+                </div>
+                <div class="control-group" style="grid-column: 1 / -1; border-top: 1px dashed #cbd5e1; padding-top: 10px; margin-top: 4px;">
+                    <label for="existingMetricSelect">Graph an Existing Metric</label>
+                    <div style="display: flex; gap: 8px;">
+                        <select id="existingMetricSelect" style="flex: 1;"></select>
+                        <button class="btn-action" onclick="addGraphFromSelect()">Display Graph</button>
+                    </div>
                 </div>
             </div>
 
-            <h3>Log Measurement Entry</h3>
+            <h3>Add / Edit Metric Observation</h3>
             <div class="controls-grid" id="growthFormGrid">
                 <input type="hidden" id="editGrowthIndex" value="-1">
                 <div class="control-group">
-                    <label>Date</label>
+                    <label for="entryDate">Measurement Date</label>
                     <input type="date" id="entryDate">
                 </div>
                 <div class="control-group">
-                    <label>Select Tree</label>
+                    <label for="entryTree">Select Tree / Cultivar</label>
                     <select id="entryTree"></select>
                 </div>
                 <div id="dynamicObservationInputs" style="display: contents;"></div>
-                <div class="control-group" style="grid-column: 1 / -1; display: flex; gap: 8px;">
+                <div class="control-group" style="justify-content: flex-end; flex-direction: row; align-items: flex-end; gap: 8px; grid-column: 1 / -1;">
                     <button class="btn-action" id="saveGrowthBtn" onclick="addMeasurementRecord()">Log Measurement</button>
-                    <button class="btn-action btn-secondary" id="cancelGrowthBtn" style="display:none;" onclick="resetGrowthForm()">Cancel</button>
+                    <button class="btn-action" id="cancelGrowthBtn" onclick="resetGrowthForm()" style="background-color: rgb(100, 116, 139); display: none;">Cancel Edit</button>
                 </div>
             </div>
 
             <div id="activeGraphsContainer"></div>
 
-            <h3>Measurement History</h3>
+            <h3>Recorded Growth Measurements History</h3>
             <div class="table-responsive">
                 <table>
                     <thead>
@@ -485,26 +598,30 @@
             </div>
         </div>
 
-        <!-- TAB 3: HARVEST -->
         <div id="harvest" class="tab-content">
             <h2>Actual Harvest Logs</h2>
-            <div class="controls-grid" id="harvestFormGrid">
+            <p style="font-size: 10pt; color: #4a5568; margin-bottom: 20px;">
+                Record actual apple harvest abundances. Logs automatically calculate running total "Act. Load" values to compare against estimates.
+            </p>
+
+            <h3>Add / Edit Harvest Log</h3>
+            <div class="controls-grid" id="harvestFormGrid" style="background: #eef2f7; border: 1px dashed #2b6cb0;">
                 <input type="hidden" id="editHarvestIndex" value="-1">
                 <div class="control-group">
-                    <label>Harvest Date *</label>
+                    <label for="harvestDate">Harvest Date *</label>
                     <input type="date" id="harvestDate">
                 </div>
                 <div class="control-group">
-                    <label>Cultivar *</label>
+                    <label for="harvestCultivar">Select Cultivar *</label>
                     <select id="harvestCultivar"></select>
                 </div>
                 <div class="control-group">
-                    <label>Quantity (# apples) *</label>
-                    <input type="number" id="harvestQuantity" min="0">
+                    <label for="harvestQuantity">Quantity (# apples) *</label>
+                    <input type="number" id="harvestQuantity" min="0" placeholder="e.g. 25">
                 </div>
-                <div class="control-group" style="grid-column: 1 / -1; display:flex; gap:8px;">
-                    <button class="btn-action" id="saveHarvestBtn" onclick="saveHarvestLog()">Log Harvest</button>
-                    <button class="btn-action btn-secondary" id="cancelHarvestBtn" style="display:none;" onclick="resetHarvestForm()">Cancel</button>
+                <div class="control-group" style="justify-content: flex-end; flex-direction: row; align-items: flex-end; gap: 8px; grid-column: 1 / -1;">
+                    <button class="btn-action" id="saveHarvestBtn" onclick="saveHarvestLog()" style="background-color: #2b6cb0;">Log Harvest</button>
+                    <button class="btn-action" id="cancelHarvestBtn" onclick="resetHarvestForm()" style="background-color: rgb(100, 116, 139); display: none;">Cancel Edit</button>
                 </div>
             </div>
 
@@ -515,7 +632,7 @@
                         <tr>
                             <th>Date</th>
                             <th>Cultivar</th>
-                            <th>Yield</th>
+                            <th>Quantity (# apples)</th>
                             <th>Logged By</th>
                             <th style="text-align: right;">Actions</th>
                         </tr>
@@ -525,13 +642,17 @@
             </div>
         </div>
 
-        <!-- TAB 4: HARVEST TIMELINE -->
         <div id="harvest_timeline" class="tab-content">
             <h2>Unified Harvest Matrix &amp; Load Projections</h2>
+            <p style="font-size: 10pt; color: #4a5568; margin-bottom: 20px;">
+                Every variety harvest is modeled over a balanced picking architecture based on calendar dates from master inventory ripening specs. The lower plot maps weekly yield totals directly downwards from the central calendar timeline axis.
+            </p>
+
             <div class="unified-timeline-box">
                 <div id="dynamicTimelineRowsContainer"></div>
-                <div class="timeline-row-item" style="margin-top: 15px;">
-                    <div class="grid-side-label">HARVEST CALENDAR</div>
+
+                <div class="timeline-row-item" style="margin: 15px 0 0 0;">
+                    <div class="grid-side-label" style="font-size: 8.5pt; color:#64748b;">HARVEST CALENDAR</div>
                     <div class="grid-main-content">
                         <div class="shared-axis-line">
                             <div class="axis-tick-label">Late Aug</div>
@@ -544,9 +665,10 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="timeline-row-item">
-                    <div class="grid-side-label" style="align-self: flex-start; margin-top: 10px;">
-                        <strong>EST. WEEKLY YIELD</strong>
+                    <div class="grid-side-label" style="font-size: 8.5pt; color:#475569; align-self: flex-start; margin-top: 10px;">
+                        <strong>EST. WEEKLY APPLES</strong>
                     </div>
                     <div class="grid-main-content">
                         <div class="inverted-volume-gantry" id="invertedVolumeGantry"></div>
@@ -555,10 +677,14 @@
             </div>
         </div>
 
-        <!-- TAB 5: FIELD LOGS -->
         <div id="logs" class="tab-content">
-            <h2>Chronological Field Logs</h2>
-            <div class="filter-section">
+            <h2>Chronological Field Logs &amp; Triage Rules</h2>
+            
+            <div style="background-color: #f8fafc; border-left: 4px solid #1b4332; padding: 10px 14px; margin-bottom: 16px; font-size: 10pt;">
+                <strong>STRICT CODIFIED TRIAGE PROTOCOL:</strong> Any visual sign of insect surface sting or pinprick = automatic cull. Zero labor spent on marginal fruitlets. Maximize return on labor hours as orchard scales.
+            </div>
+
+            <div class="filter-section" style="margin-bottom: 20px;">
                 <span class="filter-label">Filter Logs by Cultivar Tag:</span>
                 <select id="logCultivarFilter" class="filter-select" onchange="renderLogs()"></select>
             </div>
@@ -567,15 +693,15 @@
             <div class="controls-grid" id="logFormGrid">
                 <input type="hidden" id="editLogIndex" value="-1">
                 <div class="control-group">
-                    <label>Log Date</label>
-                    <input type="text" id="newLogDate">
+                    <label for="newLogDate">Log Date / Period</label>
+                    <input type="text" id="newLogDate" placeholder="e.g. 2026-08-25 or Spring 2026">
                 </div>
                 <div class="control-group">
-                    <label>Title / Summary</label>
-                    <input type="text" id="newLogTitle">
+                    <label for="newLogTitle">Title / Summary</label>
+                    <input type="text" id="newLogTitle" placeholder="e.g. Mid-August Inspection &amp; Soak">
                 </div>
                 <div class="control-group">
-                    <label>Category</label>
+                    <label for="newLogType">Type / Category</label>
                     <select id="newLogType">
                         <option value="Growth &amp; Orchard Status">Growth &amp; Orchard Status</option>
                         <option value="Growth Metrics">Growth Metrics</option>
@@ -588,25 +714,25 @@
                     </select>
                 </div>
                 <div class="control-group">
-                    <label>Age Class</label>
+                    <label for="newLogAge">Tree Age Classification</label>
                     <select id="newLogAge">
-                        <option value="all">All Trees</option>
-                        <option value="bearing">Bearing</option>
-                        <option value="established">Established</option>
-                        <option value="new">Newly Planted</option>
+                        <option value="all">All Trees / Unspecified</option>
+                        <option value="bearing">Mature / Bearing (4+ yrs)</option>
+                        <option value="established">Established (1-2 yrs)</option>
+                        <option value="new">Newly Planted (0 yrs)</option>
                     </select>
                 </div>
-                <div class="control-group" style="grid-column: 1 / -1;">
-                    <label>Cultivar Tags</label>
+                <div class="control-group control-group-span-2">
+                    <label>Cultivar Tags (Select one, multiple, or All)</label>
                     <div class="checkbox-grid" id="logCultivarCheckboxes"></div>
                 </div>
                 <div class="control-group" style="grid-column: 1 / -1;">
-                    <label>Observations &amp; Details</label>
-                    <textarea id="newLogBody" rows="4"></textarea>
+                    <label for="newLogBody">Log Details &amp; Observations</label>
+                    <textarea id="newLogBody" rows="4" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px; font-family: inherit; font-size: 9.5pt;" placeholder="Enter field log observations and operational findings..."></textarea>
                 </div>
-                <div class="control-group" style="grid-column: 1 / -1; display: flex; gap: 8px;">
+                <div class="control-group" style="grid-column: 1 / -1; display: flex; gap: 8px; justify-content: flex-end;">
                     <button class="btn-action" id="saveLogBtn" onclick="saveLogEntry()">Add Log Entry</button>
-                    <button class="btn-action btn-secondary" id="cancelLogBtn" style="display: none;" onclick="resetLogForm()">Cancel</button>
+                    <button class="btn-action" id="cancelLogBtn" onclick="resetLogForm()" style="background-color: #64748b; display: none;">Cancel Edit</button>
                 </div>
             </div>
 
@@ -614,19 +740,23 @@
             <div id="logsContainer"></div>
         </div>
 
-        <!-- TAB 6: ABUNDANCES -->
         <div id="abundances" class="tab-content">
             <h2>Verified 2026 Crop Abundance Spectrum</h2>
+            <p style="font-size: 10pt; color: #4a5568; margin-bottom: 20px;">
+                Visualizing actual yield loads for all 14 cultivars (including non-bearing). Edit values directly in the table below to update the orchard master list and harvest timeline predictions automatically.
+            </p>
+            
             <div id="abundanceChart" class="chart-container"></div>
+
             <h3>Edit Cultivar Abundance Values</h3>
-            <div class="table-responsive">
+            <div class="table-responsive" style="margin-top: 12px;">
                 <table>
                     <thead>
                         <tr>
                             <th>Cultivar</th>
                             <th>Age Class</th>
-                            <th>Ripening Window</th>
-                            <th>Est. Load</th>
+                            <th>Est. Ripening</th>
+                            <th>Est. Load / Yield</th>
                             <th>Bags Hung</th>
                             <th>Actions</th>
                         </tr>
@@ -634,53 +764,145 @@
                     <tbody id="abundanceTableBody"></tbody>
                 </table>
             </div>
-            <div id="abundanceBaselineSummary" style="margin-top: 16px; padding: 12px; background: #e2e8f0; border-radius: 6px;"></div>
+
+            <div id="abundanceBaselineSummary" style="margin-top: 24px; font-size: 10pt; color: #4a5568; padding: 12px; background-color: #f1f5f9; border-radius: 6px;"></div>
         </div>
 
-        <!-- TAB 7: SCHEDULES -->
         <div id="schedules" class="tab-content">
-            <h2>Upcoming Schedules &amp; Action Targets</h2>
-            <div class="card" data-age="new">
-                <div class="card-title">CLASS: NEWLY PLANTED (0 YRS / WHIPS)</div>
-                <div class="card-body">Black Oxford, SnowSweet, NY 414-1, Williams' Pride (Whip) - Soil armor and root booster drench priority.</div>
-            </div>
-            <div class="card" data-age="established">
-                <div class="card-title">CLASS: ESTABLISHED (1 - 2 YRS)</div>
-                <div class="card-body">Sansa, Seckel, Williams' Pride (Older), Liberty, Sundance - Nitrogen cutoff and canopy training.</div>
-            </div>
-            <div class="card" data-age="bearing">
-                <div class="card-title">CLASS: MATURE / BEARING (4+ YRS)</div>
-                <div class="card-body">Freedom, NY-35, Enterprise, Novamac, Galarina - Pest defense, hornet lure trapping, and deep soaks.</div>
-            </div>
-        </div>
-    </div>
+            <h2>Upcoming Schedules &amp; Management Targets</h2>
+            <p style="font-size: 10pt; color: #4a5568; margin-bottom: 20px;">
+                Strategic biological, chemical, and nutritional workflows grouped dynamically by tree age classification.
+            </p>
 
-    <!-- UTILITIES MODAL -->
-    <div class="modal" id="settings-modal">
-        <div class="modal-content">
-            <h2>⚙️ Dashboard Utilities &amp; Archiving</h2>
-            <hr style="margin: 12px 0;">
-            <h3>1. Archive Current Season</h3>
-            <div style="display:flex; gap:8px; margin-bottom:12px;">
-                <input type="text" id="archive-name" placeholder="e.g. 2026_season" style="flex:1;">
-                <button class="btn-action" onclick="archiveCurrentSeason()">Archive JSON</button>
+            <div class="card" data-age="new">
+                <div class="card-title" style="color: #475569; border-bottom: 2px solid #e2e8f0; padding-bottom: 4px;">
+                    CLASS: NEWLY PLANTED (0 YRS / WHIPS)
+                </div>
+                <div class="card-meta">
+                    <span class="badge badge-new">0-Yr Architecture</span> • Cultivars: Black Oxford, SnowSweet, NY 414-1, Williams' Pride (Whip)
+                </div>
+                <div class="card-body">
+                    <table style="width: 100%; margin-top: 8px;">
+                        <thead>
+                            <tr>
+                                <th style="width: 25%;">Target Window</th>
+                                <th style="width: 25%;">Type</th>
+                                <th style="width: 50%;">Operational Instructions &amp; Strategy</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>June 29 (Completed)</strong></td>
+                                <td><span class="badge badge-soil">Soil Armor</span></td>
+                                <td><strong>Nematode Base Drench:</strong> Completed initial 8 million multi-block deployment out to drip line to eliminate root pests and beetles. Ground weed whacked for clear soil interface.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>July 5 (Completed)</strong></td>
+                                <td><span class="badge badge-pest">Pest Defense</span></td>
+                                <td><strong>Secondary Residual Strike:</strong> Finalized the remaining 5 million nematode application down onto active drip lines right before the major soaking rain front to lock in full subsurface colonization.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Early July</strong></td>
+                                <td><span class="badge badge-nutrition">Nutrition</span></td>
+                                <td><strong>Secondary Tree-Tone Booster:</strong> Apply secondary ring dose around root zones to maximize initial-season root system establishment in sandy loam. Do not apply past mid-July.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            <h3>2. Load Historical Dataset</h3>
-            <div style="display:flex; gap:8px; margin-bottom:12px;">
-                <input type="file" id="load-json-file" accept=".json" style="flex:1;">
-                <button class="btn-action btn-secondary" onclick="loadHistoricalFile()">Load File</button>
+
+            <div class="card" data-age="established">
+                <div class="card-title" style="color: #084298; border-bottom: 2px solid #cfe2ff; padding-bottom: 4px;">
+                    CLASS: ESTABLISHED (1 - 2 YRS)
+                </div>
+                <div class="card-meta">
+                    <span class="badge badge-established">Vegetative Focus</span> • Cultivars: Sansa, Seckel, Williams' Pride (Older), Liberty, Sundance
+                </div>
+                <div class="card-body">
+                    <table style="width: 100%; margin-top: 8px;">
+                        <thead>
+                            <tr>
+                                <th style="width: 25%;">Target Window</th>
+                                <th style="width: 25%;">Type</th>
+                                <th style="width: 50%;">Operational Instructions &amp; Strategy</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>June 29 (Completed)</strong></td>
+                                <td><span class="badge badge-soil">Soil Armor</span></td>
+                                <td><strong>Nematode Drench:</strong> Root zones protected out past expanding drip lines to eliminate wild curculio exploratory drops and beetle grubs.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>July 5 (Completed)</strong></td>
+                                <td><span class="badge badge-pest">Pest Defense</span></td>
+                                <td><strong>Secondary Follow-up:</strong> Inoculation completely flushed in with natural rain across established root grids to sustain season-long ground defense.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Immediate</strong></td>
+                                <td><span class="badge badge-nutrition">Nutrition Cutoff</span></td>
+                                <td><strong>Nitrogen Cessation:</strong> Strict halt on all nitrogenous inputs (especially Seckel) to induce tissue hardening and permanently eliminate late-season fire blight structural vulnerabilities.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            <h3>3. Reset / Clear Active Data</h3>
-            <button class="btn-action btn-danger" onclick="confirmResetAllData()">Reset Data</button>
-            <div style="text-align: right; margin-top: 16px;">
-                <button class="btn-action btn-secondary" onclick="closeSettingsModal()">Close</button>
+
+            <div class="card" data-age="bearing">
+                <div class="card-title" style="color: #1b4332; border-bottom: 2px solid #d8f3dc; padding-bottom: 4px;">
+                    CLASS: MATURE / BEARING (4+ YRS)
+                </div>
+                <div class="card-meta">
+                    <span class="badge badge-bearing">Crop Production</span> • Cultivars: Freedom, NY-35 (Bonkers), Enterprise, Novamac, Galarina
+                </div>
+                <div class="card-body">
+                    <table style="width: 100%; margin-top: 8px;">
+                        <thead>
+                            <tr>
+                                <th style="width: 25%;">Target Window</th>
+                                <th style="width: 25%;">Type</th>
+                                <th style="width: 50%;">Operational Instructions &amp; Strategy</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>June 29 (Completed)</strong></td>
+                                <td><span class="badge badge-soil">Soil Armor</span></td>
+                                <td><strong>Primary Nematode Inundation:</strong> Heavy drench deployed with extreme emphasis under the high-pressure Freedom block to intercept exiting Plum Curculio larvae.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>July 5 (Completed)</strong></td>
+                                <td><span class="badge badge-pest">Pest Defense</span></td>
+                                <td><strong>Secondary Soil Blanket:</strong> Applied the remaining 5 million cold-stored nematode allocation directly over bearing crowns to exploit the rain profile and target late-dropping larvae.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>August (Active)</strong></td>
+                                <td><span class="badge badge-pest">Pest Defense</span></td>
+                                <td><strong>Perimeter Hornet Trapping:</strong> Refilled ACV + sugar + dish soap perimeter traps 15-20ft off canopy line. Trap catches include wasps/hornets, flies, and beetles. Maintain lure levels into ripening peak.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>August (Active)</strong></td>
+                                <td><span class="badge badge-pest">Avian &amp; Irrigation</span></td>
+                                <td><strong>Deep Soaking &amp; Protection:</strong> Executed 15-gal deep soak per tree. Maintain Mylar reflective ribbons against birds and dust exposed upper fruit with Surround WP to mitigate sunburn and secondary bitter rot.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>As Needed / Sunset</strong></td>
+                                <td><span class="badge badge-pest">Pest Defense</span></td>
+                                <td><strong>Spinosad Upper-Canopy Sniper Sprays:</strong> Reserve exclusively for direct upper-canopy insect pressure sightings (such as adult potato leafhoppers). Avoid sweeping blanket schedules.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // GLOBAL DATA STATE
-        let state = {
+        // BACKEND SYNC CONFIGURATION
+        const WORKER_URL = "https://orchard-dashboard-sync.joseph-roscioli.workers.dev";
+
+        // MASTER DATA STATE
+        var state = {
             lastUpdated: "Loading...",
             inventoryData: [],
             metricsRegistry: [],
@@ -690,25 +912,20 @@
             logsData: []
         };
 
-        let chartInstances = {};
-        const WORKER_URL = "https://orchard-dashboard-sync.joseph-roscioli.workers.dev";
+        var chartInstances = {};
 
-        function getUserName() {
-            return localStorage.getItem('orchard_user') || 'Anonymous';
-        }
-
+        function getUserName() { return localStorage.getItem('orchard_user') || 'Joe'; }
         function saveUserName() {
-            const val = document.getElementById('active-user-name').value.trim();
+            var val = document.getElementById('active-user-name').value.trim();
             if (val) localStorage.setItem('orchard_user', val);
         }
 
-        // --- DECOUPLED DATA FETCHING & SYNC ---
+        // DECOUPLED SYNC ENGINE
         async function fetchRepoData() {
             try {
-                const res = await fetch('./data.json?v=' + new Date().getTime());
+                var res = await fetch('./data.json?v=' + new Date().getTime());
                 if (!res.ok) throw new Error("Failed fetching data.json");
-                const data = await res.json();
-
+                var data = await res.json();
                 state = {
                     lastUpdated: data.lastUpdated || new Date().toISOString().replace('T', ' ').slice(0, 16),
                     inventoryData: data.inventoryData || [],
@@ -718,24 +935,23 @@
                     harvestLogsData: data.harvestLogsData || [],
                     logsData: data.logsData || []
                 };
-
                 saveLocalState();
                 renderAll();
             } catch (err) {
-                console.warn("Cloud sync read failed, reading from local cache:", err);
+                console.warn("Cloud read failed, using local storage backup:", err);
                 loadLocalState();
             }
         }
 
         function saveLocalState() {
-            localStorage.setItem('orchard_state', JSON.stringify(state));
-            document.getElementById('last-updated-display').innerText = `Last Synced: ${state.lastUpdated}`;
+            localStorage.setItem('orchard_state_full', JSON.stringify(state));
+            var disp = document.getElementById('last-updated-display');
+            if (disp) disp.innerText = `Last Synced: ${state.lastUpdated}`;
         }
 
         function loadLocalState() {
-            const stored = localStorage.getItem('orchard_state');
+            var stored = localStorage.getItem('orchard_state_full');
             if (stored) state = JSON.parse(stored);
-            document.getElementById('last-updated-display').innerText = `Last Synced: ${state.lastUpdated || 'Offline'}`;
             renderAll();
         }
 
@@ -744,24 +960,24 @@
             renderAll();
         }
 
-        async function saveDashboardToFile() {
-            const btn = document.getElementById('save-file-btn');
+        async function saveDashboardFile() {
+            var btn = document.getElementById('save-file-btn');
             if (!btn || btn.disabled) return;
 
             try {
-                const now = new Date();
+                var now = new Date();
                 state.lastUpdated = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
 
                 btn.innerText = "⏳ Syncing...";
                 btn.disabled = true;
 
-                const res = await fetch(WORKER_URL, {
+                var res = await fetch(WORKER_URL, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ data: state })
                 });
 
-                const resData = await res.json().catch(() => ({}));
+                var resData = await res.json().catch(() => ({}));
                 if (!res.ok || resData.error) throw new Error(resData.error || `HTTP ${res.status}`);
 
                 saveState();
@@ -778,51 +994,732 @@
             }
         }
 
-        function forceReloadLatest() { fetchRepoData(); }
-
-        // UTILITIES & MODAL
-        function openSettingsModal() { document.getElementById('settings-modal').classList.add('active'); }
-        function closeSettingsModal() { document.getElementById('settings-modal').classList.remove('active'); }
-        
-        function archiveCurrentSeason() {
-            const name = document.getElementById('archive-name').value.trim() || 'orchard_archive';
-            const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
-            const link = document.createElement("a");
-            link.href = URL.createObjectURL(blob);
-            link.download = `${name}.json`;
-            link.click();
+        function renderAll() {
+            renderInventoryTable();
+            renderLogs();
+            renderGrowthTabUI();
+            renderHarvestLogs();
+            renderAbundances();
+            renderHarvestTimeline();
         }
 
-        function loadHistoricalFile() {
-            const input = document.getElementById('load-json-file');
-            if (!input.files || !input.files[0]) return;
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                try {
-                    state = JSON.parse(e.target.result);
-                    saveState();
-                    closeSettingsModal();
-                } catch(err) { alert("Invalid JSON file."); }
+        // --- ORIGINAL APP CORE FUNCTIONS (RESTORED EXACTLY) ---
+        function formatDateRange(startDateStr, endDateStr, defaultText) {
+            if (!startDateStr && !endDateStr) return defaultText || '—';
+            var formatSingle = function(dStr) {
+                if (!dStr) return '';
+                var parts = dStr.split('-');
+                if (parts.length < 3) return dStr;
+                var dt = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+                return dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
             };
-            reader.readAsText(input.files[0]);
+            var startFmt = formatSingle(startDateStr);
+            var endFmt = formatSingle(endDateStr);
+            if (startFmt && endFmt) return `${startFmt} - ${endFmt}`;
+            return startFmt || endFmt || defaultText || '—';
         }
 
-        function confirmResetAllData() {
-            if (confirm("Reset active dataset?")) {
-                state = { lastUpdated: new Date().toISOString(), inventoryData: [], metricsRegistry: [], activeGraphKeys: [], growthData: [], harvestLogsData: [], logsData: [] };
+        function getTreeColors() {
+            var colors = {};
+            state.inventoryData.forEach(item => { colors[item.cultivar] = item.color || '#1b4332'; });
+            return colors;
+        }
+
+        function parseLoadNumeric(loadStr) {
+            if (!loadStr) return 0;
+            var str = String(loadStr).trim();
+            if (str.includes('-')) {
+                var parts = str.split('-');
+                return ((parseFloat(parts[0]) || 0) + (parseFloat(parts[1]) || 0)) / 2;
+            }
+            return parseFloat(str) || 0;
+        }
+
+        function calculateActualLoad(cultivarName) {
+            return state.harvestLogsData.filter(log => log.cultivar === cultivarName).reduce((sum, log) => sum + (parseInt(log.quantity) || 0), 0);
+        }
+
+        function getLatestMetricValue(treeName, metricKey) {
+            var matchingEntries = state.growthData.filter(d => d.tree === treeName && d[metricKey] !== null && d[metricKey] !== undefined && d[metricKey] !== '');
+            if (matchingEntries.length === 0) return '—';
+            matchingEntries.sort((a, b) => new Date(b.date) - new Date(a.date));
+            var latestVal = matchingEntries[0][metricKey];
+            return (metricKey === 'height' || metricKey === 'dia') ? latestVal + '"' : latestVal;
+        }
+
+        function renderInventoryTable() {
+            var tbody = document.getElementById('inventoryTableBody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            state.inventoryData.forEach((item, index) => {
+                var latestHeight = getLatestMetricValue(item.cultivar, 'height');
+                var latestDia = getLatestMetricValue(item.cultivar, 'dia');
+                var bloomDisplay = formatDateRange(item.bloomStart, item.bloomEnd, item.bloom);
+                var ripeningDisplay = formatDateRange(item.ripeningStart, item.ripeningEnd, item.ripening);
+                var actLoad = calculateActualLoad(item.cultivar);
+
+                var tr = document.createElement('tr');
+                tr.setAttribute('data-age', item.ageCat || 'all');
+                tr.innerHTML = `
+                    <td><strong>${item.cultivar}</strong></td>
+                    <td>${item.yearPlanted || '—'}</td>
+                    <td>${item.ageAtPlanting || '—'}</td>
+                    <td>${latestHeight}</td>
+                    <td>${latestDia}</td>
+                    <td>${item.rootstock}</td>
+                    <td>${bloomDisplay}</td>
+                    <td>${ripeningDisplay}</td>
+                    <td>${item.load}</td>
+                    <td><strong>${actLoad}</strong></td>
+                    <td>${item.bags}</td>
+                    <td>${item.directives}</td>
+                    <td style="text-align: right; white-space: nowrap;">
+                        <button class="btn-action" style="padding: 4px 8px; font-size: 8pt; background-color: #2b6cb0;" onclick="editInventoryRecord(${index})">Edit</button>
+                        <button class="btn-action" style="padding: 4px 8px; font-size: 8pt; background-color: #9b2c2c;" onclick="deleteInventoryRecord(${index})">Delete</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            applyAgeFilter();
+            renderMetricTreeOptions();
+            renderHarvestTreeOptions();
+            renderLogCultivarControls();
+        }
+
+        function saveInventoryRecord() {
+            var cultivar = document.getElementById('invCultivar').value.trim();
+            if (!cultivar) { alert('Please enter a cultivar name.'); return; }
+
+            var record = {
+                cultivar: cultivar,
+                ageCat: document.getElementById('invAgeCat').value,
+                yearPlanted: document.getElementById('invYearPlanted').value.trim() || '—',
+                ageAtPlanting: document.getElementById('invAgeAtPlanting').value.trim() || '—',
+                rootstock: document.getElementById('invRootstock').value.trim() || '—',
+                bloomStart: document.getElementById('invBloomStart').value,
+                bloomEnd: document.getElementById('invBloomEnd').value,
+                ripeningStart: document.getElementById('invRipeningStart').value,
+                ripeningEnd: document.getElementById('invRipeningEnd').value,
+                bloom: formatDateRange(document.getElementById('invBloomStart').value, document.getElementById('invBloomEnd').value, ''),
+                ripening: formatDateRange(document.getElementById('invRipeningStart').value, document.getElementById('invRipeningEnd').value, ''),
+                load: document.getElementById('invLoad').value.trim() || '0',
+                bags: document.getElementById('invBags').value.trim() || '0',
+                color: document.getElementById('invColor').value || '#1b4332',
+                directives: document.getElementById('invDirectives').value.trim() || '—'
+            };
+
+            var editIndex = parseInt(document.getElementById('editInventoryIndex').value);
+            if (editIndex >= 0 && editIndex < state.inventoryData.length) {
+                var oldName = state.inventoryData[editIndex].cultivar;
+                state.inventoryData[editIndex] = record;
+                if (oldName !== cultivar) {
+                    state.growthData.forEach(g => { if (g.tree === oldName) g.tree = cultivar; });
+                    state.harvestLogsData.forEach(h => { if (h.cultivar === oldName) h.cultivar = cultivar; });
+                    state.logsData.forEach(l => { if (l.tags) l.tags = l.tags.map(t => t === oldName ? cultivar : t); });
+                }
+            } else {
+                state.inventoryData.push(record);
+            }
+
+            resetInventoryForm();
+            saveState();
+        }
+
+        function editInventoryRecord(index) {
+            var item = state.inventoryData[index];
+            if (!item) return;
+            document.getElementById('editInventoryIndex').value = index;
+            document.getElementById('invCultivar').value = item.cultivar;
+            document.getElementById('invAgeCat').value = item.ageCat || 'bearing';
+            document.getElementById('invYearPlanted').value = item.yearPlanted || '';
+            document.getElementById('invAgeAtPlanting').value = item.ageAtPlanting || '';
+            document.getElementById('invRootstock').value = item.rootstock || '';
+            document.getElementById('invBloomStart').value = item.bloomStart || '';
+            document.getElementById('invBloomEnd').value = item.bloomEnd || '';
+            document.getElementById('invRipeningStart').value = item.ripeningStart || '';
+            document.getElementById('invRipeningEnd').value = item.ripeningEnd || '';
+            document.getElementById('invLoad').value = item.load || '';
+            document.getElementById('invBags').value = item.bags || '';
+            document.getElementById('invColor').value = item.color || '#1b4332';
+            document.getElementById('invDirectives').value = item.directives || '';
+            document.getElementById('saveInventoryBtn').innerText = 'Update Master Cultivar';
+            document.getElementById('cancelInventoryBtn').style.display = 'inline-block';
+            document.getElementById('inventoryFormGrid').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function deleteInventoryRecord(index) {
+            var item = state.inventoryData[index];
+            if (!item) return;
+            if (confirm(`Delete "${item.cultivar}" from Master Inventory?`)) {
+                state.inventoryData.splice(index, 1);
                 saveState();
-                closeSettingsModal();
             }
         }
 
-        // APP RENDER ROUTINES
-        function renderAll() {
-            renderInventoryTable();
-            renderGrowthTabUI();
-            renderHarvestLogs();
-            renderLogs();
-            renderAbundances();
-            renderHarvestTimeline();
+        function resetInventoryForm() {
+            document.getElementById('editInventoryIndex').value = -1;
+            document.getElementById('invCultivar').value = '';
+            document.getElementById('invAgeCat').value = 'bearing';
+            document.getElementById('invYearPlanted').value = '';
+            document.getElementById('invAgeAtPlanting').value = '';
+            document.getElementById('invRootstock').value = '';
+            document.getElementById('invBloomStart').value = '';
+            document.getElementById('invBloomEnd').value = '';
+            document.getElementById('invRipeningStart').value = '';
+            document.getElementById('invRipeningEnd').value = '';
+            document.getElementById('invLoad').value = '';
+            document.getElementById('invBags').value = '';
+            document.getElementById('invColor').value = '#1b4332';
+            document.getElementById('invDirectives').value = '';
+            document.getElementById('saveInventoryBtn').innerText = 'Save Cultivar to Master Inventory';
+            document.getElementById('cancelInventoryBtn').style.display = 'none';
+        }
+
+        function updateAbundanceValue(index, val) {
+            if (index >= 0 && index < state.inventoryData.length) {
+                state.inventoryData[index].load = val;
+                saveState();
+            }
+        }
+
+        function updateBagsValue(index, val) {
+            if (index >= 0 && index < state.inventoryData.length) {
+                state.inventoryData[index].bags = val;
+                saveState();
+            }
+        }
+
+        function renderAbundances() {
+            var chartContainer = document.getElementById('abundanceChart');
+            var tableBody = document.getElementById('abundanceTableBody');
+            var summaryDiv = document.getElementById('abundanceBaselineSummary');
+            if (!chartContainer || !tableBody) return;
+
+            chartContainer.innerHTML = '';
+            tableBody.innerHTML = '';
+
+            var maxVal = 0;
+            state.inventoryData.forEach(item => {
+                var val = parseLoadNumeric(item.load);
+                if (val > maxVal) maxVal = val;
+            });
+            if (maxVal === 0) maxVal = 100;
+
+            var sortedList = [...state.inventoryData].sort((a, b) => parseLoadNumeric(b.load) - parseLoadNumeric(a.load));
+            sortedList.forEach(item => {
+                var val = parseLoadNumeric(item.load);
+                var pct = Math.min(100, Math.round((val / maxVal) * 100));
+                var rowDiv = document.createElement('div');
+                rowDiv.className = 'chart-row';
+                rowDiv.setAttribute('data-age', item.ageCat || 'all');
+                rowDiv.innerHTML = `
+                    <div class="chart-label">${item.cultivar}</div>
+                    <div class="chart-bar-wrapper">
+                        <div class="chart-bar" style="width: ${pct}%; background: ${item.color || '#40916c'}; opacity: ${val === 0 ? 0.3 : 1.0};"></div>
+                    </div>
+                    <div class="chart-value">${item.load || '0'}</div>
+                `;
+                chartContainer.appendChild(rowDiv);
+            });
+
+            var freedomRem = 0, activeBaggedTotal = 0;
+            state.inventoryData.forEach((item, originalIndex) => {
+                var numLoad = parseLoadNumeric(item.load);
+                if (item.cultivar === 'Freedom') freedomRem = numLoad;
+                else activeBaggedTotal += (parseInt(item.bags) || 0);
+
+                var ripeningDisplay = formatDateRange(item.ripeningStart, item.ripeningEnd, item.ripening);
+                var tr = document.createElement('tr');
+                tr.setAttribute('data-age', item.ageCat || 'all');
+                tr.innerHTML = `
+                    <td><strong>${item.cultivar}</strong></td>
+                    <td><span class="badge badge-${item.ageCat}">${item.ageCat}</span></td>
+                    <td>${ripeningDisplay}</td>
+                    <td><input type="text" class="abundance-edit-input" value="${item.load}" onchange="updateAbundanceValue(${originalIndex}, this.value)"></td>
+                    <td><input type="text" class="abundance-edit-input" style="width: 70px;" value="${item.bags}" onchange="updateBagsValue(${originalIndex}, this.value)"></td>
+                    <td><button class="btn-action" style="padding: 3px 8px; font-size: 8pt;" onclick="renderInventoryTable()">Sync Master</button></td>
+                `;
+                tableBody.appendChild(tr);
+            });
+
+            if (summaryDiv) {
+                summaryDiv.innerHTML = `<strong>Current Inventory Baseline:</strong> ~${freedomRem} apples remaining on Freedom with ${activeBaggedTotal} verified bags across non-Freedom cultivars (~${freedomRem + activeBaggedTotal} total active apples).`;
+            }
+            applyAgeFilter();
+        }
+
+        var timelineWeeks = [
+            { name: "Late Aug", start: new Date(2026, 7, 16), end: new Date(2026, 7, 31) },
+            { name: "Early Sept", start: new Date(2026, 8, 1), end: new Date(2026, 8, 10) },
+            { name: "Mid Sept", start: new Date(2026, 8, 11), end: new Date(2026, 8, 20) },
+            { name: "Late Sept", start: new Date(2026, 8, 21), end: new Date(2026, 8, 30) },
+            { name: "Early Oct", start: new Date(2026, 9, 1), end: new Date(2026, 9, 10) },
+            { name: "Mid Oct", start: new Date(2026, 9, 11), end: new Date(2026, 9, 20) },
+            { name: "Late Oct", start: new Date(2026, 9, 21), end: new Date(2026, 9, 31) }
+        ];
+
+        function getHarvestWindowSpec(item) {
+            if (item.ripeningStart && item.ripeningEnd) {
+                var sParts = item.ripeningStart.split('-');
+                var eParts = item.ripeningEnd.split('-');
+                var startDate = new Date(parseInt(sParts[0]), parseInt(sParts[1]) - 1, parseInt(sParts[2]));
+                var endDate = new Date(parseInt(eParts[0]), parseInt(eParts[1]) - 1, parseInt(eParts[2]));
+
+                var rangeStart = new Date(2026, 7, 16), rangeEnd = new Date(2026, 9, 31);
+                var totalDays = (rangeEnd - rangeStart) / (1000 * 60 * 60 * 24);
+
+                var clampedStart = Math.max(rangeStart, Math.min(rangeEnd, startDate));
+                var clampedEnd = Math.max(rangeStart, Math.min(rangeEnd, endDate));
+
+                var leftPct = Math.max(0, Math.min(100, ((clampedStart - rangeStart) / (1000 * 60 * 60 * 24) / totalDays) * 100));
+                var rightPct = Math.max(0, Math.min(100, ((clampedEnd - rangeStart) / (1000 * 60 * 60 * 24) / totalDays) * 100));
+                var widthPct = Math.max(2, rightPct - leftPct);
+
+                var activeWeeks = [];
+                timelineWeeks.forEach((w, idx) => {
+                    if (startDate <= w.end && endDate >= w.start) activeWeeks.push(idx);
+                });
+
+                return { left: leftPct.toFixed(2), width: widthPct.toFixed(2), weeks: activeWeeks, display: formatDateRange(item.ripeningStart, item.ripeningEnd, item.ripening) };
+            }
+            return { left: 42.84, width: 14.28, weeks: [3], display: item.ripening || "Late Sept" };
+        }
+
+        function renderHarvestTimeline() {
+            var container = document.getElementById('dynamicTimelineRowsContainer');
+            var gantryContainer = document.getElementById('invertedVolumeGantry');
+            if (!container || !gantryContainer) return;
+
+            container.innerHTML = '';
+            gantryContainer.innerHTML = '';
+
+            var weeklyTotals = [0, 0, 0, 0, 0, 0, 0];
+            state.inventoryData.forEach(item => {
+                var loadNum = parseLoadNumeric(item.load);
+                var spec = getHarvestWindowSpec(item);
+                var isPear = item.cultivar.toLowerCase().includes('pear') || item.cultivar.toLowerCase().includes('seckel');
+                var isZero = loadNum === 0;
+
+                var row = document.createElement('div');
+                row.className = 'timeline-row-item';
+                row.setAttribute('data-age', item.ageCat || 'all');
+
+                var barClass = 'timeline-span-bar';
+                if (isPear) barClass += ' pear';
+                if (isZero) barClass += ' zero-load';
+
+                var barStyle = `left: ${spec.left}%; width: ${spec.width}%;`;
+                if (!isZero && item.color) barStyle += ` background: ${item.color};`;
+
+                row.innerHTML = `
+                    <div class="grid-side-label">${item.cultivar}</div>
+                    <div class="grid-main-content">
+                        <div class="timeline-track-lane">
+                            <div class="${barClass}" style="${barStyle}">
+                                ${spec.display} ${isZero ? '(0)' : '(' + item.load + ')'}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(row);
+
+                if (loadNum > 0 && spec.weeks.length > 0) {
+                    var perWeek = loadNum / spec.weeks.length;
+                    spec.weeks.forEach(wIdx => { if (wIdx >= 0 && wIdx < 7) weeklyTotals[wIdx] += perWeek; });
+                }
+            });
+
+            var maxWeekly = Math.max(...weeklyTotals) || 100;
+            weeklyTotals.forEach((total) => {
+                var col = document.createElement('div');
+                col.className = 'volume-vertical-column';
+                var heightPx = total === 0 ? 0 : Math.round((total / maxWeekly) * 115);
+                var isPeak = total === maxWeekly && total > 0;
+                col.innerHTML = `
+                    <div class="inverted-vol-bar ${isPeak ? 'peak-surge' : ''}" style="height: ${heightPx}px;"></div>
+                    <div class="vol-numerical-tag ${isPeak ? 'peak-text' : ''}">${Math.round(total)}</div>
+                `;
+                gantryContainer.appendChild(col);
+            });
+            applyAgeFilter();
+        }
+
+        function renderMetricTreeOptions() {
+            var select = document.getElementById('entryTree');
+            if (!select) return;
+            select.innerHTML = state.inventoryData.map(i => `<option value="${i.cultivar}">${i.cultivar}</option>`).join('');
+        }
+
+        function renderHarvestTreeOptions() {
+            var select = document.getElementById('harvestCultivar');
+            if (!select) return;
+            select.innerHTML = state.inventoryData.map(i => `<option value="${i.cultivar}">${i.cultivar}</option>`).join('');
+        }
+
+        function renderLogCultivarControls() {
+            var filterSelect = document.getElementById('logCultivarFilter');
+            if (filterSelect) {
+                var curr = filterSelect.value;
+                filterSelect.innerHTML = '<option value="all">All Cultivars</option>' + state.inventoryData.map(i => `<option value="${i.cultivar}">${i.cultivar}</option>`).join('');
+                filterSelect.value = curr || 'all';
+            }
+
+            var grid = document.getElementById('logCultivarCheckboxes');
+            if (grid) {
+                grid.innerHTML = `<label class="checkbox-item" style="font-weight: bold; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px; grid-column: 1 / -1;">
+                    <input type="checkbox" id="tag_all_cultivars" onchange="toggleAllLogCultivars(this.checked)"> All Cultivars
+                </label>` + state.inventoryData.map(i => `<label class="checkbox-item"><input type="checkbox" class="log-cultivar-cb" value="${i.cultivar}"> ${i.cultivar}</label>`).join('');
+            }
+        }
+
+        function toggleAllLogCultivars(checked) {
+            document.querySelectorAll('.log-cultivar-cb').forEach(cb => { cb.checked = checked; });
+        }
+
+        function getSelectedLogTags() {
+            var allCb = document.getElementById('tag_all_cultivars');
+            if (allCb && allCb.checked) return ["All Cultivars"];
+            var selected = Array.from(document.querySelectorAll('.log-cultivar-cb:checked')).map(cb => cb.value);
+            return selected.length > 0 ? selected : ["All Cultivars"];
+        }
+
+        function renderHarvestLogs() {
+            var tbody = document.getElementById('harvestTableBody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+            state.harvestLogsData.forEach((log, index) => {
+                var tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${log.date}</td>
+                    <td><strong>${log.cultivar}</strong></td>
+                    <td>${log.quantity}</td>
+                    <td><span class="user-tag">${log.loggedBy || 'Anon'}</span></td>
+                    <td style="text-align: right;">
+                        <button class="btn-action" style="padding: 4px 10px; font-size: 8.5pt; background-color: #2b6cb0;" onclick="editHarvestLog(${index})">Edit</button>
+                        <button class="btn-action" style="padding: 4px 10px; font-size: 8.5pt; background-color: #9b2c2c;" onclick="deleteHarvestLog(${index})">Delete</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function saveHarvestLog() {
+            var dateVal = document.getElementById('harvestDate').value;
+            var cultivarVal = document.getElementById('harvestCultivar').value;
+            var quantityVal = parseInt(document.getElementById('harvestQuantity').value);
+            if (!dateVal || !cultivarVal || isNaN(quantityVal)) return;
+
+            var log = { date: dateVal, cultivar: cultivarVal, quantity: quantityVal, loggedBy: getUserName() };
+            var editIndex = parseInt(document.getElementById('editHarvestIndex').value);
+            if (editIndex >= 0 && editIndex < state.harvestLogsData.length) state.harvestLogsData[editIndex] = log;
+            else state.harvestLogsData.unshift(log);
+
+            resetHarvestForm();
+            saveState();
+        }
+
+        function editHarvestLog(index) {
+            var log = state.harvestLogsData[index];
+            if (!log) return;
+            document.getElementById('editHarvestIndex').value = index;
+            document.getElementById('harvestDate').value = log.date;
+            document.getElementById('harvestCultivar').value = log.cultivar;
+            document.getElementById('harvestQuantity').value = log.quantity;
+            document.getElementById('saveHarvestBtn').innerText = 'Update Harvest Log';
+            document.getElementById('cancelHarvestBtn').style.display = 'inline-block';
+        }
+
+        function deleteHarvestLog(index) {
+            if (confirm('Delete harvest log entry?')) {
+                state.harvestLogsData.splice(index, 1);
+                saveState();
+            }
+        }
+
+        function resetHarvestForm() {
+            document.getElementById('editHarvestIndex').value = -1;
+            document.getElementById('harvestDate').valueAsDate = new Date();
+            document.getElementById('harvestQuantity').value = '';
+            document.getElementById('saveHarvestBtn').innerText = 'Log Harvest';
+            document.getElementById('cancelHarvestBtn').style.display = 'none';
+        }
+
+        function renderLogs() {
+            var container = document.getElementById('logsContainer');
+            if (!container) return;
+            container.innerHTML = '';
+
+            var selectedCultivar = document.getElementById('logCultivarFilter') ? document.getElementById('logCultivarFilter').value : 'all';
+            state.logsData.forEach((log, index) => {
+                var tags = log.tags || ["All Cultivars"];
+                if (selectedCultivar !== 'all' && !tags.includes("All Cultivars") && !tags.includes(selectedCultivar)) return;
+
+                var card = document.createElement('div');
+                card.className = 'card';
+                card.setAttribute('data-age', log.age || 'all');
+                var tagBadgesHTML = tags.map(t => `<span class="badge badge-tag">${t}</span>`).join(' ');
+
+                card.innerHTML = `
+                    <div class="card-title">${log.date} - ${log.title}</div>
+                    <div class="card-meta">
+                        <span class="user-tag">${log.loggedBy || 'Anon'}</span> • <span class="badge badge-bearing">${log.type}</span> • Tags: ${tagBadgesHTML}
+                    </div>
+                    <div class="card-body">${log.body}</div>
+                    <div style="margin-top: 10px; display: flex; gap: 8px; justify-content: flex-end;">
+                        <button class="btn-action" style="padding: 4px 10px; font-size: 8.5pt; background-color: #2b6cb0;" onclick="editLogRecord(${index})">Edit</button>
+                        <button class="btn-action" style="padding: 4px 10px; font-size: 8.5pt; background-color: #9b2c2c;" onclick="deleteLogRecord(${index})">Delete</button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+            applyAgeFilter();
+        }
+
+        function saveLogEntry() {
+            var dateVal = document.getElementById('newLogDate').value.trim();
+            var titleVal = document.getElementById('newLogTitle').value.trim();
+            var bodyVal = document.getElementById('newLogBody').value.trim();
+            if (!dateVal || !titleVal || !bodyVal) return;
+
+            var entry = {
+                date: dateVal, title: titleVal,
+                type: document.getElementById('newLogType').value,
+                tags: getSelectedLogTags(),
+                age: document.getElementById('newLogAge').value,
+                body: bodyVal,
+                loggedBy: getUserName()
+            };
+
+            var editIndex = parseInt(document.getElementById('editLogIndex').value);
+            if (editIndex >= 0 && editIndex < state.logsData.length) state.logsData[editIndex] = entry;
+            else state.logsData.unshift(entry);
+
+            resetLogForm();
+            saveState();
+        }
+
+        function editLogRecord(index) {
+            var log = state.logsData[index];
+            if (!log) return;
+            document.getElementById('editLogIndex').value = index;
+            document.getElementById('newLogDate').value = log.date;
+            document.getElementById('newLogTitle').value = log.title;
+            document.getElementById('newLogType').value = log.type;
+            document.getElementById('newLogAge').value = log.age || 'all';
+            document.getElementById('newLogBody').value = log.body;
+            document.getElementById('saveLogBtn').innerText = 'Update Log Entry';
+            document.getElementById('cancelLogBtn').style.display = 'inline-block';
+        }
+
+        function deleteLogRecord(index) {
+            if (confirm('Delete log entry?')) {
+                state.logsData.splice(index, 1);
+                saveState();
+            }
+        }
+
+        function resetLogForm() {
+            document.getElementById('editLogIndex').value = -1;
+            document.getElementById('newLogDate').value = new Date().toISOString().split('T')[0];
+            document.getElementById('newLogTitle').value = '';
+            document.getElementById('newLogBody').value = '';
+            document.getElementById('saveLogBtn').innerText = 'Add Log Entry';
+            document.getElementById('cancelLogBtn').style.display = 'none';
+        }
+
+        function addNewMetricFromBuilder() {
+            var name = document.getElementById('newMetricName').value.trim();
+            var unit = document.getElementById('newMetricUnit').value.trim();
+            if (!name) return;
+            var key = 'metric_' + name.toLowerCase().replace(/[^a-z0-9]/g, '_');
+            state.metricsRegistry.push({ key, name, unit: unit || 'units', isCustom: true, isGraphed: true });
+            state.activeGraphKeys.push(key);
+            saveState();
+        }
+
+        function addGraphFromSelect() {
+            var key = document.getElementById('existingMetricSelect').value;
+            if (key && !state.activeGraphKeys.includes(key)) {
+                state.activeGraphKeys.push(key);
+                saveState();
+            }
+        }
+
+        function removeGraph(key) {
+            state.activeGraphKeys = state.activeGraphKeys.filter(k => k !== key);
+            saveState();
+        }
+
+        function renderGrowthTabUI() {
+            renderMetricSelectOptions();
+            renderDynamicFormInputs();
+            renderActiveGraphsHTML();
+            renderGrowthCharts();
+            renderGrowthTable();
+        }
+
+        function renderMetricSelectOptions() {
+            var select = document.getElementById('existingMetricSelect');
+            if (!select) return;
+            select.innerHTML = state.metricsRegistry.filter(m => !state.activeGraphKeys.includes(m.key)).map(m => `<option value="${m.key}">${m.name} (${m.unit})</option>`).join('');
+        }
+
+        function renderDynamicFormInputs() {
+            var container = document.getElementById('dynamicObservationInputs');
+            if (!container) return;
+            container.innerHTML = state.metricsRegistry.map(m => `
+                <div class="control-group">
+                    <label for="entry_${m.key}"><span>${m.name} (${m.unit})</span></label>
+                    <input type="number" id="entry_${m.key}" step="any" placeholder="e.g. 1.25">
+                </div>
+            `).join('');
+        }
+
+        function renderActiveGraphsHTML() {
+            var container = document.getElementById('activeGraphsContainer');
+            if (!container) return;
+            container.innerHTML = '';
+            var treeOptionsHTML = '<option value="all">-- All / None --</option>' + state.inventoryData.map(item => `<option value="${item.cultivar}">${item.cultivar}</option>`).join('');
+
+            state.activeGraphKeys.forEach(key => {
+                var m = state.metricsRegistry.find(item => item.key === key);
+                if (!m) return;
+                var card = document.createElement('div');
+                card.innerHTML = `
+                    <div class="graph-card-header">
+                        <h3>${m.name} vs Time</h3>
+                        <button class="btn-close-x" onclick="removeGraph('${m.key}')">×</button>
+                    </div>
+                    <div class="controls-grid">
+                        <div class="control-group" style="grid-column: 1 / -1;">
+                            <label>Highlight Tree</label>
+                            <select id="${m.key}HighlightSelect" onchange="renderGrowthCharts()">${treeOptionsHTML}</select>
+                        </div>
+                    </div>
+                    <div class="plot-wrapper"><canvas id="${m.key}Chart"></canvas></div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function renderGrowthCharts() {
+            var treeColorMap = getTreeColors();
+            var trees = state.inventoryData.map(i => i.cultivar);
+
+            state.activeGraphKeys.forEach(key => {
+                var m = state.metricsRegistry.find(item => item.key === key);
+                if (!m) return;
+                var highlightSelect = document.getElementById(key + 'HighlightSelect');
+                var selectedTree = highlightSelect ? highlightSelect.value : 'all';
+
+                var datasets = [];
+                trees.forEach(tree => {
+                    var pts = state.growthData
+                        .filter(d => d.tree === tree && d[m.key] !== null && d[m.key] !== undefined)
+                        .map(d => ({ x: d.date, y: d[m.key] }));
+                    if (pts.length > 0) {
+                        var isHighlighted = (selectedTree === 'all' || selectedTree === tree);
+                        datasets.push({
+                            label: tree,
+                            data: pts,
+                            borderColor: isHighlighted ? (treeColorMap[tree] || '#1b4332') : '#cbd5e1',
+                            borderWidth: isHighlighted ? 2 : 1,
+                            tension: 0.1
+                        });
+                    }
+                });
+
+                if (chartInstances[m.key]) chartInstances[m.key].destroy();
+                var canvas = document.getElementById(m.key + 'Chart');
+                if (canvas) {
+                    chartInstances[m.key] = new Chart(canvas.getContext('2d'), {
+                        type: 'line',
+                        data: { datasets: datasets },
+                        options: { responsive: true, maintainAspectRatio: false, scales: { x: { type: 'time' } } }
+                    });
+                }
+            });
+        }
+
+        function addMeasurementRecord() {
+            var dateVal = document.getElementById('entryDate').value;
+            var treeVal = document.getElementById('entryTree').value;
+            if (!dateVal || !treeVal) return;
+
+            var rec = { date: dateVal, tree: treeVal, loggedBy: getUserName() };
+            state.metricsRegistry.forEach(m => {
+                var el = document.getElementById('entry_' + m.key);
+                if (el && el.value !== '') rec[m.key] = parseFloat(el.value);
+            });
+
+            var editIndex = parseInt(document.getElementById('editGrowthIndex').value);
+            if (editIndex >= 0 && editIndex < state.growthData.length) state.growthData[editIndex] = rec;
+            else state.growthData.push(rec);
+
+            resetGrowthForm();
+            saveState();
+        }
+
+        function editGrowthRecord(index) {
+            var rec = state.growthData[index];
+            if (!rec) return;
+            document.getElementById('editGrowthIndex').value = index;
+            document.getElementById('entryDate').value = rec.date;
+            document.getElementById('entryTree').value = rec.tree;
+            state.metricsRegistry.forEach(m => {
+                var el = document.getElementById('entry_' + m.key);
+                if (el) el.value = rec[m.key] !== undefined ? rec[m.key] : '';
+            });
+            document.getElementById('saveGrowthBtn').innerText = 'Update Measurement';
+            document.getElementById('cancelGrowthBtn').style.display = 'inline-block';
+        }
+
+        function deleteGrowthRecord(index) {
+            if (confirm('Delete measurement entry?')) {
+                state.growthData.splice(index, 1);
+                saveState();
+            }
+        }
+
+        function resetGrowthForm() {
+            document.getElementById('editGrowthIndex').value = -1;
+            document.getElementById('entryDate').valueAsDate = new Date();
+            state.metricsRegistry.forEach(m => {
+                var el = document.getElementById('entry_' + m.key);
+                if (el) el.value = '';
+            });
+            document.getElementById('saveGrowthBtn').innerText = 'Log Measurement';
+            document.getElementById('cancelGrowthBtn').style.display = 'none';
+        }
+
+        function renderGrowthTable() {
+            var headerRow = document.getElementById('growthTableHeaderRow');
+            if (headerRow) {
+                headerRow.innerHTML = `<th>Date</th><th>Tree</th>${state.metricsRegistry.map(m => `<th>${m.name}</th>`).join('')}<th>Logged By</th><th style="text-align:right;">Actions</th>`;
+            }
+
+            var tbody = document.getElementById('growthTableBody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+            state.growthData.forEach((item, index) => {
+                var valCols = state.metricsRegistry.map(m => `<td>${item[m.key] !== undefined && item[m.key] !== null ? item[m.key] : '—'}</td>`).join('');
+                var tr = document.createElement('tr');
+                tr.innerHTML = `<td>${item.date}</td><td><strong>${item.tree}</strong></td>${valCols}<td><span class="user-tag">${item.loggedBy || 'Anon'}</span></td><td style="text-align:right;">
+                    <button class="btn-action" style="padding: 4px 10px; font-size: 8.5pt; background-color: #2b6cb0;" onclick="editGrowthRecord(${index})">Edit</button>
+                    <button class="btn-action" style="padding: 4px 10px; font-size: 8.5pt; background-color: #9b2c2c;" onclick="deleteGrowthRecord(${index})">Delete</button>
+                </td>`;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function applyAgeFilter() {
+            var val = document.getElementById('ageFilter').value;
+            document.querySelectorAll('[data-age]').forEach(el => {
+                var age = el.getAttribute('data-age');
+                el.style.display = (val === 'all' || age === 'all' || age === val) ? '' : 'none';
+            });
         }
 
         function switchTab(e, tabId) {
@@ -832,171 +1729,24 @@
             if (e && e.currentTarget) e.currentTarget.classList.add('active');
         }
 
-        // LOGIC & IMPLEMENTATION FOR DASHBOARD MODULES
-        function calculateActualLoad(cultivarName) {
-            return state.harvestLogsData.filter(h => h.cultivar === cultivarName).reduce((sum, h) => sum + (parseInt(h.quantity)||0), 0);
-        }
-
-        function renderInventoryTable() {
-            const tbody = document.getElementById('inventoryTableBody');
-            if (!tbody) return;
-            tbody.innerHTML = '';
-            state.inventoryData.forEach((item, index) => {
-                const tr = document.createElement('tr');
-                tr.setAttribute('data-age', item.ageCat || 'all');
-                tr.innerHTML = `
-                    <td><strong>${item.cultivar}</strong></td>
-                    <td>${item.yearPlanted || '—'}</td>
-                    <td>${item.ageAtPlanting || '—'}</td>
-                    <td>—</td><td>—</td>
-                    <td>${item.rootstock}</td>
-                    <td>${item.load}</td>
-                    <td><strong>${calculateActualLoad(item.cultivar)}</strong></td>
-                    <td>${item.bags}</td>
-                    <td>${item.directives}</td>
-                    <td style="text-align: right;">
-                        <button class="btn-action" onclick="deleteInventoryRecord(${index})">🗑️</button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
+        function exportOrchardToCSV() {
+            var csv = [];
+            document.querySelectorAll("#orchardTable tr").forEach(row => {
+                var cols = Array.from(row.querySelectorAll("td, th")).slice(0, -1).map(c => `"${c.innerText.replace(/"/g, '""')}"`);
+                csv.push(cols.join(","));
             });
-            applyAgeFilter();
+            var blob = new Blob([csv.join("\n")], { type: 'text/csv' });
+            var a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'orchard_metrics_2026.csv';
+            a.click();
         }
 
-        function saveInventoryRecord() {
-            const cultivar = document.getElementById('invCultivar').value.trim();
-            if (!cultivar) return;
-            state.inventoryData.push({
-                cultivar,
-                ageCat: document.getElementById('invAgeCat').value,
-                yearPlanted: document.getElementById('invYearPlanted').value,
-                ageAtPlanting: document.getElementById('invAgeAtPlanting').value,
-                rootstock: document.getElementById('invRootstock').value,
-                load: document.getElementById('invLoad').value,
-                bags: document.getElementById('invBags').value,
-                color: document.getElementById('invColor').value,
-                directives: document.getElementById('invDirectives').value
-            });
-            resetInventoryForm();
-            saveState();
-        }
-
-        function deleteInventoryRecord(index) {
-            state.inventoryData.splice(index, 1);
-            saveState();
-        }
-
-        function resetInventoryForm() {
-            document.getElementById('invCultivar').value = '';
-            document.getElementById('invDirectives').value = '';
-        }
-
-        function renderGrowthTabUI() {
-            const select = document.getElementById('entryTree');
-            if (!select) return;
-            select.innerHTML = state.inventoryData.map(i => `<option value="${i.cultivar}">${i.cultivar}</option>`).join('');
-
-            const tbody = document.getElementById('growthTableBody');
-            tbody.innerHTML = '';
-            state.growthData.forEach((g, idx) => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `<td>${g.date}</td><td><strong>${g.tree}</strong></td><td><span class="user-tag">${g.loggedBy || 'Anon'}</span></td>`;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function addMeasurementRecord() {
-            const tree = document.getElementById('entryTree').value;
-            const date = document.getElementById('entryDate').value;
-            if (!tree || !date) return;
-            state.growthData.push({ date, tree, loggedBy: getUserName() });
-            saveState();
-        }
-
-        function saveHarvestLog() {
-            const date = document.getElementById('harvestDate').value;
-            const cultivar = document.getElementById('harvestCultivar').value;
-            const quantity = parseInt(document.getElementById('harvestQuantity').value);
-            if (!date || !cultivar || isNaN(quantity)) return;
-            state.harvestLogsData.unshift({ date, cultivar, quantity, loggedBy: getUserName() });
-            saveState();
-        }
-
-        function renderHarvestLogs() {
-            const select = document.getElementById('harvestCultivar');
-            if (select) select.innerHTML = state.inventoryData.map(i => `<option value="${i.cultivar}">${i.cultivar}</option>`).join('');
-            const tbody = document.getElementById('harvestTableBody');
-            if (!tbody) return;
-            tbody.innerHTML = '';
-            state.harvestLogsData.forEach((h, idx) => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `<td>${h.date}</td><td><strong>${h.cultivar}</strong></td><td>${h.quantity}</td><td><span class="user-tag">${h.loggedBy || 'Anon'}</span></td><td style="text-align:right;"><button class="btn-action btn-danger" onclick="deleteHarvestLog(${idx})">🗑️</button></td>`;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function deleteHarvestLog(idx) { state.harvestLogsData.splice(idx, 1); saveState(); }
-
-        function saveLogEntry() {
-            const date = document.getElementById('newLogDate').value;
-            const title = document.getElementById('newLogTitle').value;
-            const body = document.getElementById('newLogBody').value;
-            if (!date || !title) return;
-            state.logsData.unshift({ date, title, body, loggedBy: getUserName(), type: document.getElementById('newLogType').value, age: document.getElementById('newLogAge').value });
-            saveState();
-        }
-
-        function renderLogs() {
-            const container = document.getElementById('logsContainer');
-            if (!container) return;
-            container.innerHTML = '';
-            state.logsData.forEach(log => {
-                const div = document.createElement('div');
-                div.className = 'card';
-                div.setAttribute('data-age', log.age || 'all');
-                div.innerHTML = `<div class="card-title">${log.date} - ${log.title}</div><div class="card-meta"><span class="user-tag">${log.loggedBy || 'Anon'}</span> • ${log.type}</div><div class="card-body">${log.body}</div>`;
-                container.appendChild(div);
-            });
-            applyAgeFilter();
-        }
-
-        function renderAbundances() {
-            const tbody = document.getElementById('abundanceTableBody');
-            if (!tbody) return;
-            tbody.innerHTML = '';
-            state.inventoryData.forEach(item => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `<td>${item.cultivar}</td><td>${item.ageCat}</td><td>—</td><td>${item.load}</td><td>${item.bags}</td><td>Synced</td>`;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function renderHarvestTimeline() {
-            const container = document.getElementById('dynamicTimelineRowsContainer');
-            if (!container) return;
-            container.innerHTML = '';
-            state.inventoryData.forEach(item => {
-                const row = document.createElement('div');
-                row.className = 'timeline-row-item';
-                row.setAttribute('data-age', item.ageCat || 'all');
-                row.innerHTML = `<div class="grid-side-label">${item.cultivar}</div><div class="grid-main-content"><div class="timeline-track-lane"><div class="timeline-span-bar" style="left: 20%; width: 30%; background:${item.color}">${item.load}</div></div></div>`;
-                container.appendChild(row);
-            });
-        }
-
-        function applyAgeFilter() {
-            const val = document.getElementById('ageFilter').value;
-            document.querySelectorAll('[data-age]').forEach(el => {
-                const age = el.getAttribute('data-age');
-                el.style.display = (val === 'all' || age === 'all' || age === val) ? '' : 'none';
-            });
-        }
-
-        window.addEventListener('load', () => {
-            const savedUser = getUserName();
+        window.onload = function() {
+            var savedUser = getUserName();
             if (savedUser) document.getElementById('active-user-name').value = savedUser;
             fetchRepoData();
-        });
+        };
     </script>
 </body>
 </html>

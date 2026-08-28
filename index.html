@@ -60,6 +60,13 @@
             border-color: #68d391;
         }
         .header-btn-load:hover { background-color: #276749; }
+        .header-btn-login {
+            background-color: #d69e2e;
+            border-color: #f6e05e;
+            color: #1a202c;
+        }
+        .header-btn-login:hover { background-color: #b7791f; color: white; }
+        
         .sync-status {
             position: absolute;
             top: 25px;
@@ -80,14 +87,8 @@
             margin-bottom: 12px;
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-size: 9pt;
-        }
-        .user-tag-bar input {
-            padding: 4px 8px;
-            font-size: 9pt;
-            border: 1px solid #cbd5e1;
-            border-radius: 4px;
+            justify-content: space-between;
+            font-size: 9.5pt;
         }
         .filter-section {
             background-color: white;
@@ -406,6 +407,7 @@
         <h1>Orchard Tactical Dashboard</h1>
         <p>14-Tree Management Framework • August 2026 State</p>
         <div class="header-actions">
+            <button class="header-btn header-btn-login" onclick="promptPinLogin()">🔒 Login</button>
             <button class="header-btn header-btn-load" id="load-file-btn" onclick="fetchRepoData(true)">📥 Load Latest</button>
             <button class="header-btn" id="save-file-btn" onclick="saveDashboardFile()">💾 Save &amp; Sync</button>
         </div>
@@ -413,9 +415,13 @@
 
     <div class="container">
         <div class="user-tag-bar">
-            <strong>Operator Authorization PIN:</strong>
-            <input type="password" id="active-user-pin" placeholder="Enter Security PIN" onchange="saveUserPin()" style="width: 160px;">
-            <span style="color: #64748b; font-size: 8.5pt;" id="author-display-tag">(Authenticates worker sync &amp; tags commits)</span>
+            <div>
+                <strong>Active Operator:</strong> 
+                <span id="active-user-display" style="color: #2b6cb0; font-weight: bold;">Not Logged In</span>
+            </div>
+            <div style="color: #64748b; font-size: 8.5pt;" id="author-display-tag">
+                (Click "🔒 Login" to authenticate PIN)
+            </div>
         </div>
 
         <div class="filter-section">
@@ -914,16 +920,61 @@
             logsData: []
         };
 
+        var currentUserAuthor = localStorage.getItem('orchard_active_author') || '';
+        var currentUserPin = localStorage.getItem('orchard_user_pin') || '';
         var chartInstances = {};
 
-        function getUserPin() { return localStorage.getItem('orchard_user_pin') || ''; }
-        function saveUserPin() {
-            var val = document.getElementById('active-user-pin').value.trim();
-            localStorage.setItem('orchard_user_pin', val);
+        function updateAuthorDisplayUI() {
+            var displayEl = document.getElementById('active-user-display');
+            var tagEl = document.getElementById('author-display-tag');
+
+            if (currentUserAuthor) {
+                if (displayEl) displayEl.innerText = currentUserAuthor;
+                if (tagEl) tagEl.innerText = `(Authenticated via Worker PIN • Last sync by: ${state.lastUpdatedBy || currentUserAuthor})`;
+            } else {
+                if (displayEl) displayEl.innerText = "Not Logged In";
+                if (tagEl) tagEl.innerText = `(Click "🔒 Login" to authenticate PIN • Last sync by: ${state.lastUpdatedBy || 'System'})`;
+            }
+        }
+
+        async function promptPinLogin() {
+            var inputPin = prompt("Enter Operator Security PIN:");
+            if (!inputPin) return;
+
+            inputPin = inputPin.trim();
+
+            try {
+                // Test PIN with Worker
+                var res = await fetch(WORKER_URL, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Orchard-Auth": inputPin
+                    },
+                    body: JSON.stringify({ data: state })
+                });
+
+                var resData = await res.json().catch(() => ({}));
+                if (!res.ok || resData.error) {
+                    throw new Error(resData.error || "Authentication failed. Check PIN.");
+                }
+
+                if (resData.author) {
+                    currentUserAuthor = resData.author;
+                    currentUserPin = inputPin;
+                    localStorage.setItem('orchard_active_author', currentUserAuthor);
+                    localStorage.setItem('orchard_user_pin', currentUserPin);
+                    state.lastUpdatedBy = currentUserAuthor;
+                    saveState();
+                    alert(`Welcome, ${currentUserAuthor}! PIN verified successfully.`);
+                }
+            } catch (err) {
+                alert("Login Failed: " + err.message);
+            }
         }
 
         function getActiveAuthorName() {
-            return state.lastUpdatedBy || 'Joe';
+            return currentUserAuthor || 'Rob';
         }
 
         // DECOUPLED SYNC ENGINE: Load latest data.json from repository
@@ -941,7 +992,7 @@
                 
                 state = {
                     lastUpdated: data.lastUpdated || new Date().toISOString().replace('T', ' ').slice(0, 16),
-                    lastUpdatedBy: data.lastUpdatedBy || "Joe",
+                    lastUpdatedBy: data.lastUpdatedBy || "Rob",
                     inventoryData: data.inventoryData || [],
                     metricsRegistry: data.metricsRegistry || [],
                     activeGraphKeys: data.activeGraphKeys || [],
@@ -975,7 +1026,7 @@
         function saveLocalState() {
             localStorage.setItem('orchard_state_full', JSON.stringify(state));
             var disp = document.getElementById('last-updated-display');
-            if (disp) disp.innerText = `Last Synced: ${state.lastUpdated} (${state.lastUpdatedBy || 'Joe'})`;
+            if (disp) disp.innerText = `Last Synced: ${state.lastUpdated} (${state.lastUpdatedBy || 'Rob'})`;
         }
 
         function loadLocalState() {
@@ -992,12 +1043,10 @@
         // DECOUPLED SYNC ENGINE: Push current local state to GitHub repository via Cloudflare Worker
         async function saveDashboardFile() {
             var btn = document.getElementById('save-file-btn');
-            var pin = getUserPin();
 
-            if (!pin) {
-                alert("Please enter your Authorization PIN to sync changes.");
-                document.getElementById('active-user-pin').focus();
-                return;
+            if (!currentUserPin) {
+                await promptPinLogin();
+                if (!currentUserPin) return;
             }
 
             if (!btn || btn.disabled) return;
@@ -1013,7 +1062,7 @@
                     method: "POST",
                     headers: { 
                         "Content-Type": "application/json",
-                        "X-Orchard-Auth": pin
+                        "X-Orchard-Auth": String(currentUserPin).trim()
                     },
                     body: JSON.stringify({ data: state })
                 });
@@ -1022,14 +1071,16 @@
                 if (!res.ok || resData.error) throw new Error(resData.error || `HTTP ${res.status}`);
 
                 if (resData.author) {
+                    currentUserAuthor = resData.author;
                     state.lastUpdatedBy = resData.author;
+                    localStorage.setItem('orchard_active_author', currentUserAuthor);
                 }
 
                 saveState();
                 btn.innerText = `✅ Committed (${state.lastUpdatedBy})!`;
             } catch (err) {
                 console.error("Cloudflare Worker Sync Error:", err);
-                alert("Sync failed: " + err.message);
+                alert("Sync push failed: " + err.message);
                 btn.innerText = "❌ Sync Failed";
             } finally {
                 setTimeout(() => {
@@ -1040,9 +1091,7 @@
         }
 
         function renderAll() {
-            var tagEl = document.getElementById('author-display-tag');
-            if (tagEl) tagEl.innerText = `(Last commit by: ${state.lastUpdatedBy || 'Joe'})`;
-            
+            updateAuthorDisplayUI();
             renderInventoryTable();
             renderLogs();
             renderGrowthTabUI();
@@ -1442,7 +1491,7 @@
                     <td>${log.date}</td>
                     <td><strong>${log.cultivar}</strong></td>
                     <td>${log.quantity}</td>
-                    <td><span class="user-tag">${log.loggedBy || 'Anon'}</span></td>
+                    <td><span class="user-tag">${log.loggedBy || 'Rob'}</span></td>
                     <td style="text-align: right;">
                         <button class="btn-action" style="padding: 4px 10px; font-size: 8.5pt; background-color: #2b6cb0;" onclick="editHarvestLog(${index})">Edit</button>
                         <button class="btn-action" style="padding: 4px 10px; font-size: 8.5pt; background-color: #9b2c2c;" onclick="deleteHarvestLog(${index})">Delete</button>
@@ -1511,7 +1560,7 @@
                 card.innerHTML = `
                     <div class="card-title">${log.date} - ${log.title}</div>
                     <div class="card-meta">
-                        <span class="user-tag">${log.loggedBy || 'Anon'}</span> • <span class="badge badge-bearing">${log.type}</span> • Tags: ${tagBadgesHTML}
+                        <span class="user-tag">${log.loggedBy || 'Rob'}</span> • <span class="badge badge-bearing">${log.type}</span> • Tags: ${tagBadgesHTML}
                     </div>
                     <div class="card-body">${log.body}</div>
                     <div style="margin-top: 10px; display: flex; gap: 8px; justify-content: flex-end;">
@@ -1753,7 +1802,7 @@
             state.growthData.forEach((item, index) => {
                 var valCols = state.metricsRegistry.map(m => `<td>${item[m.key] !== undefined && item[m.key] !== null ? item[m.key] : '—'}</td>`).join('');
                 var tr = document.createElement('tr');
-                tr.innerHTML = `<td>${item.date}</td><td><strong>${item.tree}</strong></td>${valCols}<td><span class="user-tag">${item.loggedBy || 'Anon'}</span></td><td style="text-align:right;">
+                tr.innerHTML = `<td>${item.date}</td><td><strong>${item.tree}</strong></td>${valCols}<td><span class="user-tag">${item.loggedBy || 'Rob'}</span></td><td style="text-align:right;">
                     <button class="btn-action" style="padding: 4px 10px; font-size: 8.5pt; background-color: #2b6cb0;" onclick="editGrowthRecord(${index})">Edit</button>
                     <button class="btn-action" style="padding: 4px 10px; font-size: 8.5pt; background-color: #9b2c2c;" onclick="deleteGrowthRecord(${index})">Delete</button>
                 </td>`;
@@ -1790,8 +1839,6 @@
         }
 
         window.onload = function() {
-            var savedPin = getUserPin();
-            if (savedPin) document.getElementById('active-user-pin').value = savedPin;
             fetchRepoData();
         };
     </script>

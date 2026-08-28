@@ -71,6 +71,11 @@
             color: #1a202c;
         }
         .header-btn-login:hover { background-color: #b7791f; color: white; }
+        .header-btn-utils {
+            background-color: #4a5568;
+            border-color: #a0aec0;
+        }
+        .header-btn-utils:hover { background-color: #2d3748; }
         
         .sync-status {
             font-size: 9pt;
@@ -451,6 +456,7 @@
         <span class="sync-status" id="last-updated-display">Last Synced: Loading...</span>
         <div class="header-actions">
             <button class="header-btn header-btn-login" id="login-toggle-btn" onclick="handleAuthToggle()">🔒 Login</button>
+            <button class="header-btn header-btn-utils" onclick="toggleUtilitiesModal(true)">⚙️ Utilities</button>
             <button class="header-btn header-btn-load" id="load-file-btn" onclick="fetchRepoData(true)">📥 Load Latest</button>
             <button class="header-btn" id="save-file-btn" onclick="saveDashboardFile()">💾 Save &amp; Sync</button>
         </div>
@@ -947,6 +953,42 @@
         </div>
     </div>
 
+    <!-- UTILITIES & ARCHIVING MODAL -->
+    <div id="utilitiesModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center;">
+        <div style="background: white; padding: 24px; border-radius: 8px; width: 90%; max-width: 600px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+            <h2 style="margin-top: 0; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; color: #1b4332;">⚙️ Dashboard Utilities &amp; Archiving</h2>
+            
+            <!-- 1. Archive Current Season -->
+            <h3 style="margin-top: 16px;">1. Archive Current Season</h3>
+            <p style="font-size: 9.5pt; color: #4a5568; margin-top: -4px;">Save active data to a named JSON file (e.g. 2026 becomes <code>2026_orchard_data.json</code> downloaded locally).</p>
+            <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+                <input type="text" id="archiveSeasonTag" placeholder="e.g. 2026" style="flex: 1; padding: 6px 10px; border: 1px solid #cbd5e1; border-radius: 4px;">
+                <button class="btn-action" style="background-color: #2f855a;" onclick="archiveCurrentSeason()">📦 Archive Season</button>
+            </div>
+            <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 16px 0;">
+
+            <!-- 2. Load Historical Dataset -->
+            <h3>2. Load Historical Dataset</h3>
+            <p style="font-size: 9.5pt; color: #4a5568; margin-top: -4px;">Load a past season's data file into the dashboard to review historical records.</p>
+            <div style="display: flex; gap: 8px; margin-bottom: 16px; align-items: center;">
+                <input type="file" id="importJsonFileInput" accept=".json" style="flex: 1; padding: 4px; border: 1px solid #cbd5e1; border-radius: 4px;">
+                <button class="btn-action" style="background-color: #2b6cb0;" onclick="loadArchivedJsonFile()">📁 Load File</button>
+            </div>
+            <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 16px 0;">
+
+            <!-- 3. Reset / Clear Active Data -->
+            <h3 style="color: #c53030;">3. Reset / Clear Active Data</h3>
+            <p style="font-size: 9.5pt; color: #4a5568; margin-top: -4px;">Clear all active crop, metric, log, and harvest records to start fresh for a new season (e.g., 2027).</p>
+            <div style="margin-bottom: 20px;">
+                <button class="btn-action" style="background-color: #c53030;" onclick="clearAllDashboardData()">🧹 Reset Active Season Data</button>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end;">
+                <button class="btn-action" style="background-color: #64748b;" onclick="toggleUtilitiesModal(false)">Close</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // BACKEND SYNC CONFIGURATION
         const WORKER_URL = "https://orchard-dashboard-sync.joseph-roscioli.workers.dev";
@@ -987,16 +1029,82 @@
             if (logDateEl && !logDateEl.value) logDateEl.value = todayStr;
         }
 
+        function toggleUtilitiesModal(show) {
+            var modal = document.getElementById('utilitiesModal');
+            if (modal) modal.style.display = show ? 'flex' : 'none';
+        }
+
+        function archiveCurrentSeason() {
+            var tag = document.getElementById('archiveSeasonTag').value.trim() || '2026';
+            var fileName = `${tag}_orchard_data.json`;
+            var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state, null, 2));
+            var downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", fileName);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        }
+
+        function loadArchivedJsonFile() {
+            var fileInput = document.getElementById('importJsonFileInput');
+            if (!fileInput.files || fileInput.files.length === 0) {
+                alert("Please select a JSON file to import.");
+                return;
+            }
+            var file = fileInput.files[0];
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    var imported = JSON.parse(e.target.result);
+                    if (imported && typeof imported === 'object') {
+                        state = {
+                            lastUpdated: imported.lastUpdated || getTodayISO(),
+                            lastUpdatedBy: imported.lastUpdatedBy || currentUserAuthor || "Rob",
+                            inventoryData: imported.inventoryData || [],
+                            metricsRegistry: imported.metricsRegistry || [],
+                            activeGraphKeys: imported.activeGraphKeys || [],
+                            growthData: imported.growthData || [],
+                            harvestLogsData: imported.harvestLogsData || [],
+                            logsData: imported.logsData || []
+                        };
+                        saveState();
+                        toggleUtilitiesModal(false);
+                        alert("Archived dataset loaded successfully!");
+                    }
+                } catch (err) {
+                    alert("Error parsing JSON file: " + err.message);
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function clearAllDashboardData() {
+            if (!confirm("⚠️ WARNING: You are about to wipe ALL active season data (Inventory, Metrics, Harvest Logs, and Observations). Are you sure you want to proceed?")) {
+                return;
+            }
+            var verification = prompt("🔒 DOUBLE VERIFICATION REQUIRED:\nType 'DELETE ALL DATA' below to confirm permanent clearance:");
+            if (verification === "DELETE ALL DATA") {
+                state.inventoryData = [];
+                state.growthData = [];
+                state.harvestLogsData = [];
+                state.logsData = [];
+                saveState();
+                toggleUtilitiesModal(false);
+                alert("Active season data cleared successfully. Ready for the new season!");
+            } else {
+                alert("Clear operation cancelled. Verification text did not match.");
+            }
+        }
+
         function handleAuthToggle() {
             if (currentUserAuthor || currentUserPin) {
-                // Logout
                 currentUserAuthor = '';
                 currentUserPin = '';
                 localStorage.removeItem('orchard_active_author');
                 localStorage.removeItem('orchard_user_pin');
                 updateAuthorDisplayUI();
             } else {
-                // Login
                 promptPinLogin();
             }
         }
@@ -1335,9 +1443,17 @@
         function deleteInventoryRecord(index) {
             var item = state.inventoryData[index];
             if (!item) return;
-            if (confirm(`Delete "${item.cultivar}" from Master Inventory?`)) {
+
+            if (!confirm(`Are you sure you want to delete "${item.cultivar}" from the Master Inventory?`)) {
+                return;
+            }
+
+            var confirmName = prompt(`⚠️ SECURITY CONFIRMATION:\nDeleting this variety will remove it from all master lists.\nType '${item.cultivar}' below to confirm deletion:`);
+            if (confirmName === item.cultivar) {
                 state.inventoryData.splice(index, 1);
                 saveState();
+            } else {
+                alert("Deletion cancelled. Cultivar name did not match.");
             }
         }
 

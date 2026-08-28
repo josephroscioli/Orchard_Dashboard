@@ -354,9 +354,9 @@
         @media (max-width: 600px) { .control-group-span-2 { grid-column: span 1; } }
 
         .checkbox-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 16px;
             background: white;
             border: 1px solid #cbd5e1;
             padding: 10px;
@@ -365,16 +365,22 @@
             overflow-y: auto;
         }
         .checkbox-item { 
-            display: inline-flex; 
-            align-items: center; 
-            justify-content: flex-start; 
-            gap: 6px; 
+            display: inline-flex !important; 
+            align-items: center !important; 
+            justify-content: flex-start !important; 
+            gap: 4px !important; 
             font-size: 9pt; 
             color: #334155; 
             cursor: pointer; 
-            width: auto;
+            white-space: nowrap;
+            margin: 0 !important;
         }
-        .checkbox-item input[type="checkbox"] { cursor: pointer; margin: 0; }
+        .checkbox-item input[type="checkbox"] { 
+            cursor: pointer; 
+            margin: 0 !important;
+            padding: 0 !important;
+            flex-shrink: 0;
+        }
 
         .date-range-picker-container {
             display: flex;
@@ -978,7 +984,7 @@
 
             <!-- 3. Reset / Clear Active Data -->
             <h3 style="color: #c53030;">3. Reset / Clear Active Data</h3>
-            <p style="font-size: 9.5pt; color: #4a5568; margin-top: -4px;">Clear all active crop, metric, log, and harvest records to start fresh for a new season (e.g., 2027).</p>
+            <p style="font-size: 9.5pt; color: #4a5568; margin-top: -4px;">Clear active metric observations, harvest logs, and field notes while resetting cultivar loads/bags to 0.</p>
             <div style="margin-bottom: 20px;">
                 <button class="btn-action" style="background-color: #c53030;" onclick="clearAllDashboardData()">🧹 Reset Active Season Data</button>
             </div>
@@ -1080,18 +1086,22 @@
         }
 
         function clearAllDashboardData() {
-            if (!confirm("⚠️ WARNING: You are about to wipe ALL active season data (Inventory, Metrics, Harvest Logs, and Observations). Are you sure you want to proceed?")) {
+            if (!confirm("⚠️ WARNING: You are about to clear all seasonal data (Growth Measurements, Harvest Logs, and Observations). Master Inventory tree details will be preserved, but Est. Load and Bags will be reset to 0. Proceed?")) {
                 return;
             }
-            var verification = prompt("🔒 DOUBLE VERIFICATION REQUIRED:\nType 'DELETE ALL DATA' below to confirm permanent clearance:");
+            var verification = prompt("🔒 DOUBLE VERIFICATION REQUIRED:\nType 'DELETE ALL DATA' below to confirm seasonal reset:");
             if (verification === "DELETE ALL DATA") {
-                state.inventoryData = [];
+                // Keep master cultivars, reset loads/bags to 0
+                state.inventoryData.forEach(item => {
+                    item.load = "0";
+                    item.bags = "0";
+                });
                 state.growthData = [];
                 state.harvestLogsData = [];
                 state.logsData = [];
                 saveState();
                 toggleUtilitiesModal(false);
-                alert("Active season data cleared successfully. Ready for the new season!");
+                alert("Active season records cleared. Master cultivar inventory preserved!");
             } else {
                 alert("Clear operation cancelled. Verification text did not match.");
             }
@@ -1671,7 +1681,7 @@
 
             var grid = document.getElementById('logCultivarCheckboxes');
             if (grid) {
-                grid.innerHTML = `<label class="checkbox-item" style="font-weight: bold; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px; grid-column: 1 / -1;">
+                grid.innerHTML = `<label class="checkbox-item" style="font-weight: bold; width: 100%; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px; margin-bottom: 4px;">
                     <input type="checkbox" id="tag_all_cultivars" onchange="toggleAllLogCultivars(this.checked)"> All Cultivars
                 </label>` + state.inventoryData.map(i => `<label class="checkbox-item"><input type="checkbox" class="log-cultivar-cb" value="${i.cultivar}"> <span>${i.cultivar}</span></label>`).join('');
             }

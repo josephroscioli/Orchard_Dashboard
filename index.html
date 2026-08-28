@@ -413,9 +413,9 @@
 
     <div class="container">
         <div class="user-tag-bar">
-            <strong>Operator Identity:</strong>
-            <input type="text" id="active-user-name" placeholder="Joe" onchange="saveUserName()">
-            <span style="color: #64748b; font-size: 8.5pt;">(Tagged automatically on measurement &amp; harvest entries)</span>
+            <strong>Operator Authorization PIN:</strong>
+            <input type="password" id="active-user-pin" placeholder="Enter Security PIN" onchange="saveUserPin()" style="width: 160px;">
+            <span style="color: #64748b; font-size: 8.5pt;" id="author-display-tag">(Authenticates worker sync &amp; tags commits)</span>
         </div>
 
         <div class="filter-section">
@@ -905,6 +905,7 @@
         // MASTER DATA STATE
         var state = {
             lastUpdated: "Loading...",
+            lastUpdatedBy: "System",
             inventoryData: [],
             metricsRegistry: [],
             activeGraphKeys: [],
@@ -915,10 +916,14 @@
 
         var chartInstances = {};
 
-        function getUserName() { return localStorage.getItem('orchard_user') || 'Joe'; }
-        function saveUserName() {
-            var val = document.getElementById('active-user-name').value.trim();
-            if (val) localStorage.setItem('orchard_user', val);
+        function getUserPin() { return localStorage.getItem('orchard_user_pin') || ''; }
+        function saveUserPin() {
+            var val = document.getElementById('active-user-pin').value.trim();
+            localStorage.setItem('orchard_user_pin', val);
+        }
+
+        function getActiveAuthorName() {
+            return state.lastUpdatedBy || 'Joe';
         }
 
         // DECOUPLED SYNC ENGINE: Load latest data.json from repository
@@ -930,13 +935,13 @@
             }
 
             try {
-                // Fetch fresh data.json bypassing browser cache
                 var res = await fetch('./data.json?v=' + new Date().getTime());
                 if (!res.ok) throw new Error("Failed fetching data.json (HTTP " + res.status + ")");
                 var data = await res.json();
                 
                 state = {
                     lastUpdated: data.lastUpdated || new Date().toISOString().replace('T', ' ').slice(0, 16),
+                    lastUpdatedBy: data.lastUpdatedBy || "Joe",
                     inventoryData: data.inventoryData || [],
                     metricsRegistry: data.metricsRegistry || [],
                     activeGraphKeys: data.activeGraphKeys || [],
@@ -970,7 +975,7 @@
         function saveLocalState() {
             localStorage.setItem('orchard_state_full', JSON.stringify(state));
             var disp = document.getElementById('last-updated-display');
-            if (disp) disp.innerText = `Last Synced: ${state.lastUpdated}`;
+            if (disp) disp.innerText = `Last Synced: ${state.lastUpdated} (${state.lastUpdatedBy || 'Joe'})`;
         }
 
         function loadLocalState() {
@@ -987,6 +992,14 @@
         // DECOUPLED SYNC ENGINE: Push current local state to GitHub repository via Cloudflare Worker
         async function saveDashboardFile() {
             var btn = document.getElementById('save-file-btn');
+            var pin = getUserPin();
+
+            if (!pin) {
+                alert("Please enter your Authorization PIN to sync changes.");
+                document.getElementById('active-user-pin').focus();
+                return;
+            }
+
             if (!btn || btn.disabled) return;
 
             try {
@@ -998,18 +1011,25 @@
 
                 var res = await fetch(WORKER_URL, {
                     method: "POST",
-                    headers: { "Content-Type": "application/json" },
+                    headers: { 
+                        "Content-Type": "application/json",
+                        "X-Orchard-Auth": pin
+                    },
                     body: JSON.stringify({ data: state })
                 });
 
                 var resData = await res.json().catch(() => ({}));
                 if (!res.ok || resData.error) throw new Error(resData.error || `HTTP ${res.status}`);
 
+                if (resData.author) {
+                    state.lastUpdatedBy = resData.author;
+                }
+
                 saveState();
-                btn.innerText = "✅ Committed!";
+                btn.innerText = `✅ Committed (${state.lastUpdatedBy})!`;
             } catch (err) {
                 console.error("Cloudflare Worker Sync Error:", err);
-                alert("Sync push failed: " + err.message);
+                alert("Sync failed: " + err.message);
                 btn.innerText = "❌ Sync Failed";
             } finally {
                 setTimeout(() => {
@@ -1020,6 +1040,9 @@
         }
 
         function renderAll() {
+            var tagEl = document.getElementById('author-display-tag');
+            if (tagEl) tagEl.innerText = `(Last commit by: ${state.lastUpdatedBy || 'Joe'})`;
+            
             renderInventoryTable();
             renderLogs();
             renderGrowthTabUI();
@@ -1435,7 +1458,7 @@
             var quantityVal = parseInt(document.getElementById('harvestQuantity').value);
             if (!dateVal || !cultivarVal || isNaN(quantityVal)) return;
 
-            var log = { date: dateVal, cultivar: cultivarVal, quantity: quantityVal, loggedBy: getUserName() };
+            var log = { date: dateVal, cultivar: cultivarVal, quantity: quantityVal, loggedBy: getActiveAuthorName() };
             var editIndex = parseInt(document.getElementById('editHarvestIndex').value);
             if (editIndex >= 0 && editIndex < state.harvestLogsData.length) state.harvestLogsData[editIndex] = log;
             else state.harvestLogsData.unshift(log);
@@ -1513,7 +1536,7 @@
                 tags: getSelectedLogTags(),
                 age: document.getElementById('newLogAge').value,
                 body: bodyVal,
-                loggedBy: getUserName()
+                loggedBy: getActiveAuthorName()
             };
 
             var editIndex = parseInt(document.getElementById('editLogIndex').value);
@@ -1672,7 +1695,7 @@
             var treeVal = document.getElementById('entryTree').value;
             if (!dateVal || !treeVal) return;
 
-            var rec = { date: dateVal, tree: treeVal, loggedBy: getUserName() };
+            var rec = { date: dateVal, tree: treeVal, loggedBy: getActiveAuthorName() };
             state.metricsRegistry.forEach(m => {
                 var el = document.getElementById('entry_' + m.key);
                 if (el && el.value !== '') rec[m.key] = parseFloat(el.value);
@@ -1767,8 +1790,8 @@
         }
 
         window.onload = function() {
-            var savedUser = getUserName();
-            if (savedUser) document.getElementById('active-user-name').value = savedUser;
+            var savedPin = getUserPin();
+            if (savedPin) document.getElementById('active-user-pin').value = savedPin;
             fetchRepoData();
         };
     </script>

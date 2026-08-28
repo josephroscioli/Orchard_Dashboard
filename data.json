@@ -1,5 +1,6 @@
 {
   "lastUpdated": "2026-08-27 17:14",
+  "lastUpdatedBy": "Rob",
   "inventoryData": [
     {
       "cultivar": "Freedom",
@@ -264,32 +265,188 @@
   ],
   "activeGraphKeys": [],
   "growthData": [
-    { "date": "2026-07-24", "tree": "Freedom", "dia": 2.5, "height": 144, "loggedBy": "Joe" },
-    { "date": "2026-07-24", "tree": "Novamac", "dia": 2.5, "height": 150, "loggedBy": "Joe" },
-    { "date": "2026-07-24", "tree": "Galarina", "dia": 2.5, "height": 153, "loggedBy": "Joe" },
-    { "date": "2026-07-24", "tree": "Enterprise", "dia": 2, "height": 164, "loggedBy": "Joe" },
-    { "date": "2026-07-24", "tree": "NY-35", "dia": 2.75, "height": 106, "loggedBy": "Joe" },
-    { "date": "2026-07-24", "tree": "Williams' Pride (Older)", "dia": null, "height": 52, "loggedBy": "Joe" },
-    { "date": "2026-07-24", "tree": "Liberty", "dia": null, "height": 66, "loggedBy": "Joe" },
-    { "date": "2026-07-24", "tree": "Sundance", "dia": null, "height": 68, "loggedBy": "Joe" },
-    { "date": "2026-07-24", "tree": "Black Oxford", "dia": null, "height": 58, "loggedBy": "Joe" },
-    { "date": "2026-07-24", "tree": "Williams' Pride (Whip)", "dia": null, "height": 50, "loggedBy": "Joe" },
-    { "date": "2026-07-24", "tree": "SnowSweet", "dia": null, "height": 41, "loggedBy": "Joe" },
-    { "date": "2026-07-24", "tree": "NY 414-1", "dia": null, "height": 47, "loggedBy": "Joe" },
-    { "date": "2026-07-24", "tree": "Sansa", "dia": null, "height": 58, "loggedBy": "Joe" },
-    { "date": "2026-08-22", "tree": "Freedom", "dia": 3, "height": 144, "loggedBy": "Joe" },
-    { "date": "2026-08-22", "tree": "Novamac", "dia": 2.75, "height": 170, "loggedBy": "Joe" },
-    { "date": "2026-08-22", "tree": "Galarina", "dia": 2.75, "height": 170, "loggedBy": "Joe" },
-    { "date": "2026-08-22", "tree": "Enterprise", "dia": 2.75, "height": 180, "loggedBy": "Joe" },
-    { "date": "2026-08-22", "tree": "NY-35", "dia": 3.25, "height": 112, "loggedBy": "Joe" },
-    { "date": "2026-08-22", "tree": "Williams' Pride (Older)", "dia": null, "height": 59, "loggedBy": "Joe" },
-    { "date": "2026-08-22", "tree": "Liberty", "dia": null, "height": 80, "loggedBy": "Joe" },
-    { "date": "2026-08-22", "tree": "Sundance", "dia": null, "height": 79, "loggedBy": "Joe" },
-    { "date": "2026-08-22", "tree": "Black Oxford", "dia": null, "height": 75, "loggedBy": "Joe" },
-    { "date": "2026-08-22", "tree": "Williams' Pride (Whip)", "dia": null, "height": 60, "loggedBy": "Joe" },
-    { "date": "2026-08-22", "tree": "SnowSweet", "dia": null, "height": 54, "loggedBy": "Joe" },
-    { "date": "2026-08-22", "tree": "NY 414-1", "dia": null, "height": 59, "loggedBy": "Joe" },
-    { "date": "2026-08-22", "tree": "Sansa", "dia": null, "height": 68, "loggedBy": "Joe" }
+    {
+      "date": "2026-07-24",
+      "tree": "Freedom",
+      "dia": 2.5,
+      "height": 144,
+      "loggedBy": "Joe"
+    },
+    {
+      "date": "2026-07-24",
+      "tree": "Novamac",
+      "dia": 2.5,
+      "height": 150,
+      "loggedBy": "Joe"
+    },
+    {
+      "date": "2026-07-24",
+      "tree": "Galarina",
+      "dia": 2.5,
+      "height": 153,
+      "loggedBy": "Joe"
+    },
+    {
+      "date": "2026-07-24",
+      "tree": "Enterprise",
+      "dia": 2,
+      "height": 164,
+      "loggedBy": "Joe"
+    },
+    {
+      "date": "2026-07-24",
+      "tree": "NY-35",
+      "dia": 2.75,
+      "height": 106,
+      "loggedBy": "Joe"
+    },
+    {
+      "date": "2026-07-24",
+      "tree": "Williams' Pride (Older)",
+      "dia": null,
+      "height": 52,
+      "loggedBy": "Joe"
+    },
+    {
+      "date": "2026-07-24",
+      "tree": "Liberty",
+      "dia": null,
+      "height": 66,
+      "loggedBy": "Joe"
+    },
+    {
+      "date": "2026-07-24",
+      "tree": "Sundance",
+      "dia": null,
+      "height": 68,
+      "loggedBy": "Joe"
+    },
+    {
+      "date": "2026-07-24",
+      "tree": "Black Oxford",
+      "dia": null,
+      "height": 58,
+      "loggedBy": "Joe"
+    },
+    {
+      "date": "2026-07-24",
+      "tree": "Williams' Pride (Whip)",
+      "dia": null,
+      "height": 50,
+      "loggedBy": "Joe"
+    },
+    {
+      "date": "2026-07-24",
+      "tree": "SnowSweet",
+      "dia": null,
+      "height": 41,
+      "loggedBy": "Joe"
+    },
+    {
+      "date": "2026-07-24",
+      "tree": "NY 414-1",
+      "dia": null,
+      "height": 47,
+      "loggedBy": "Joe"
+    },
+    {
+      "date": "2026-07-24",
+      "tree": "Sansa",
+      "dia": null,
+      "height": 58,
+      "loggedBy": "Joe"
+    },
+    {
+      "date": "2026-08-22",
+      "tree": "Freedom",
+      "dia": 3,
+      "height": 144,
+      "loggedBy": "Joe"
+    },
+    {
+      "date": "2026-08-22",
+      "tree": "Novamac",
+      "dia": 2.75,
+      "height": 170,
+      "loggedBy": "Joe"
+    },
+    {
+      "date": "2026-08-22",
+      "tree": "Galarina",
+      "dia": 2.75,
+      "height": 170,
+      "loggedBy": "Joe"
+    },
+    {
+      "date": "2026-08-22",
+      "tree": "Enterprise",
+      "dia": 2.75,
+      "height": 180,
+      "loggedBy": "Joe"
+    },
+    {
+      "date": "2026-08-22",
+      "tree": "NY-35",
+      "dia": 3.25,
+      "height": 112,
+      "loggedBy": "Joe"
+    },
+    {
+      "date": "2026-08-22",
+      "tree": "Williams' Pride (Older)",
+      "dia": null,
+      "height": 59,
+      "loggedBy": "Joe"
+    },
+    {
+      "date": "2026-08-22",
+      "tree": "Liberty",
+      "dia": null,
+      "height": 80,
+      "loggedBy": "Joe"
+    },
+    {
+      "date": "2026-08-22",
+      "tree": "Sundance",
+      "dia": null,
+      "height": 79,
+      "loggedBy": "Joe"
+    },
+    {
+      "date": "2026-08-22",
+      "tree": "Black Oxford",
+      "dia": null,
+      "height": 75,
+      "loggedBy": "Joe"
+    },
+    {
+      "date": "2026-08-22",
+      "tree": "Williams' Pride (Whip)",
+      "dia": null,
+      "height": 60,
+      "loggedBy": "Joe"
+    },
+    {
+      "date": "2026-08-22",
+      "tree": "SnowSweet",
+      "dia": null,
+      "height": 54,
+      "loggedBy": "Joe"
+    },
+    {
+      "date": "2026-08-22",
+      "tree": "NY 414-1",
+      "dia": null,
+      "height": 59,
+      "loggedBy": "Joe"
+    },
+    {
+      "date": "2026-08-22",
+      "tree": "Sansa",
+      "dia": null,
+      "height": 68,
+      "loggedBy": "Joe"
+    }
   ],
   "harvestLogsData": [],
   "logsData": [
@@ -297,7 +454,13 @@
       "date": "2026-08-22",
       "title": "Late-August Post-Vacation Audit, Deep Soak & Rot Inspection",
       "type": "Growth & Orchard Status",
-      "tags": ["Freedom", "NY-35", "Enterprise", "Novamac", "Galarina"],
+      "tags": [
+        "Freedom",
+        "NY-35",
+        "Enterprise",
+        "Novamac",
+        "Galarina"
+      ],
       "age": "bearing",
       "body": "Logged updated fruit diameter measurements (Freedom: 3.0\", Novamac: 2.75\", Galarina: 2.75\", Enterprise: 2.75\", NY-35: 3.25\") and full orchard height benchmark update. Returned from vacation to find 4 Freedom apples dropped and culled a few rotting fruit showing sunburn damage; overall Freedom crop estimated at ~150 ± 25 apples. Freedom fruit showing localized dark, soft spots with premature localized ripening, identified as solar-damaged entry points susceptible to bitter rot (Colletotrichum). Action: Monitoring closely; plan to cull if soft spots expand to avoid secondary spore spread. Applied 15-gallon deep soak to each bearing tree. Refilled perimeter hornet traps (ACV, sugar, water, dish soap); catching some hornets/wasps alongside flies and beetles. No animal damage observed.",
       "loggedBy": "Joe"
@@ -306,7 +469,13 @@
       "date": "2026-08-16",
       "title": "Mid-August Fruit Sizing, Crop Abortions & Structural Audit",
       "type": "Growth & Orchard Status",
-      "tags": ["Freedom", "NY-35", "Enterprise", "Novamac", "Galarina"],
+      "tags": [
+        "Freedom",
+        "NY-35",
+        "Enterprise",
+        "Novamac",
+        "Galarina"
+      ],
       "age": "bearing",
       "body": "Apples growing well overall with zero active insect or pest issues. Noted a couple of small rotting fruitlets aborted naturally by the tree due to poor early growth. Conducted physical shake test across all bearing trees: dropped ~5 total smaller/underdeveloped apples on Freedom (3 natural, 2 via shake), including 1 showing earlier bottom damage. No additional fruit dislodged on further shaking, confirming remaining canopy crop is securely attached. NY-35 leading in fruit size with initial reddening on sun-exposed surfaces, followed closely by Freedom. Other bearing varieties (Novamac, Galarina, Enterprise) remain smaller and very green. Active robin nest noted in Galarina. Hornet traps actively catching low baseline numbers. Heavy branches remain stable; intentionally leaving limbs un-supported to encourage natural reaction wood and structural strength unless immediate failure risk develops.",
       "loggedBy": "Joe"
@@ -315,7 +484,9 @@
       "date": "2026-07-24",
       "title": "Growth & Sizing Metrics Benchmark",
       "type": "Growth Metrics",
-      "tags": ["All Cultivars"],
+      "tags": [
+        "All Cultivars"
+      ],
       "age": "all",
       "body": "Logged mid-summer tree heights across all 13 apple trees and recorded fruit diameter benchmarks on bearing varieties: Freedom (2.5\"), NY-35 (2.75\"), Galarina (2.5\"), Novamac (2.5\"), and Enterprise (2.0\"). Deer pressure successfully stabilized following Deer Scram repellent deployment.",
       "loggedBy": "Joe"
@@ -324,7 +495,18 @@
       "date": "2026-07-05 (Twilight)",
       "title": "Final Nematode Application & Rain Synergy",
       "type": "Pest Management",
-      "tags": ["Freedom", "NY-35", "Enterprise", "Novamac", "Galarina", "Sansa", "Seckel (Pear)", "Williams' Pride (Older)", "Liberty", "Sundance"],
+      "tags": [
+        "Freedom",
+        "NY-35",
+        "Enterprise",
+        "Novamac",
+        "Galarina",
+        "Sansa",
+        "Seckel (Pear)",
+        "Williams' Pride (Older)",
+        "Liberty",
+        "Sundance"
+      ],
       "age": "bearing",
       "body": "Successfully distributed the remaining 5 million beneficial nematodes out across the drip lines of all bearing and developing blocks. Strategy executed precisely ahead of a substantial regional rainstorm to ensure ideal moisture film transport structures and immediate soil penetration. Total seasonal soil drench count officially complete at 13 million units.",
       "loggedBy": "Joe"
@@ -333,7 +515,13 @@
       "date": "2026-07-04",
       "title": "Trunk Barrier Deployment & Audit Counts",
       "type": "Pest Management",
-      "tags": ["Freedom", "NY-35", "Enterprise", "Novamac", "Galarina"],
+      "tags": [
+        "Freedom",
+        "NY-35",
+        "Enterprise",
+        "Novamac",
+        "Galarina"
+      ],
       "age": "bearing",
       "body": "Deployed localized crawling insect barriers across bearing trunks. Wrapped lower trunks with a protective base layer of Saran Wrap, topped with a 1-inch band of Tanglefoot positioned ~18 inches up the trunk line to insulate canopies from earwig and ant migration. External structural support posts flagged for observation. Completed comprehensive audit of active non-Freedom bagged fruit: NY-35: 37, Galarina: 20, Novamac: 17, Enterprise: 10 (84 units total).",
       "loggedBy": "Joe"
@@ -342,7 +530,9 @@
       "date": "Spring 2026",
       "title": "Initial Baseline Spring Feeding",
       "type": "Nutrition",
-      "tags": ["All Cultivars"],
+      "tags": [
+        "All Cultivars"
+      ],
       "age": "all",
       "body": "Applied initial baseline spring feeding consisting of 1/2 treatment dose of Tree-Tone and 2/3 dose of Coop Poop (organic calcium amendment).",
       "loggedBy": "Joe"
@@ -351,7 +541,13 @@
       "date": "Spring 2026",
       "title": "Protective Cover Sprays",
       "type": "Pest Management",
-      "tags": ["Freedom", "NY-35", "Enterprise", "Novamac", "Galarina"],
+      "tags": [
+        "Freedom",
+        "NY-35",
+        "Enterprise",
+        "Novamac",
+        "Galarina"
+      ],
       "age": "bearing",
       "body": "Completed 1 protective cover spray of Fertilome and 2 initial baseline preventive applications of Surround WP.",
       "loggedBy": "Joe"
@@ -360,7 +556,9 @@
       "date": "Spring 2026",
       "title": "Initial Nematode Sub-Surface Treatment",
       "type": "Pest Management",
-      "tags": ["All Cultivars"],
+      "tags": [
+        "All Cultivars"
+      ],
       "age": "all",
       "body": "Completed initial spring application of beneficial nematodes for early subterranean grub and Curculio pupae suppression.",
       "loggedBy": "Joe"
@@ -369,7 +567,10 @@
       "date": "2026-06-06",
       "title": "High-Density Surround WP Cover Spray",
       "type": "Pest Management",
-      "tags": ["Freedom", "NY-35"],
+      "tags": [
+        "Freedom",
+        "NY-35"
+      ],
       "age": "bearing",
       "body": "Applied heavy high-density Surround WP cover spray (2.5 cups/gallon). Noted Freedom canopy taking the brunt of current Curculio pressure; other varieties clear.",
       "loggedBy": "Joe"
@@ -378,7 +579,10 @@
       "date": "2026-06-06",
       "title": "Targeted Manual Hand-Thinning",
       "type": "Pest Management",
-      "tags": ["Freedom", "NY-35"],
+      "tags": [
+        "Freedom",
+        "NY-35"
+      ],
       "age": "bearing",
       "body": "Conducted targeted manual hand-thinning of the worst curculio-scarred fruitlets to break life cycle prior to June drop fallout.",
       "loggedBy": "Joe"
@@ -387,7 +591,12 @@
       "date": "2026-06-06",
       "title": "Secondary Booster Application",
       "type": "Nutrition",
-      "tags": ["Black Oxford", "Williams' Pride (Whip)", "SnowSweet", "NY 414-1"],
+      "tags": [
+        "Black Oxford",
+        "Williams' Pride (Whip)",
+        "SnowSweet",
+        "NY 414-1"
+      ],
       "age": "new",
       "body": "Applied targeted secondary booster dose of Tree-Tone to Black Oxford, Williams' Pride, SnowSweet, and NY 414-1 whips to accelerate structural framework development.",
       "loggedBy": "Joe"
@@ -396,7 +605,9 @@
       "date": "2026-06-06",
       "title": "Organic Mulch Application",
       "type": "Soil Management",
-      "tags": ["All Cultivars"],
+      "tags": [
+        "All Cultivars"
+      ],
       "age": "all",
       "body": "Spread fresh organic mulch layers around root zones to protect carbon-rich sandy loam topsoil and lock moisture above shallow water table.",
       "loggedBy": "Joe"
@@ -405,7 +616,9 @@
       "date": "2026-06-06",
       "title": "Rabbit Nesting Observation",
       "type": "Soil Management",
-      "tags": ["Freedom"],
+      "tags": [
+        "Freedom"
+      ],
       "age": "bearing",
       "body": "Discovered an active baby rabbit den directly adjacent to trunk. Confirmed rabbits are nesting completely outside of the fine hardware mesh/wire trunk guard; zero damage, bark completely protected.",
       "loggedBy": "Joe"
@@ -414,7 +627,9 @@
       "date": "2026-06-11 to 2026-06-13",
       "title": "Fruitlet Sanitation & Drop Control",
       "type": "Pest Management",
-      "tags": ["All Cultivars"],
+      "tags": [
+        "All Cultivars"
+      ],
       "age": "bearing",
       "body": "Collected and removed 1-2 lbs of June drop and curculio-marked fruitlets daily (~5-6 lbs total over 3 days) to disrupt the pest reproduction cycle before larval escape.",
       "loggedBy": "Joe"
@@ -423,7 +638,9 @@
       "date": "2026-06-13",
       "title": "Precision Fruitlet Thinning",
       "type": "Pest Management",
-      "tags": ["NY-35"],
+      "tags": [
+        "NY-35"
+      ],
       "age": "bearing",
       "body": "Completed precision fruitlet thinning and successfully hand-bagged fruitlets larger than quarter size.",
       "loggedBy": "Joe"
@@ -432,7 +649,13 @@
       "date": "2026-06-13",
       "title": "Emergency Deep Watering",
       "type": "Irrigation",
-      "tags": ["Freedom", "NY-35", "Enterprise", "Novamac", "Galarina"],
+      "tags": [
+        "Freedom",
+        "NY-35",
+        "Enterprise",
+        "Novamac",
+        "Galarina"
+      ],
       "age": "bearing",
       "body": "Emergency deep watering due to extreme heatwave. Hand-watered 10-20 gallons per tree via hose. Noted prominent new shoot drooping on higher-elevation trees; fully recovered post-irrigation.",
       "loggedBy": "Joe"
@@ -441,7 +664,9 @@
       "date": "2026-06-17",
       "title": "Larvae Behavior & Canopy Strategy",
       "type": "Pest Management",
-      "tags": ["Freedom"],
+      "tags": [
+        "Freedom"
+      ],
       "age": "all",
       "body": "Observed early fruitlet drop. Diagnostic cuts show curculio exit holes. Larvae do not remain in organza bags; they exit through mesh to dive into sandy loam. Confirms necessity of biological soil drenches. Benched generic spray schedules.",
       "loggedBy": "Joe"
@@ -450,7 +675,13 @@
       "date": "2026-06-18",
       "title": "Bagging Complete & Triage Discovery",
       "type": "Pest Management",
-      "tags": ["Freedom", "NY-35", "Enterprise", "Novamac", "Galarina"],
+      "tags": [
+        "Freedom",
+        "NY-35",
+        "Enterprise",
+        "Novamac",
+        "Galarina"
+      ],
       "age": "all",
       "body": "Completed bulk bagging runs; orchard totals reach ~300 bags hung. 100 organza bags placed in final pass (2/3 on Freedom, 1/3 across Galarina, Novamac, Enterprise). Culled 3 lbs of fruitlets. Breakdown: exactly 50% target crop load reduction, 50% curculio triage damage isolation.",
       "loggedBy": "Joe"
@@ -459,7 +690,9 @@
       "date": "2026-06-24",
       "title": "Precipitation Influx Dynamics",
       "type": "Irrigation",
-      "tags": ["All Cultivars"],
+      "tags": [
+        "All Cultivars"
+      ],
       "age": "all",
       "body": "Logged nearly 1.0 inch of slow, deep soaking rain across a 48-hour stretch. Sandy loam soil profile is highly saturated, providing excellent structural hydraulic tension and setting up ideal conditions for nematode movement.",
       "loggedBy": "Joe"
@@ -468,7 +701,9 @@
       "date": "2026-06-25",
       "title": "Undamaged Self-Thinning Event",
       "type": "Mature / Bearing",
-      "tags": ["Freedom"],
+      "tags": [
+        "Freedom"
+      ],
       "age": "all",
       "body": "Observed a single fruitlet drop on Freedom. Performed macro-examination: clean exterior, no curculio stings, or structural pinprick damage found. Determined to be automated load balancing ahead of thermal shifts.",
       "loggedBy": "Joe"
@@ -477,7 +712,9 @@
       "date": "2026-06-28",
       "title": "Sub-Surface Soil Pre-Soak",
       "type": "Irrigation",
-      "tags": ["All Cultivars"],
+      "tags": [
+        "All Cultivars"
+      ],
       "age": "all",
       "body": "Executed full sub-surface soil pre-soak across all blocks to ensure ideal moisture film structures ahead of the primary biological agent application.",
       "loggedBy": "Joe"
@@ -486,7 +723,9 @@
       "date": "2026-06-29 (Morning)",
       "title": "Habitat Optimization & Floor Management",
       "type": "Soil Management",
-      "tags": ["All Cultivars"],
+      "tags": [
+        "All Cultivars"
+      ],
       "age": "all",
       "body": "Weed whacked under-canopy floor across all blocks. Eliminated vegetative cover interception to guarantee direct, immediate soil contact for the nematode drench framework.",
       "loggedBy": "Joe"
@@ -495,7 +734,9 @@
       "date": "2026-06-29 (Twilight)",
       "title": "Primary Nematode Inundation Strike",
       "type": "Pest Management",
-      "tags": ["All Cultivars"],
+      "tags": [
+        "All Cultivars"
+      ],
       "age": "all",
       "body": "Successfully applied 8 million beneficial nematodes (Steinernema carpocapsae) across all 14 tree stations, extending fully out to the drip lines. Provided extra concentration under the high-pressure Freedom block to eliminate burrowing Curculio larvae. Staged remaining 5 million stock in cold storage.",
       "loggedBy": "Joe"

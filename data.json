@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "2026-08-27 22:08",
-  "lastUpdatedBy": "Rob",
+  "lastUpdated": "2026-08-27 22:53",
+  "lastUpdatedBy": "Wyatt",
   "inventoryData": [
     {
       "cultivar": "Freedom",
@@ -446,6 +446,12 @@
       "dia": null,
       "height": 68,
       "loggedBy": "Joe"
+    },
+    {
+      "date": "2026-08-27",
+      "tree": "Seckel (Pear)",
+      "loggedBy": "Rob",
+      "dia": 5
     }
   ],
   "harvestLogsData": [],

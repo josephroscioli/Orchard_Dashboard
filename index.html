@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Orchard Management Dashboard - 2026</title>
+    <title>Orchard Management Dashboard</title>
     <style>
         *, *::before, *::after { box-sizing: border-box; }
         body {
@@ -457,8 +457,8 @@
 <body>
 
     <header>
-        <h1>Orchard Tactical Dashboard</h1>
-        <p>14-Tree Management Framework • August 2026 State</p>
+        <h1>Roscioli Orchard Dashboard</h1>
+        <p>14-Tree Management Framework</p>
         <span class="sync-status" id="last-updated-display">Last Synced: Loading...</span>
         <div class="header-actions">
             <button class="header-btn header-btn-login" id="login-toggle-btn" onclick="handleAuthToggle()">🔒 Login</button>
@@ -748,12 +748,7 @@
         </div>
 
         <div id="logs" class="tab-content">
-            <h2>Chronological Field Logs &amp; Triage Rules</h2>
-            
-            <div style="background-color: #f8fafc; border-left: 4px solid #1b4332; padding: 10px 14px; margin-bottom: 16px; font-size: 10pt;">
-                <strong>STRICT CODIFIED TRIAGE PROTOCOL:</strong> Any visual sign of insect surface sting or pinprick = automatic cull. Zero labor spent on marginal fruitlets. Maximize return on labor hours as orchard scales.
-            </div>
-
+           
             <div class="filter-section" style="margin-bottom: 20px;">
                 <span class="filter-label">Filter Logs by Cultivar Tag:</span>
                 <select id="logCultivarFilter" class="filter-select" onchange="renderLogs()"></select>

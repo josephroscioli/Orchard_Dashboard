@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "2026-08-28 10:53",
-  "lastUpdatedBy": "Wyatt",
+  "lastUpdated": "2026-08-28 18:48",
+  "lastUpdatedBy": "Rob",
   "inventoryData": [
     {
       "cultivar": "Freedom",
@@ -450,6 +450,18 @@
   ],
   "harvestLogsData": [],
   "logsData": [
+    {
+      "date": "2026-08-28",
+      "title": "Red spots",
+      "type": "Growth & Orchard Status",
+      "tags": [
+        "Freedom",
+        "NY-35"
+      ],
+      "age": "all",
+      "body": "Noticing lots of red spot on some apples. Likely pin-prick stings, which have healed up but left a red spot.",
+      "loggedBy": "Rob"
+    },
     {
       "date": "2026-08-28",
       "title": "Concerns About Apple Droppage",

@@ -650,6 +650,10 @@
             <div id="activeGraphsContainer"></div>
 
             <h3>Recorded Growth Measurements History</h3>
+            <div class="filter-section" style="margin-bottom: 12px;">
+                <span class="filter-label">Filter Metrics by Cultivar:</span>
+                <select id="growthCultivarFilter" class="filter-select" onchange="renderGrowthTable()"></select>
+            </div>
             <div class="table-responsive">
                 <table>
                     <thead>
@@ -688,6 +692,10 @@
             </div>
 
             <h3>Recorded Harvest Logs</h3>
+            <div class="filter-section" style="margin-bottom: 12px;">
+                <span class="filter-label">Filter Harvest Logs by Cultivar:</span>
+                <select id="harvestCultivarFilter" class="filter-select" onchange="renderHarvestLogs()"></select>
+            </div>
             <div class="table-responsive">
                 <table>
                     <thead>
@@ -759,8 +767,8 @@
                     <input type="text" id="newLogDate" placeholder="e.g. 2026-08-27 or Spring 2026">
                 </div>
                 <div class="control-group">
-                    <label for="newLogTitle">Title / Summary</label>
-                    <input type="text" id="newLogTitle" placeholder="e.g. Mid-August Inspection &amp; Soak">
+                    <label for="newLogTitle">Title / Summary (Optional)</label>
+                    <input type="text" id="newLogTitle" placeholder="e.g. Mid-August Inspection &amp; Soak (Optional)">
                 </div>
                 <div class="control-group">
                     <label for="newLogType">Type / Category</label>
@@ -789,7 +797,7 @@
                     <div class="checkbox-grid" id="logCultivarCheckboxes"></div>
                 </div>
                 <div class="control-group" style="grid-column: 1 / -1;">
-                    <label for="newLogBody">Log Details &amp; Observations</label>
+                    <label for="newLogBody">Log Details &amp; Observations *</label>
                     <textarea id="newLogBody" rows="4" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px; font-family: inherit; font-size: 9.5pt;" placeholder="Enter field log observations and operational findings..."></textarea>
                 </div>
                 <div class="control-group" style="grid-column: 1 / -1; display: flex; gap: 8px; justify-content: flex-end;">
@@ -1091,7 +1099,6 @@
             }
             var verification = prompt("🔒 DOUBLE VERIFICATION REQUIRED:\nType 'DELETE ALL DATA' below to confirm seasonal reset:");
             if (verification === "DELETE ALL DATA") {
-                // Keep master cultivars, reset loads/bags to 0
                 state.inventoryData.forEach(item => {
                     item.load = "0";
                     item.bags = "0";
@@ -1298,11 +1305,37 @@
             updateAuthorDisplayUI();
             setDefaultDates();
             renderInventoryTable();
+            renderAllCultivarFilterOptions();
             renderLogs();
             renderGrowthTabUI();
             renderHarvestLogs();
             renderAbundances();
             renderHarvestTimeline();
+        }
+
+        function renderAllCultivarFilterOptions() {
+            var options = '<option value="all">All Cultivars</option>' + state.inventoryData.map(i => `<option value="${i.cultivar}">${i.cultivar}</option>`).join('');
+            
+            var logFilter = document.getElementById('logCultivarFilter');
+            if (logFilter) {
+                var curr = logFilter.value;
+                logFilter.innerHTML = options;
+                logFilter.value = curr || 'all';
+            }
+
+            var harvestFilter = document.getElementById('harvestCultivarFilter');
+            if (harvestFilter) {
+                var currH = harvestFilter.value;
+                harvestFilter.innerHTML = options;
+                harvestFilter.value = currH || 'all';
+            }
+
+            var growthFilter = document.getElementById('growthCultivarFilter');
+            if (growthFilter) {
+                var currG = growthFilter.value;
+                growthFilter.innerHTML = options;
+                growthFilter.value = currG || 'all';
+            }
         }
 
         function formatDateRange(startDateStr, endDateStr, defaultText) {
@@ -1672,13 +1705,6 @@
         }
 
         function renderLogCultivarControls() {
-            var filterSelect = document.getElementById('logCultivarFilter');
-            if (filterSelect) {
-                var curr = filterSelect.value;
-                filterSelect.innerHTML = '<option value="all">All Cultivars</option>' + state.inventoryData.map(i => `<option value="${i.cultivar}">${i.cultivar}</option>`).join('');
-                filterSelect.value = curr || 'all';
-            }
-
             var grid = document.getElementById('logCultivarCheckboxes');
             if (grid) {
                 grid.innerHTML = `<label class="checkbox-item" style="font-weight: bold; width: 100%; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px; margin-bottom: 4px;">
@@ -1702,7 +1728,11 @@
             var tbody = document.getElementById('harvestTableBody');
             if (!tbody) return;
             tbody.innerHTML = '';
+            var selectedCultivar = document.getElementById('harvestCultivarFilter') ? document.getElementById('harvestCultivarFilter').value : 'all';
+
             state.harvestLogsData.forEach((log, index) => {
+                if (selectedCultivar !== 'all' && log.cultivar !== selectedCultivar) return;
+
                 var tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td>${log.date}</td>
@@ -1775,7 +1805,7 @@
                 var tagBadgesHTML = tags.map(t => `<span class="badge badge-tag">${t}</span>`).join(' ');
 
                 card.innerHTML = `
-                    <div class="card-title">${log.date} - ${log.title}</div>
+                    <div class="card-title">${log.date} - ${log.title || 'Field Observation'}</div>
                     <div class="card-meta">
                         <span class="user-tag">${log.loggedBy || 'Rob'}</span> • <span class="badge badge-bearing">${log.type}</span> • Tags: ${tagBadgesHTML}
                     </div>
@@ -1792,9 +1822,12 @@
 
         function saveLogEntry() {
             var dateVal = document.getElementById('newLogDate').value.trim();
-            var titleVal = document.getElementById('newLogTitle').value.trim();
+            var titleVal = document.getElementById('newLogTitle').value.trim() || 'Field Observation';
             var bodyVal = document.getElementById('newLogBody').value.trim();
-            if (!dateVal || !titleVal || !bodyVal) return;
+            if (!dateVal || !bodyVal) {
+                alert("Please ensure both the Log Date and Log Details fields are filled out.");
+                return;
+            }
 
             var entry = {
                 date: dateVal, title: titleVal,
@@ -1818,7 +1851,7 @@
             if (!log) return;
             document.getElementById('editLogIndex').value = index;
             document.getElementById('newLogDate').value = log.date;
-            document.getElementById('newLogTitle').value = log.title;
+            document.getElementById('newLogTitle').value = log.title || '';
             document.getElementById('newLogType').value = log.type;
             document.getElementById('newLogAge').value = log.age || 'all';
             document.getElementById('newLogBody').value = log.body;
@@ -2101,7 +2134,11 @@
             var tbody = document.getElementById('growthTableBody');
             if (!tbody) return;
             tbody.innerHTML = '';
+            var selectedCultivar = document.getElementById('growthCultivarFilter') ? document.getElementById('growthCultivarFilter').value : 'all';
+
             state.growthData.forEach((item, index) => {
+                if (selectedCultivar !== 'all' && item.tree !== selectedCultivar) return;
+
                 var valCols = state.metricsRegistry.map(m => `<td>${item[m.key] !== undefined && item[m.key] !== null ? item[m.key] : '—'}</td>`).join('');
                 var tr = document.createElement('tr');
                 tr.innerHTML = `<td>${item.date}</td><td><strong>${item.tree}</strong></td>${valCols}<td><span class="user-tag">${item.loggedBy || 'Rob'}</span></td><td style="text-align:right;">

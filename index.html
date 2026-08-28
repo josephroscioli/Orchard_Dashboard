@@ -320,7 +320,7 @@
 
         .controls-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 12px;
             background: #f8fafc;
             padding: 14px;
@@ -329,15 +329,28 @@
             margin-bottom: 16px;
         }
         .control-group { display: flex; flex-direction: column; gap: 4px; }
-        .control-group label { font-size: 9pt; font-weight: 600; color: #4a5568; display: flex; justify-content: space-between; align-items: center; }
-        .control-group input, .control-group select { padding: 6px 10px; font-size: 9.5pt; border: 1px solid #cbd5e1; border-radius: 4px; }
+        .control-group label { font-size: 8.5pt; font-weight: 600; color: #4a5568; display: flex; justify-content: space-between; align-items: center; }
+        .control-group input, .control-group select { padding: 6px 8px; font-size: 9pt; border: 1px solid #cbd5e1; border-radius: 4px; }
         
+        .btn-autoscale {
+            background: #4a5568;
+            color: white;
+            border: none;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 7.5pt;
+            font-weight: 600;
+            cursor: pointer;
+            margin-left: 4px;
+        }
+        .btn-autoscale:hover { background: #2d3748; }
+
         .control-group-span-2 { grid-column: span 2; }
         @media (max-width: 600px) { .control-group-span-2 { grid-column: span 1; } }
 
         .checkbox-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
             gap: 8px;
             background: white;
             border: 1px solid #cbd5e1;
@@ -346,8 +359,17 @@
             max-height: 180px;
             overflow-y: auto;
         }
-        .checkbox-item { display: flex; align-items: center; gap: 6px; font-size: 9pt; color: #334155; cursor: pointer; }
-        .checkbox-item input[type="checkbox"] { cursor: pointer; }
+        .checkbox-item { 
+            display: inline-flex; 
+            align-items: center; 
+            justify-content: flex-start; 
+            gap: 6px; 
+            font-size: 9pt; 
+            color: #334155; 
+            cursor: pointer; 
+            width: auto;
+        }
+        .checkbox-item input[type="checkbox"] { cursor: pointer; margin: 0; }
 
         .date-range-picker-container {
             display: flex;
@@ -428,7 +450,7 @@
         <p>14-Tree Management Framework • August 2026 State</p>
         <span class="sync-status" id="last-updated-display">Last Synced: Loading...</span>
         <div class="header-actions">
-            <button class="header-btn header-btn-login" onclick="promptPinLogin()">🔒 Login</button>
+            <button class="header-btn header-btn-login" id="login-toggle-btn" onclick="handleAuthToggle()">🔒 Login</button>
             <button class="header-btn header-btn-load" id="load-file-btn" onclick="fetchRepoData(true)">📥 Load Latest</button>
             <button class="header-btn" id="save-file-btn" onclick="saveDashboardFile()">💾 Save &amp; Sync</button>
         </div>
@@ -941,6 +963,7 @@
             logsData: []
         };
 
+        var graphScaleConfig = {};
         var currentUserAuthor = localStorage.getItem('orchard_active_author') || '';
         var currentUserPin = localStorage.getItem('orchard_user_pin') || '';
         var chartInstances = {};
@@ -964,16 +987,43 @@
             if (logDateEl && !logDateEl.value) logDateEl.value = todayStr;
         }
 
+        function handleAuthToggle() {
+            if (currentUserAuthor || currentUserPin) {
+                // Logout
+                currentUserAuthor = '';
+                currentUserPin = '';
+                localStorage.removeItem('orchard_active_author');
+                localStorage.removeItem('orchard_user_pin');
+                updateAuthorDisplayUI();
+            } else {
+                // Login
+                promptPinLogin();
+            }
+        }
+
         function updateAuthorDisplayUI() {
             var displayEl = document.getElementById('active-user-display');
             var tagEl = document.getElementById('author-display-tag');
+            var toggleBtn = document.getElementById('login-toggle-btn');
 
             if (currentUserAuthor) {
                 if (displayEl) displayEl.innerText = `${currentUserAuthor} logged in`;
                 if (tagEl) tagEl.innerText = `(Authenticated via Worker PIN • Last sync by: ${state.lastUpdatedBy || currentUserAuthor})`;
+                if (toggleBtn) {
+                    toggleBtn.innerText = "🔓 Logout";
+                    toggleBtn.style.backgroundColor = "#c53030";
+                    toggleBtn.style.borderColor = "#feb2b2";
+                    toggleBtn.style.color = "white";
+                }
             } else {
                 if (displayEl) displayEl.innerText = "Not Logged In";
                 if (tagEl) tagEl.innerText = `(Click "🔒 Login" to authenticate PIN • Last sync by: ${state.lastUpdatedBy || 'System'})`;
+                if (toggleBtn) {
+                    toggleBtn.innerText = "🔒 Login";
+                    toggleBtn.style.backgroundColor = "#d69e2e";
+                    toggleBtn.style.borderColor = "#f6e05e";
+                    toggleBtn.style.color = "#1a202c";
+                }
             }
         }
 
@@ -984,7 +1034,6 @@
             inputPin = inputPin.trim();
 
             try {
-                // Test PIN with Worker using non-committing verification action
                 var res = await fetch(WORKER_URL, {
                     method: "POST",
                     headers: {
@@ -1508,7 +1557,7 @@
             if (grid) {
                 grid.innerHTML = `<label class="checkbox-item" style="font-weight: bold; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px; grid-column: 1 / -1;">
                     <input type="checkbox" id="tag_all_cultivars" onchange="toggleAllLogCultivars(this.checked)"> All Cultivars
-                </label>` + state.inventoryData.map(i => `<label class="checkbox-item"><input type="checkbox" class="log-cultivar-cb" value="${i.cultivar}"> ${i.cultivar}</label>`).join('');
+                </label>` + state.inventoryData.map(i => `<label class="checkbox-item"><input type="checkbox" class="log-cultivar-cb" value="${i.cultivar}"> <span>${i.cultivar}</span></label>`).join('');
             }
         }
 
@@ -1687,6 +1736,7 @@
 
         function removeGraph(key) {
             state.activeGraphKeys = state.activeGraphKeys.filter(k => k !== key);
+            delete graphScaleConfig[key];
             saveState();
         }
 
@@ -1749,6 +1799,21 @@
             handle.addEventListener('touchstart', onPointerDown, { passive: false });
         }
 
+        function updateGraphScale(key, field, value) {
+            if (!graphScaleConfig[key]) graphScaleConfig[key] = {};
+            graphScaleConfig[key][field] = value ? value : null;
+            renderGrowthCharts();
+        }
+
+        function autoScaleGraphAxis(key, field) {
+            if (graphScaleConfig[key]) {
+                graphScaleConfig[key][field] = null;
+            }
+            var el = document.getElementById(`${key}_${field}`);
+            if (el) el.value = '';
+            renderGrowthCharts();
+        }
+
         function renderActiveGraphsHTML() {
             var container = document.getElementById('activeGraphsContainer');
             if (!container) return;
@@ -1758,6 +1823,7 @@
             state.activeGraphKeys.forEach(key => {
                 var m = state.metricsRegistry.find(item => item.key === key);
                 if (!m) return;
+                var cfg = graphScaleConfig[key] || {};
                 var card = document.createElement('div');
                 card.innerHTML = `
                     <div class="graph-card-header">
@@ -1765,9 +1831,25 @@
                         <button class="btn-close-x" onclick="removeGraph('${m.key}')">×</button>
                     </div>
                     <div class="controls-grid">
-                        <div class="control-group" style="grid-column: 1 / -1;">
-                            <label>Highlight Tree</label>
+                        <div class="control-group control-group-span-2" style="grid-column: 1 / -1;">
+                            <label style="font-weight: bold; color: #2d3748;">Highlight Tree / Cultivar</label>
                             <select id="${m.key}HighlightSelect" onchange="renderGrowthCharts()">${treeOptionsHTML}</select>
+                        </div>
+                        <div class="control-group">
+                            <label>X-Min (Date / auto) <button class="btn-autoscale" onclick="autoScaleGraphAxis('${m.key}', 'xMin')">auto scale</button></label>
+                            <input type="date" id="${m.key}_xMin" value="${cfg.xMin || ''}" onchange="updateGraphScale('${m.key}', 'xMin', this.value)">
+                        </div>
+                        <div class="control-group">
+                            <label>X-Max (Date / auto) <button class="btn-autoscale" onclick="autoScaleGraphAxis('${m.key}', 'xMax')">auto scale</button></label>
+                            <input type="date" id="${m.key}_xMax" value="${cfg.xMax || ''}" onchange="updateGraphScale('${m.key}', 'xMax', this.value)">
+                        </div>
+                        <div class="control-group">
+                            <label>Y-Min (${m.unit} / auto) <button class="btn-autoscale" onclick="autoScaleGraphAxis('${m.key}', 'yMin')">auto scale</button></label>
+                            <input type="number" step="any" id="${m.key}_yMin" value="${cfg.yMin !== undefined && cfg.yMin !== null ? cfg.yMin : ''}" onchange="updateGraphScale('${m.key}', 'yMin', this.value)">
+                        </div>
+                        <div class="control-group">
+                            <label>Y-Max (${m.unit} / auto) <button class="btn-autoscale" onclick="autoScaleGraphAxis('${m.key}', 'yMax')">auto scale</button></label>
+                            <input type="number" step="any" id="${m.key}_yMax" value="${cfg.yMax !== undefined && cfg.yMax !== null ? cfg.yMax : ''}" onchange="updateGraphScale('${m.key}', 'yMax', this.value)">
                         </div>
                     </div>
                     <div class="plot-wrapper" id="${m.key}_wrapper"><canvas id="${m.key}Chart"></canvas></div>
@@ -1805,13 +1887,29 @@
                     }
                 });
 
+                var cfg = graphScaleConfig[key] || {};
+                var xScaleOpts = { type: 'time' };
+                if (cfg.xMin) xScaleOpts.min = cfg.xMin;
+                if (cfg.xMax) xScaleOpts.max = cfg.xMax;
+
+                var yScaleOpts = {};
+                if (cfg.yMin !== undefined && cfg.yMin !== null && cfg.yMin !== '') yScaleOpts.min = parseFloat(cfg.yMin);
+                if (cfg.yMax !== undefined && cfg.yMax !== null && cfg.yMax !== '') yScaleOpts.max = parseFloat(cfg.yMax);
+
                 if (chartInstances[m.key]) chartInstances[m.key].destroy();
                 var canvas = document.getElementById(m.key + 'Chart');
                 if (canvas) {
                     chartInstances[m.key] = new Chart(canvas.getContext('2d'), {
                         type: 'line',
                         data: { datasets: datasets },
-                        options: { responsive: true, maintainAspectRatio: false, scales: { x: { type: 'time' } } }
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            scales: {
+                                x: xScaleOpts,
+                                y: yScaleOpts
+                            }
+                        }
                     });
                 }
             });

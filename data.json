@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "2026-08-27 22:54",
-  "lastUpdatedBy": "Wyatt",
+  "lastUpdated": "2026-08-28 08:05",
+  "lastUpdatedBy": "Rob",
   "inventoryData": [
     {
       "cultivar": "Freedom",
@@ -450,6 +450,17 @@
   ],
   "harvestLogsData": [],
   "logsData": [
+    {
+      "date": "2026-08-28",
+      "title": "Field Observation",
+      "type": "General Observation",
+      "tags": [
+        "Novamac"
+      ],
+      "age": "all",
+      "body": "Two apples on novamac that were in paper bags have fallen off, they're extremely white. For paper-bagged fruit the bags need to come off a few weeks before harvest to get the skins to redden.",
+      "loggedBy": "Rob"
+    },
     {
       "date": "2026-08-22",
       "title": "Late-August Post-Vacation Audit, Deep Soak & Rot Inspection",

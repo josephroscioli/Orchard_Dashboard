@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "2026-08-28 08:05",
-  "lastUpdatedBy": "Rob",
+  "lastUpdated": "2026-08-28 10:53",
+  "lastUpdatedBy": "Wyatt",
   "inventoryData": [
     {
       "cultivar": "Freedom",
@@ -450,6 +450,18 @@
   ],
   "harvestLogsData": [],
   "logsData": [
+    {
+      "date": "2026-08-28",
+      "title": "Concerns About Apple Droppage",
+      "type": "Mature / Bearing",
+      "tags": [
+        "Novamac",
+        "Galarina"
+      ],
+      "age": "bearing",
+      "body": "The Novamac has dropped many apples; I am worried about the Novamac. I am concerned because the Novamac has dropped many apples; it makes me paranoid, not knowing what will happen. They were not ripe apples; the tree simply gave up on them. They were relatively large apples. They were almost white. I hypothesize that this may be due to the lack of sunlight. On the other hand, the Galarina is doing great!!!",
+      "loggedBy": "Wyatt"
+    },
     {
       "date": "2026-08-28",
       "title": "Field Observation",

@@ -17,10 +17,13 @@
         header {
             background-color: #1b4332;
             color: white;
-            padding: 20px 16px;
+            padding: 16px;
             text-align: center;
             border-bottom: 4px solid #40916c;
-            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
         }
         header h1 {
             margin: 0;
@@ -29,17 +32,18 @@
             letter-spacing: -0.5px;
         }
         header p {
-            margin: 5px 0 0 0;
+            margin: 0;
             font-size: 11pt;
             color: #b7e4c7;
         }
         .header-actions {
-            position: absolute;
-            top: 18px;
-            right: 20px;
             display: flex;
             gap: 8px;
             align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            width: 100%;
+            margin-top: 6px;
         }
         .header-btn {
             background-color: #2b6cb0;
@@ -52,6 +56,7 @@
             cursor: pointer;
             box-shadow: 0 2px 4px rgba(0,0,0,0.15);
             transition: background-color 0.15s ease, transform 0.05s ease;
+            white-space: nowrap;
         }
         .header-btn:hover { background-color: #2c5282; }
         .header-btn:active { transform: scale(0.98); }
@@ -68,9 +73,6 @@
         .header-btn-login:hover { background-color: #b7791f; color: white; }
         
         .sync-status {
-            position: absolute;
-            top: 25px;
-            left: 20px;
             font-size: 9pt;
             color: #b7e4c7;
             font-weight: 500;
@@ -89,6 +91,8 @@
             align-items: center;
             justify-content: space-between;
             font-size: 9.5pt;
+            flex-wrap: wrap;
+            gap: 6px;
         }
         .filter-section {
             background-color: white;
@@ -191,7 +195,7 @@
         .badge-tag { background-color: #e2e8f0; color: #334155; border: 1px solid #cbd5e1; font-weight: 600; text-transform: none; }
         .user-tag { background-color: #e0e7ff; color: #3730a3; padding: 2px 6px; border-radius: 4px; font-size: 8pt; font-weight: bold; }
 
-        .table-responsive { width: 100%; overflow-x: visible; }
+        .table-responsive { width: 100%; overflow-x: auto; margin-bottom: 16px; }
         table { width: 100%; border-collapse: collapse; font-size: 9pt; text-align: left; }
         th {
             background-color: #f1f5f9;
@@ -216,7 +220,7 @@
             padding: 6px 4px;
         }
         
-        .chart-container { margin: 20px 0; }
+        .chart-container { margin: 20px 0; width: 100%; }
         .chart-row { display: table; width: 100%; margin-bottom: 12px; }
         .chart-label { display: table-cell; width: 30%; font-weight: 600; font-size: 10pt; vertical-align: middle; }
         .chart-bar-wrapper { display: table-cell; width: 55%; vertical-align: middle; padding-right: 10px; }
@@ -229,27 +233,29 @@
             border-radius: 8px;
             padding: 20px 14px;
             margin: 15px 0 30px 0;
+            overflow-x: auto;
         }
-        .timeline-row-item { display: flex; margin-bottom: 10px; }
+        .timeline-row-item { display: flex; margin-bottom: 12px; align-items: center; min-width: 600px; }
         .grid-side-label { width: 22%; font-weight: 600; font-size: 10pt; color: #334155; padding-right: 10px; display: flex; align-items: center; }
         .grid-main-content { width: 78%; position: relative; }
-        .timeline-track-lane { width: 100%; height: 26px; background-color: #e2e8f0; border-radius: 4px; position: relative; }
+        .timeline-track-lane { width: 100%; min-height: 32px; background-color: #e2e8f0; border-radius: 4px; position: relative; display: flex; align-items: center; }
         .timeline-span-bar {
             position: absolute;
-            height: 100%;
+            min-height: 28px;
+            top: 2px;
             background: linear-gradient(90deg, #f59e0b, #d97706);
             border-radius: 4px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 8.5pt;
+            font-size: 8pt;
             font-weight: bold;
             box-shadow: 0 2px 4px rgba(0,0,0,0.08);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            padding: 0 4px;
+            padding: 2px 6px;
+            text-align: center;
+            line-height: 1.1;
+            word-break: break-word;
         }
         .timeline-span-bar.pear { background: linear-gradient(90deg, #84cc16, #65a30d); }
         .timeline-span-bar.zero-load { background: #cbd5e1 !important; color: #475569 !important; font-weight: normal; }
@@ -368,16 +374,31 @@
             border: 1px solid #cbd5e1;
             border-radius: 6px;
             padding: 12px;
-            margin-bottom: 24px;
+            margin-bottom: 8px;
             position: relative;
-            resize: both;
-            overflow: auto;
             width: 100%;
             height: 400px;
-            min-width: 300px;
             min-height: 200px;
         }
         .plot-wrapper canvas { width: 100% !important; height: 100% !important; }
+        .graph-resize-handle {
+            height: 14px;
+            background: #e2e8f0;
+            border: 1px solid #cbd5e1;
+            border-radius: 0 0 6px 6px;
+            cursor: ns-resize;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+            touch-action: none;
+        }
+        .graph-resize-handle::after {
+            content: "•••";
+            color: #64748b;
+            font-size: 8pt;
+            letter-spacing: 2px;
+        }
         .graph-card-header {
             display: flex;
             justify-content: space-between;
@@ -403,9 +424,9 @@
 <body>
 
     <header>
-        <span class="sync-status" id="last-updated-display">Last Synced: Loading...</span>
         <h1>Orchard Tactical Dashboard</h1>
         <p>14-Tree Management Framework • August 2026 State</p>
+        <span class="sync-status" id="last-updated-display">Last Synced: Loading...</span>
         <div class="header-actions">
             <button class="header-btn header-btn-login" onclick="promptPinLogin()">🔒 Login</button>
             <button class="header-btn header-btn-load" id="load-file-btn" onclick="fetchRepoData(true)">📥 Load Latest</button>
@@ -701,7 +722,7 @@
                 <input type="hidden" id="editLogIndex" value="-1">
                 <div class="control-group">
                     <label for="newLogDate">Log Date / Period</label>
-                    <input type="text" id="newLogDate" placeholder="e.g. 2026-08-25 or Spring 2026">
+                    <input type="text" id="newLogDate" placeholder="e.g. 2026-08-27 or Spring 2026">
                 </div>
                 <div class="control-group">
                     <label for="newLogTitle">Title / Summary</label>
@@ -756,7 +777,7 @@
             <div id="abundanceChart" class="chart-container"></div>
 
             <h3>Edit Cultivar Abundance Values</h3>
-            <div class="table-responsive" style="margin-top: 12px;">
+            <div class="table-responsive">
                 <table>
                     <thead>
                         <tr>
@@ -765,7 +786,7 @@
                             <th>Est. Ripening</th>
                             <th>Est. Load / Yield</th>
                             <th>Bags Hung</th>
-                            <th>Actions</th>
+                            <th style="text-align: right;">Actions</th>
                         </tr>
                     </thead>
                     <tbody id="abundanceTableBody"></tbody>
@@ -924,12 +945,31 @@
         var currentUserPin = localStorage.getItem('orchard_user_pin') || '';
         var chartInstances = {};
 
+        function getTodayISO() {
+            var today = new Date();
+            var yyyy = today.getFullYear();
+            var mm = String(today.getMonth() + 1).padStart(2, '0');
+            var dd = String(today.getDate()).padStart(2, '0');
+            return `${yyyy}-${mm}-${dd}`;
+        }
+
+        function setDefaultDates() {
+            var todayStr = getTodayISO();
+            var dateInputs = ['entryDate', 'harvestDate', 'invBloomStart', 'invBloomEnd', 'invRipeningStart', 'invRipeningEnd'];
+            dateInputs.forEach(id => {
+                var el = document.getElementById(id);
+                if (el && !el.value) el.value = todayStr;
+            });
+            var logDateEl = document.getElementById('newLogDate');
+            if (logDateEl && !logDateEl.value) logDateEl.value = todayStr;
+        }
+
         function updateAuthorDisplayUI() {
             var displayEl = document.getElementById('active-user-display');
             var tagEl = document.getElementById('author-display-tag');
 
             if (currentUserAuthor) {
-                if (displayEl) displayEl.innerText = currentUserAuthor;
+                if (displayEl) displayEl.innerText = `${currentUserAuthor} logged in`;
                 if (tagEl) tagEl.innerText = `(Authenticated via Worker PIN • Last sync by: ${state.lastUpdatedBy || currentUserAuthor})`;
             } else {
                 if (displayEl) displayEl.innerText = "Not Logged In";
@@ -944,14 +984,14 @@
             inputPin = inputPin.trim();
 
             try {
-                // Test PIN with Worker
+                // Test PIN with Worker using non-committing verification action
                 var res = await fetch(WORKER_URL, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                         "X-Orchard-Auth": inputPin
                     },
-                    body: JSON.stringify({ data: state })
+                    body: JSON.stringify({ action: "verify_pin" })
                 });
 
                 var resData = await res.json().catch(() => ({}));
@@ -966,7 +1006,6 @@
                     localStorage.setItem('orchard_user_pin', currentUserPin);
                     state.lastUpdatedBy = currentUserAuthor;
                     saveState();
-                    alert(`Welcome, ${currentUserAuthor}! PIN verified successfully.`);
                 }
             } catch (err) {
                 alert("Login Failed: " + err.message);
@@ -977,7 +1016,6 @@
             return currentUserAuthor || 'Rob';
         }
 
-        // DECOUPLED SYNC ENGINE: Load latest data.json from repository
         async function fetchRepoData(isManualTrigger = false) {
             var loadBtn = document.getElementById('load-file-btn');
             if (loadBtn && isManualTrigger) {
@@ -1040,7 +1078,6 @@
             renderAll();
         }
 
-        // DECOUPLED SYNC ENGINE: Push current local state to GitHub repository via Cloudflare Worker
         async function saveDashboardFile() {
             var btn = document.getElementById('save-file-btn');
 
@@ -1092,6 +1129,7 @@
 
         function renderAll() {
             updateAuthorDisplayUI();
+            setDefaultDates();
             renderInventoryTable();
             renderLogs();
             renderGrowthTabUI();
@@ -1232,10 +1270,10 @@
             document.getElementById('invYearPlanted').value = item.yearPlanted || '';
             document.getElementById('invAgeAtPlanting').value = item.ageAtPlanting || '';
             document.getElementById('invRootstock').value = item.rootstock || '';
-            document.getElementById('invBloomStart').value = item.bloomStart || '';
-            document.getElementById('invBloomEnd').value = item.bloomEnd || '';
-            document.getElementById('invRipeningStart').value = item.ripeningStart || '';
-            document.getElementById('invRipeningEnd').value = item.ripeningEnd || '';
+            document.getElementById('invBloomStart').value = item.bloomStart || getTodayISO();
+            document.getElementById('invBloomEnd').value = item.bloomEnd || getTodayISO();
+            document.getElementById('invRipeningStart').value = item.ripeningStart || getTodayISO();
+            document.getElementById('invRipeningEnd').value = item.ripeningEnd || getTodayISO();
             document.getElementById('invLoad').value = item.load || '';
             document.getElementById('invBags').value = item.bags || '';
             document.getElementById('invColor').value = item.color || '#1b4332';
@@ -1255,16 +1293,17 @@
         }
 
         function resetInventoryForm() {
+            var todayStr = getTodayISO();
             document.getElementById('editInventoryIndex').value = -1;
             document.getElementById('invCultivar').value = '';
             document.getElementById('invAgeCat').value = 'bearing';
             document.getElementById('invYearPlanted').value = '';
             document.getElementById('invAgeAtPlanting').value = '';
             document.getElementById('invRootstock').value = '';
-            document.getElementById('invBloomStart').value = '';
-            document.getElementById('invBloomEnd').value = '';
-            document.getElementById('invRipeningStart').value = '';
-            document.getElementById('invRipeningEnd').value = '';
+            document.getElementById('invBloomStart').value = todayStr;
+            document.getElementById('invBloomEnd').value = todayStr;
+            document.getElementById('invRipeningStart').value = todayStr;
+            document.getElementById('invRipeningEnd').value = todayStr;
             document.getElementById('invLoad').value = '';
             document.getElementById('invBags').value = '';
             document.getElementById('invColor').value = '#1b4332';
@@ -1335,7 +1374,10 @@
                     <td>${ripeningDisplay}</td>
                     <td><input type="text" class="abundance-edit-input" value="${item.load}" onchange="updateAbundanceValue(${originalIndex}, this.value)"></td>
                     <td><input type="text" class="abundance-edit-input" style="width: 70px;" value="${item.bags}" onchange="updateBagsValue(${originalIndex}, this.value)"></td>
-                    <td><button class="btn-action" style="padding: 3px 8px; font-size: 8pt;" onclick="renderInventoryTable()">Sync Master</button></td>
+                    <td style="text-align: right; white-space: nowrap;">
+                        <button class="btn-action" style="padding: 4px 8px; font-size: 8pt; background-color: #2b6cb0;" onclick="editInventoryRecord(${originalIndex})">Edit</button>
+                        <button class="btn-action" style="padding: 4px 8px; font-size: 8pt; background-color: #9b2c2c;" onclick="deleteInventoryRecord(${originalIndex})">Delete</button>
+                    </td>
                 `;
                 tableBody.appendChild(tr);
             });
@@ -1371,7 +1413,7 @@
 
                 var leftPct = Math.max(0, Math.min(100, ((clampedStart - rangeStart) / (1000 * 60 * 60 * 24) / totalDays) * 100));
                 var rightPct = Math.max(0, Math.min(100, ((clampedEnd - rangeStart) / (1000 * 60 * 60 * 24) / totalDays) * 100));
-                var widthPct = Math.max(2, rightPct - leftPct);
+                var widthPct = Math.max(4, rightPct - leftPct);
 
                 var activeWeeks = [];
                 timelineWeeks.forEach((w, idx) => {
@@ -1536,7 +1578,7 @@
 
         function resetHarvestForm() {
             document.getElementById('editHarvestIndex').value = -1;
-            document.getElementById('harvestDate').valueAsDate = new Date();
+            document.getElementById('harvestDate').value = getTodayISO();
             document.getElementById('harvestQuantity').value = '';
             document.getElementById('saveHarvestBtn').innerText = 'Log Harvest';
             document.getElementById('cancelHarvestBtn').style.display = 'none';
@@ -1618,7 +1660,7 @@
 
         function resetLogForm() {
             document.getElementById('editLogIndex').value = -1;
-            document.getElementById('newLogDate').value = new Date().toISOString().split('T')[0];
+            document.getElementById('newLogDate').value = getTodayISO();
             document.getElementById('newLogTitle').value = '';
             document.getElementById('newLogBody').value = '';
             document.getElementById('saveLogBtn').innerText = 'Add Log Entry';
@@ -1673,6 +1715,40 @@
             `).join('');
         }
 
+        function makeGraphResizable(wrapperId, key) {
+            var wrapper = document.getElementById(wrapperId);
+            var handle = document.getElementById(wrapperId + '_handle');
+            if (!wrapper || !handle) return;
+
+            var startY, startH;
+
+            var onPointerMove = function(e) {
+                var clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                var newH = Math.max(200, startH + (clientY - startY));
+                wrapper.style.height = newH + 'px';
+                if (chartInstances[key]) chartInstances[key].resize();
+            };
+
+            var onPointerUp = function() {
+                window.removeEventListener('mousemove', onPointerMove);
+                window.removeEventListener('mouseup', onPointerUp);
+                window.removeEventListener('touchmove', onPointerMove);
+                window.removeEventListener('touchend', onPointerUp);
+            };
+
+            var onPointerDown = function(e) {
+                startY = e.touches ? e.touches[0].clientY : e.clientY;
+                startH = wrapper.offsetHeight;
+                window.addEventListener('mousemove', onPointerMove);
+                window.addEventListener('mouseup', onPointerUp);
+                window.addEventListener('touchmove', onPointerMove, { passive: false });
+                window.addEventListener('touchend', onPointerUp);
+            };
+
+            handle.addEventListener('mousedown', onPointerDown);
+            handle.addEventListener('touchstart', onPointerDown, { passive: false });
+        }
+
         function renderActiveGraphsHTML() {
             var container = document.getElementById('activeGraphsContainer');
             if (!container) return;
@@ -1694,9 +1770,11 @@
                             <select id="${m.key}HighlightSelect" onchange="renderGrowthCharts()">${treeOptionsHTML}</select>
                         </div>
                     </div>
-                    <div class="plot-wrapper"><canvas id="${m.key}Chart"></canvas></div>
+                    <div class="plot-wrapper" id="${m.key}_wrapper"><canvas id="${m.key}Chart"></canvas></div>
+                    <div class="graph-resize-handle" id="${m.key}_wrapper_handle" title="Drag to resize graph height"></div>
                 `;
                 container.appendChild(card);
+                setTimeout(() => makeGraphResizable(`${m.key}_wrapper`, key), 50);
             });
         }
 
@@ -1781,7 +1859,7 @@
 
         function resetGrowthForm() {
             document.getElementById('editGrowthIndex').value = -1;
-            document.getElementById('entryDate').valueAsDate = new Date();
+            document.getElementById('entryDate').value = getTodayISO();
             state.metricsRegistry.forEach(m => {
                 var el = document.getElementById('entry_' + m.key);
                 if (el) el.value = '';

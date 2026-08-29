@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-08-29 10:26",
+  "lastUpdated": "2026-08-29 10:41",
   "lastUpdatedBy": "Rob",
   "inventoryData": [
     {
@@ -509,8 +509,8 @@
       "defaultYMax": "200"
     },
     {
-      "key": "metric_bebe",
-      "name": "bebe",
+      "key": "metric_bah",
+      "name": "bah",
       "unit": "bah",
       "isCustom": true,
       "isGraphed": true
@@ -699,6 +699,12 @@
       "dia": null,
       "height": 68,
       "loggedBy": "Joe"
+    },
+    {
+      "date": "2026-08-29",
+      "tree": "Freedom",
+      "loggedBy": "Rob",
+      "metric_bah": 6
     }
   ],
   "harvestLogsData": [],

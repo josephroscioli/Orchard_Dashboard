@@ -1227,102 +1227,137 @@
             downloadAnchor.remove();
         }
 
-        // EXPORT ALL DASHBOARD DATA TO MULTI-TAB EXCEL (.XLSX) FILE
-        function exportDashboardToXLSX() {
-            if (typeof XLSX === 'undefined') {
-                alert("Excel export library failed to load. Please check internet connection.");
-                return;
-            }
+        // EXPORT ALL DASHBOARD DATA TO MULTI-TAB EXCEL (.XLSX) FILE WITH PROPER COLUMN WIDTHS & TABLE HEADERS
+function exportDashboardToXLSX() {
+    if (typeof XLSX === 'undefined') {
+        alert("Excel export library failed to load. Please check internet connection.");
+        return;
+    }
 
-            var wb = XLSX.utils.book_new();
-            var seasonTag = document.getElementById('archiveSeasonTag') ? document.getElementById('archiveSeasonTag').value.trim() : '';
-            var fileName = seasonTag ? `orchard_dashboard_${seasonTag}.xlsx` : `orchard_dashboard_${getTodayISO()}.xlsx`;
+    var wb = XLSX.utils.book_new();
+    var seasonTag = document.getElementById('archiveSeasonTag') ? document.getElementById('archiveSeasonTag').value.trim() : '';
+    var fileName = seasonTag ? `orchard_dashboard_${seasonTag}.xlsx` : `orchard_dashboard_${getTodayISO()}.xlsx`;
 
-            // 1. MASTER INVENTORY TAB
-            var invRows = state.inventoryData.map(item => ({
-                "Cultivar": item.cultivar,
-                "Age Classification": item.ageCat || '—',
-                "Year Planted": item.yearPlanted || '—',
-                "Age at Planting": item.ageAtPlanting || '—',
-                "Rootstock": item.rootstock || '—',
-                "Latitude": item.lat || '',
-                "Longitude": item.lon || '',
-                "Bloom Start": item.bloomStart || '',
-                "Bloom End": item.bloomEnd || '',
-                "Ripening Start": item.ripeningStart || '',
-                "Ripening End": item.ripeningEnd || '',
-                "Est. Load": item.load || '0',
-                "Act. Load": calculateActualLoad(item.cultivar),
-                "Bags Hung": item.bags || '0',
-                "Directives & Directives": item.directives || ''
-            }));
-            var wsInv = XLSX.utils.json_to_sheet(invRows);
-            XLSX.utils.book_append_sheet(wb, wsInv, "Master Inventory");
+    // HELPER FUNCTION: Calculate autofit column widths and add header auto-filters
+    function formatWorksheet(ws, rowsData) {
+        if (!rowsData || rowsData.length === 0) return;
 
-            // 2. TREATMENT SCHEDULES TAB
-            var schedRows = state.scheduleData.map(s => ({
-                "Phase Category": s.phase,
-                "Treatment Type": s.type,
-                "Start Date": s.startDate || '',
-                "End Date": s.endDate || '',
-                "Target Cultivars / Tags": (s.tags || ["All Cultivars"]).join(", "),
-                "Instructions & Strategy": s.instructions
-            }));
-            var wsSched = XLSX.utils.json_to_sheet(schedRows);
-            XLSX.utils.book_append_sheet(wb, wsSched, "Treatment Schedules");
-
-            // 3. GROWTH METRICS TAB
-            var growthRows = state.growthData.map(g => {
-                var rowObj = {
-                    "Measurement Date": g.date,
-                    "Cultivar / Tree": g.tree,
-                    "Logged By": g.loggedBy || 'Rob'
-                };
-                state.metricsRegistry.forEach(m => {
-                    rowObj[`${m.name} (${m.unit})`] = g[m.key] !== undefined && g[m.key] !== null ? g[m.key] : '';
-                });
-                return rowObj;
+        var keys = Object.keys(rowsData[0]);
+        var colWidths = keys.map(key => {
+            // Find max length between header string and all row values in that column
+            var maxLen = key.toString().length;
+            rowsData.forEach(row => {
+                var val = row[key];
+                if (val !== null && val !== undefined) {
+                    var len = val.toString().length;
+                    if (len > maxLen) maxLen = len;
+                }
             });
-            var wsGrowth = XLSX.utils.json_to_sheet(growthRows);
-            XLSX.utils.book_append_sheet(wb, wsGrowth, "Growth Metrics");
+            // Add padding so text isn't cramped against cell borders (min width: 12, max width: 60)
+            return { wch: Math.min(60, Math.max(12, maxLen + 4)) };
+        });
 
-            // 4. HARVEST LOGS TAB
-            var harvestRows = state.harvestLogsData.map(h => ({
-                "Harvest Date": h.date,
-                "Cultivar": h.cultivar,
-                "Quantity (# apples)": h.quantity,
-                "Logged By": h.loggedBy || 'Rob'
-            }));
-            var wsHarvest = XLSX.utils.json_to_sheet(harvestRows);
-            XLSX.utils.book_append_sheet(wb, wsHarvest, "Harvest Logs");
+        // Set column widths
+        ws['!cols'] = colWidths;
 
-            // 5. FIELD LOGS & NOTES TAB
-            var logRows = state.logsData.map(l => ({
-                "Log Date": l.date,
-                "Title": l.title || '',
-                "Type / Category": l.type,
-                "Age Class Filter": l.age || 'all',
-                "Cultivar Tags": (l.tags || ["All Cultivars"]).join(", "),
-                "Log Details & Observations": l.body,
-                "Logged By": l.loggedBy || 'Rob'
-            }));
-            var wsLogs = XLSX.utils.json_to_sheet(logRows);
-            XLSX.utils.book_append_sheet(wb, wsLogs, "Field Logs & Notes");
-
-            // 6. CROP ABUNDANCES TAB
-            var abundanceRows = state.inventoryData.map(item => ({
-                "Cultivar": item.cultivar,
-                "Age Class": item.ageCat,
-                "Est. Load": item.load,
-                "Bags Hung": item.bags,
-                "Act. Harvested Total": calculateActualLoad(item.cultivar)
-            }));
-            var wsAbundance = XLSX.utils.json_to_sheet(abundanceRows);
-            XLSX.utils.book_append_sheet(wb, wsAbundance, "Crop Abundances");
-
-            // WRITE FILE DOWNLOAD
-            XLSX.writeFile(wb, fileName);
+        // Apply native Excel Auto-Filter dropdowns on header row
+        if (ws['!ref']) {
+            var range = XLSX.utils.decode_range(ws['!ref']);
+            ws['!autofilter'] = { ref: XLSX.utils.encode_range({ s: { r: 0, c: 0 }, e: { r: range.e.r, c: range.e.c } }) };
         }
+    }
+
+    // 1. MASTER INVENTORY TAB
+    var invRows = state.inventoryData.map(item => ({
+        "Cultivar": item.cultivar,
+        "Age Classification": item.ageCat || '—',
+        "Year Planted": item.yearPlanted || '—',
+        "Age at Planting": item.ageAtPlanting || '—',
+        "Rootstock": item.rootstock || '—',
+        "Latitude": item.lat || '',
+        "Longitude": item.lon || '',
+        "Bloom Start": item.bloomStart || '',
+        "Bloom End": item.bloomEnd || '',
+        "Ripening Start": item.ripeningStart || '',
+        "Ripening End": item.ripeningEnd || '',
+        "Est. Load": item.load || '0',
+        "Act. Load": calculateActualLoad(item.cultivar),
+        "Bags Hung": item.bags || '0',
+        "Directives & Action Items": item.directives || ''
+    }));
+    var wsInv = XLSX.utils.json_to_sheet(invRows);
+    formatWorksheet(wsInv, invRows);
+    XLSX.utils.book_append_sheet(wb, wsInv, "Master Inventory");
+
+    // 2. TREATMENT SCHEDULES TAB
+    var schedRows = state.scheduleData.map(s => ({
+        "Phase Category": s.phase,
+        "Treatment Type": s.type,
+        "Start Date": s.startDate || '',
+        "End Date": s.endDate || '',
+        "Target Cultivars / Tags": (s.tags || ["All Cultivars"]).join(", "),
+        "Instructions & Strategy": s.instructions
+    }));
+    var wsSched = XLSX.utils.json_to_sheet(schedRows);
+    formatWorksheet(wsSched, schedRows);
+    XLSX.utils.book_append_sheet(wb, wsSched, "Treatment Schedules");
+
+    // 3. GROWTH METRICS TAB
+    var growthRows = state.growthData.map(g => {
+        var rowObj = {
+            "Measurement Date": g.date,
+            "Cultivar / Tree": g.tree,
+            "Logged By": g.loggedBy || 'Rob'
+        };
+        state.metricsRegistry.forEach(m => {
+            rowObj[`${m.name} (${m.unit})`] = g[m.key] !== undefined && g[m.key] !== null ? g[m.key] : '';
+        });
+        return rowObj;
+    });
+    var wsGrowth = XLSX.utils.json_to_sheet(growthRows);
+    formatWorksheet(wsGrowth, growthRows);
+    XLSX.utils.book_append_sheet(wb, wsGrowth, "Growth Metrics");
+
+    // 4. HARVEST LOGS TAB
+    var harvestRows = state.harvestLogsData.map(h => ({
+        "Harvest Date": h.date,
+        "Cultivar": h.cultivar,
+        "Quantity (# apples)": h.quantity,
+        "Logged By": h.loggedBy || 'Rob'
+    }));
+    var wsHarvest = XLSX.utils.json_to_sheet(harvestRows);
+    formatWorksheet(wsHarvest, harvestRows);
+    XLSX.utils.book_append_sheet(wb, wsHarvest, "Harvest Logs");
+
+    // 5. FIELD LOGS & NOTES TAB
+    var logRows = state.logsData.map(l => ({
+        "Log Date": l.date,
+        "Title": l.title || '',
+        "Type / Category": l.type,
+        "Age Class Filter": l.age || 'all',
+        "Cultivar Tags": (l.tags || ["All Cultivars"]).join(", "),
+        "Log Details & Observations": l.body,
+        "Logged By": l.loggedBy || 'Rob'
+    }));
+    var wsLogs = XLSX.utils.json_to_sheet(logRows);
+    formatWorksheet(wsLogs, logRows);
+    XLSX.utils.book_append_sheet(wb, wsLogs, "Field Logs & Notes");
+
+    // 6. CROP ABUNDANCES TAB
+    var abundanceRows = state.inventoryData.map(item => ({
+        "Cultivar": item.cultivar,
+        "Age Class": item.ageCat,
+        "Est. Load": item.load,
+        "Bags Hung": item.bags,
+        "Act. Harvested Total": calculateActualLoad(item.cultivar)
+    }));
+    var wsAbundance = XLSX.utils.json_to_sheet(abundanceRows);
+    formatWorksheet(wsAbundance, abundanceRows);
+    XLSX.utils.book_append_sheet(wb, wsAbundance, "Crop Abundances");
+
+    // WRITE FILE DOWNLOAD
+    XLSX.writeFile(wb, fileName);
+}
 
         function loadArchivedJsonFile() {
             var fileInput = document.getElementById('importJsonFileInput');

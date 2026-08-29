@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-08-29 09:46",
+  "lastUpdated": "2026-08-29 09:48",
   "lastUpdatedBy": "Rob",
   "inventoryData": [
     {
@@ -485,16 +485,6 @@
         "Williams' Pride (Whip)"
       ],
       "instructions": "Tree Trunk Painting & Hardware Guard Check: Verify white latex/water trunk paint coverage on young whips to block southwest winter sun scald. Ensure wire hardware mesh guards are tight to the ground line to exclude voles."
-    },
-    {
-      "phase": "Phase 1: Dormant & Delayed-Dormant Window (March 15 – April 15)",
-      "type": "Pest Defense",
-      "startDate": "2026-08-29",
-      "endDate": "2026-08-29",
-      "tags": [
-        "NY-35"
-      ],
-      "instructions": "test"
     }
   ],
   "metricsRegistry": [

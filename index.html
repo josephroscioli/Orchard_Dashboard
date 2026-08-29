@@ -178,6 +178,7 @@
             border-radius: 6px;
             padding: 14px;
             margin-bottom: 14px;
+            overflow: hidden;
         }
         .card-title { font-weight: 700; font-size: 11pt; color: #2d3748; margin-bottom: 6px; }
         .card-meta { font-size: 9.5pt; color: #718096; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
@@ -225,6 +226,14 @@
             padding: 6px 4px;
         }
         
+        .table-actions-cell {
+            display: flex;
+            gap: 4px;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
         .chart-container { margin: 20px 0; width: 100%; }
         .chart-row { display: table; width: 100%; margin-bottom: 12px; }
         .chart-label { display: table-cell; width: 30%; font-weight: 600; font-size: 10pt; vertical-align: middle; }
@@ -291,14 +300,15 @@
             background-color: #40916c;
             color: white;
             border: none;
-            padding: 8px 14px;
+            padding: 6px 10px;
             border-radius: 4px;
-            font-size: 9.5pt;
+            font-size: 8.5pt;
             font-weight: 600;
             cursor: pointer;
             display: inline-block;
             text-decoration: none;
             transition: background-color 0.15s ease;
+            white-space: nowrap;
         }
         .btn-action:hover { background-color: #1b4332; }
         .btn-csv { background-color: #2b6cb0; }
@@ -1489,9 +1499,11 @@
                     <td><strong>${actLoad}</strong></td>
                     <td>${item.bags}</td>
                     <td>${item.directives}</td>
-                    <td style="text-align: right; white-space: nowrap;">
-                        <button class="btn-action" style="padding: 4px 8px; font-size: 8pt; background-color: #2b6cb0;" onclick="editInventoryRecord(${index})">Edit</button>
-                        <button class="btn-action" style="padding: 4px 8px; font-size: 8pt; background-color: #9b2c2c;" onclick="deleteInventoryRecord(${index})">Delete</button>
+                    <td style="text-align: right;">
+                        <div class="table-actions-cell">
+                            <button class="btn-action" style="background-color: #2b6cb0;" onclick="editInventoryRecord(${index})">Edit</button>
+                            <button class="btn-action" style="background-color: #9b2c2c;" onclick="deleteInventoryRecord(${index})">Delete</button>
+                        </div>
                     </td>
                 `;
                 tbody.appendChild(tr);
@@ -1656,9 +1668,11 @@
                             <td><strong>${dateDisplay}</strong><br><div style="margin-top:4px;">${tagsHTML}</div></td>
                             <td><span class="${badgeClass}">${s.type}</span></td>
                             <td>${s.instructions}</td>
-                            <td style="text-align: right; white-space: nowrap;">
-                                <button class="btn-action" style="padding: 4px 8px; font-size: 8pt; background-color: #2b6cb0;" onclick="editScheduleRecord(${idx})">Edit</button>
-                                <button class="btn-action" style="padding: 4px 8px; font-size: 8pt; background-color: #9b2c2c;" onclick="deleteScheduleRecord(${idx})">Delete</button>
+                            <td style="text-align: right;">
+                                <div class="table-actions-cell">
+                                    <button class="btn-action" style="background-color: #2b6cb0;" onclick="editScheduleRecord(${idx})">Edit</button>
+                                    <button class="btn-action" style="background-color: #9b2c2c;" onclick="deleteScheduleRecord(${idx})">Delete</button>
+                                </div>
                             </td>
                         </tr>
                     `;
@@ -1669,19 +1683,21 @@
                         ${phaseName.toUpperCase()}
                     </div>
                     <div class="card-body">
-                        <table style="width: 100%; margin-top: 8px;">
-                            <thead>
-                                <tr>
-                                    <th style="width: 25%;">Target Window &amp; Cultivars</th>
-                                    <th style="width: 20%;">Type</th>
-                                    <th style="width: 43%;">Operational Instructions &amp; Strategy</th>
-                                    <th style="width: 12%; text-align: right;">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${rowsHTML}
-                            </tbody>
-                        </table>
+                        <div class="table-responsive">
+                            <table style="width: 100%; margin-top: 8px;">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 25%;">Target Window &amp; Cultivars</th>
+                                        <th style="width: 20%;">Type</th>
+                                        <th style="width: 43%;">Operational Instructions &amp; Strategy</th>
+                                        <th style="width: 12%; text-align: right;">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${rowsHTML}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 `;
                 container.appendChild(card);
@@ -1892,9 +1908,11 @@
                     <td>${ripeningDisplay}</td>
                     <td><input type="text" class="abundance-edit-input" value="${item.load}" onchange="updateAbundanceValue(${originalIndex}, this.value)"></td>
                     <td><input type="text" class="abundance-edit-input" style="width: 70px;" value="${item.bags}" onchange="updateBagsValue(${originalIndex}, this.value)"></td>
-                    <td style="text-align: right; white-space: nowrap;">
-                        <button class="btn-action" style="padding: 4px 8px; font-size: 8pt; background-color: #2b6cb0;" onclick="editInventoryRecord(${originalIndex})">Edit</button>
-                        <button class="btn-action" style="padding: 4px 8px; font-size: 8pt; background-color: #9b2c2c;" onclick="deleteInventoryRecord(${originalIndex})">Delete</button>
+                    <td style="text-align: right;">
+                        <div class="table-actions-cell">
+                            <button class="btn-action" style="background-color: #2b6cb0;" onclick="editInventoryRecord(${originalIndex})">Edit</button>
+                            <button class="btn-action" style="background-color: #9b2c2c;" onclick="deleteInventoryRecord(${originalIndex})">Delete</button>
+                        </div>
                     </td>
                 `;
                 tableBody.appendChild(tr);
@@ -2045,8 +2063,10 @@
                     <td>${log.quantity}</td>
                     <td><span class="user-tag">${authorName}</span></td>
                     <td style="text-align: right;">
-                        <button class="btn-action" style="padding: 4px 10px; font-size: 8.5pt; background-color: #2b6cb0;" onclick="editHarvestLog(${index})">Edit</button>
-                        <button class="btn-action" style="padding: 4px 10px; font-size: 8.5pt; background-color: #9b2c2c;" onclick="deleteHarvestLog(${index})">Delete</button>
+                        <div class="table-actions-cell">
+                            <button class="btn-action" style="background-color: #2b6cb0;" onclick="editHarvestLog(${index})">Edit</button>
+                            <button class="btn-action" style="background-color: #9b2c2c;" onclick="deleteHarvestLog(${index})">Delete</button>
+                        </div>
                     </td>
                 `;
                 tbody.appendChild(tr);
@@ -2115,9 +2135,9 @@
                         <span class="user-tag">${authorName}</span> • <span class="badge badge-bearing">${log.type}</span> • Tags: ${tagBadgesHTML}
                     </div>
                     <div class="card-body">${log.body}</div>
-                    <div style="margin-top: 10px; display: flex; gap: 8px; justify-content: flex-end;">
-                        <button class="btn-action" style="padding: 4px 10px; font-size: 8.5pt; background-color: #2b6cb0;" onclick="editLogRecord(${index})">Edit</button>
-                        <button class="btn-action" style="padding: 4px 10px; font-size: 8.5pt; background-color: #9b2c2c;" onclick="deleteLogRecord(${index})">Delete</button>
+                    <div style="margin-top: 10px; display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap;">
+                        <button class="btn-action" style="background-color: #2b6cb0;" onclick="editLogRecord(${index})">Edit</button>
+                        <button class="btn-action" style="background-color: #9b2c2c;" onclick="deleteLogRecord(${index})">Delete</button>
                     </div>
                 `;
                 container.appendChild(card);
@@ -2436,8 +2456,10 @@
                 var valCols = state.metricsRegistry.map(m => `<td>${item[m.key] !== undefined && item[m.key] !== null ? item[m.key] : '—'}</td>`).join('');
                 var tr = document.createElement('tr');
                 tr.innerHTML = `<td>${item.date}</td><td><strong>${item.tree}</strong></td>${valCols}<td><span class="user-tag">${authorName}</span></td><td style="text-align:right;">
-                    <button class="btn-action" style="padding: 4px 10px; font-size: 8.5pt; background-color: #2b6cb0;" onclick="editGrowthRecord(${index})">Edit</button>
-                    <button class="btn-action" style="padding: 4px 10px; font-size: 8.5pt; background-color: #9b2c2c;" onclick="deleteGrowthRecord(${index})">Delete</button>
+                    <div class="table-actions-cell">
+                        <button class="btn-action" style="background-color: #2b6cb0;" onclick="editGrowthRecord(${index})">Edit</button>
+                        <button class="btn-action" style="background-color: #9b2c2c;" onclick="deleteGrowthRecord(${index})">Delete</button>
+                    </div>
                 </td>`;
                 tbody.appendChild(tr);
             });

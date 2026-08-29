@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-08-29 15:02",
+  "lastUpdated": "2026-08-29 15:59",
   "lastUpdatedBy": "Rob",
   "inventoryData": [
     {
@@ -692,6 +692,36 @@
       "dia": null,
       "height": 68,
       "loggedBy": "Joe"
+    },
+    {
+      "date": "2026-08-29",
+      "tree": "NY-35",
+      "loggedBy": "Rob",
+      "dia": 3.119
+    },
+    {
+      "date": "2026-08-29",
+      "tree": "Enterprise",
+      "loggedBy": "Rob",
+      "dia": 2.913
+    },
+    {
+      "date": "2026-08-29",
+      "tree": "Galarina",
+      "loggedBy": "Rob",
+      "dia": 2.963
+    },
+    {
+      "date": "2026-08-29",
+      "tree": "Novamac",
+      "loggedBy": "Rob",
+      "dia": 3.076
+    },
+    {
+      "date": "2026-08-29",
+      "tree": "Freedom",
+      "loggedBy": "Rob",
+      "dia": 3.202
     }
   ],
   "harvestLogsData": [

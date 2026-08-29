@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-08-29 09:56",
+  "lastUpdated": "2026-08-29 10:00",
   "lastUpdatedBy": "Rob",
   "inventoryData": [
     {
@@ -509,9 +509,7 @@
       "defaultYMax": "200"
     }
   ],
-  "activeGraphKeys": [
-    "dia"
-  ],
+  "activeGraphKeys": [],
   "growthData": [
     {
       "date": "2026-07-24",

@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-08-28 22:24",
+  "lastUpdated": "2026-08-28 22:25",
   "lastUpdatedBy": "Rob",
   "inventoryData": [
     {
@@ -217,7 +217,7 @@
       "yearPlanted": "2026",
       "ageAtPlanting": "0 yr (Whip)",
       "rootstock": "Semi-Std B.118",
-      "lat": -71.33706296,
+      "lat": 42.59523607,
       "lon": -71.33711072,
       "bloomStart": "2026-05-15",
       "bloomEnd": "2026-05-25",

@@ -990,15 +990,24 @@
             { cultivar: "NY 414-1", lat: 42.59518773, lon: -71.33713298, ageCat: "new", yearPlanted: "2026", ageAtPlanting: "0 yr", rootstock: "Semi-Std G.969", load: "0", bags: "0", color: "#475569", directives: "Monitor shallow roots." }
         ];
 
-        // DEFAULT TREATMENT SCHEDULE SEED DATA
+        // COMPLETE ITEMIZED TREATMENT SCHEDULE SEED DATA
         var defaultScheduleSeed = [
+            // PHASE 1
             {
                 phase: "Phase 1: Dormant & Delayed-Dormant Window (March 15 – April 15)",
                 type: "Pest Defense",
                 startDate: "2026-03-15",
                 endDate: "2026-03-30",
                 tags: ["All Cultivars"],
-                instructions: "Dormant Oil (2% dilution): Apply to all tree canopies on a sunny day with temperatures above 45°F to smother overwintering mite/scale eggs."
+                instructions: "Dormant Scale & Mite Smother: Apply Dormant Oil (2% dilution) to all tree canopies on a sunny day with temps above 45°F to smother overwintering mite/scale and aphid eggs in bark crevices."
+            },
+            {
+                phase: "Phase 1: Dormant & Delayed-Dormant Window (March 15 – April 15)",
+                type: "Pest Defense",
+                startDate: "2026-03-15",
+                endDate: "2026-03-30",
+                tags: ["All Cultivars"],
+                instructions: "Trunk & Base Drench Wash: Spray lower trunks and graft unions with Ferti-lome Triple Action—especially trees showing structural issues—to force overwintering borer/scale insects out of hiding and smother bark furrows."
             },
             {
                 phase: "Phase 1: Dormant & Delayed-Dormant Window (March 15 – April 15)",
@@ -1006,23 +1015,69 @@
                 startDate: "2026-04-01",
                 endDate: "2026-04-15",
                 tags: ["All Cultivars"],
-                instructions: "Tree-Tone & Coop Poop: Apply 1/2 dose of Tree-Tone paired with 2/3 dose of Coop Poop across all drip lines to supply early organic nutrition."
+                instructions: "Soil Foundation & Base Nutrition: Apply a 1/2 dose of Tree-Tone paired with a 2/3 dose of Coop Poop across all drip lines. Broadcast over mulch to supply organic calcium, nitrogen, and micronutrients early so spring rains wash them down to root depth."
             },
+
+            // PHASE 2
             {
                 phase: "Phase 2: Pre-Bloom & Bloom Phase (April 20 – May 15)",
                 type: "Pest Defense",
                 startDate: "2026-04-20",
                 endDate: "2026-04-30",
                 tags: ["All Cultivars"],
-                instructions: "Ferti-lome Triple Action: Apply to canopy foliage before blossom buds open for early contact knockdown and fungal spore suppression."
+                instructions: "Early Contact & Fungicide Pass: Apply Ferti-lome Triple Action to canopy foliage before blossom buds open. The Pyrethrin content flushes out overwintering aphid clusters, leafrollers, and mites, while neem oil provides early suppression against fungal spores (Apple Scab, Rust)."
             },
+            {
+                phase: "Phase 2: Pre-Bloom & Bloom Phase (April 20 – May 15)",
+                type: "Sanitation",
+                startDate: "2026-05-01",
+                endDate: "2026-05-15",
+                tags: ["All Cultivars"],
+                instructions: "STRICT SPRAY HALT (Full Bloom): Cease all canopy sprays during bloom. Pyrethrins and sprays are toxic to active pollinators—never spray open blossoms."
+            },
+
+            // PHASE 3
             {
                 phase: "Phase 3: Petal Fall & Curculio Inundation (May 16 – June 10)",
                 type: "Pest Defense",
                 startDate: "2026-05-16",
                 endDate: "2026-05-22",
                 tags: ["Freedom", "NY-35", "Enterprise", "Novamac", "Galarina"],
-                instructions: "Surround WP & Bt: Apply high-density kaolin clay (2.5 cups/gal) tank-mixed with Bt immediately at petal fall to deter Plum Curculio and caterpillars."
+                instructions: "Kaolin Barrier (Petal Fall): Apply high-density Surround WP (2.5 cups/gallon) immediately at petal fall to mature bearing trees. Target high-pressure blocks heavily. Reapply every 7-10 days or immediately following 1.0\"+ rainfall to keep developing fruitlets fully coated."
+            },
+            {
+                phase: "Phase 3: Petal Fall & Curculio Inundation (May 16 – June 10)",
+                type: "Pest Defense",
+                startDate: "2026-05-16",
+                endDate: "2026-05-22",
+                tags: ["All Cultivars"],
+                instructions: "Caterpillar Strike: Tank-mix Bt (Bacillus thuringiensis) with the Surround WP application to target leafrollers, winter moth caterpillars, and early codling moth larvae feeding on new shoot tissue."
+            },
+            {
+                phase: "Phase 3: Petal Fall & Curculio Inundation (May 16 – June 10)",
+                type: "Sanitation",
+                startDate: "2026-06-01",
+                endDate: "2026-06-10",
+                tags: ["Freedom", "NY-35", "Enterprise", "Novamac", "Galarina"],
+                instructions: "Manual Hand-Thinning & Drop Sanitation: Hand-thin worst curculio-stung and double-clustered fruitlets down to 1 fruit per spur. Daily drop sanitation (collecting drops off the floor) is critical to disrupt pest reproduction before larvae exit fruitlets."
+            },
+            {
+                phase: "Phase 3: Petal Fall & Curculio Inundation (May 16 – June 10)",
+                type: "Nutrition",
+                startDate: "2026-06-01",
+                endDate: "2026-06-10",
+                tags: ["Black Oxford", "SnowSweet", "NY 414-1", "Williams' Pride (Whip)"],
+                instructions: "Tree-Tone Whip Booster: Apply a secondary 1/2 dose of Tree-Tone exclusively around newly planted 0-year whips to drive vegetative framework development. Strict halt on all nitrogen inputs on established non-bearing blocks (especially Seckel Pear) to induce tissue hardening and eliminate fire blight risks."
+            },
+
+            // PHASE 4
+            {
+                phase: "Phase 4: Bagging Pass & Biological Soil Armor (June 11 – July 10)",
+                type: "Pest Defense",
+                startDate: "2026-06-11",
+                endDate: "2026-06-20",
+                tags: ["Freedom", "NY-35", "Enterprise", "Novamac", "Galarina"],
+                instructions: "Fruit Bagging Pass: Bag fruitlets larger than quarter-size across all bearing blocks with organza/paper bags. Bags physically insulate crop loads from mid-summer codling moth, apple maggot fly, and pin-prick stings."
             },
             {
                 phase: "Phase 4: Bagging Pass & Biological Soil Armor (June 11 – July 10)",
@@ -1030,7 +1085,25 @@
                 startDate: "2026-06-25",
                 endDate: "2026-06-30",
                 tags: ["All Cultivars"],
-                instructions: "Beneficial Nematodes: Apply ~8 million Steinernema carpocapsae during evening twilight out to drip lines after a sub-surface pre-soak."
+                instructions: "Primary Nematode Soil Strike: Weed-whack grass under canopy drip lines and execute a deep sub-surface pre-soak. Apply Beneficial Nematodes (Steinernema carpocapsae - ~8 Million Units) during evening/twilight hours. Concentrate heavily under high-pressure bearing trees to attack subterranean grubs and Plum Curculio larvae diving into sandy loam topsoil."
+            },
+            {
+                phase: "Phase 4: Bagging Pass & Biological Soil Armor (June 11 – July 10)",
+                type: "Soil Armor",
+                startDate: "2026-07-01",
+                endDate: "2026-07-10",
+                tags: ["All Cultivars"],
+                instructions: "Secondary Nematode Rain Synergy: Apply a follow-up soil drench of Beneficial Nematodes (Residual ~5 Million Units) right before a forecasted summer rainstorm to lock in moisture film transport and ensure complete subsurface colonization."
+            },
+
+            // PHASE 5
+            {
+                phase: "Phase 5: Mid-to-Late Summer Protection & Trapping (July 11 – August 31)",
+                type: "Pest Defense",
+                startDate: "2026-07-15",
+                endDate: "2026-07-31",
+                tags: ["All Cultivars"],
+                instructions: "Targeted Pest Knockdown: Use Ferti-lome Triple Action as a targeted spot spray on unbagged perimeter shoots if aphid outbreaks, spider mites, or leafhoppers flare up. Apply late in the evening near sunset (below 85°F) to avoid leaf scorch and protect foraging bees."
             },
             {
                 phase: "Phase 5: Mid-to-Late Summer Protection & Trapping (July 11 – August 31)",
@@ -1038,7 +1111,49 @@
                 startDate: "2026-08-01",
                 endDate: "2026-08-31",
                 tags: ["All Cultivars"],
-                instructions: "Perimeter Hornet Trapping: Hang ACV + sugar + soap traps 15-20ft off canopy line to intercept yellowjackets, hornets, and fruit flies."
+                instructions: "Perimeter Hornet Trapping: Hang perimeter hornet/wasp traps (filled with Apple Cider Vinegar, sugar, water, and a drop of dish soap) 15-20 feet away from the canopy line. Maintain and refill lure liquid regularly through peak harvest to intercept yellowjackets, hornets, and fruit flies before they target ripening fruit."
+            },
+            {
+                phase: "Phase 5: Mid-to-Late Summer Protection & Trapping (July 11 – August 31)",
+                type: "Pest Defense",
+                startDate: "2026-08-01",
+                endDate: "2026-08-31",
+                tags: ["Freedom", "NY-35", "Enterprise", "Novamac", "Galarina"],
+                instructions: "Surround WP Sunburn & Rot Dusting: Apply a light dusting of Surround WP to exposed upper-canopy fruit on bearing trees to shield skin from solar burn and secondary entry points for bitter rot."
+            },
+            {
+                phase: "Phase 5: Mid-to-Late Summer Protection & Trapping (July 11 – August 31)",
+                type: "Pest Defense",
+                startDate: "2026-08-01",
+                endDate: "2026-08-31",
+                tags: ["All Cultivars"],
+                instructions: "Bt Re-Application: Apply Bt if second-generation codling moth or leafroller larvae activity is noted on unbagged shoot tips."
+            },
+            {
+                phase: "Phase 5: Mid-to-Late Summer Protection & Trapping (July 11 – August 31)",
+                type: "Sanitation",
+                startDate: "2026-08-15",
+                endDate: "2026-08-31",
+                tags: ["Freedom", "NY-35", "Enterprise", "Novamac", "Galarina"],
+                instructions: "Debagging Paper-Bagged Apples: Remove opaque paper bags 2 to 3 weeks before expected harvest on an overcast day so fruit skins acclimate to sunlight without sunburn shock. Organza bags remain on the tree until harvest."
+            },
+
+            // PHASE 6
+            {
+                phase: "Phase 6: Post-Harvest & Autumn Sanitation (October 15 – November 15)",
+                type: "Sanitation",
+                startDate: "2026-10-15",
+                endDate: "2026-11-15",
+                tags: ["All Cultivars"],
+                instructions: "Orchard Floor Sanitation: Rake, remove, or flail-mow all fallen apple leaves and dropped fruit. Clearing canopy leaf litter eliminates overwintering scab pseudothecia, curculio, and moth habitat on the soil floor."
+            },
+            {
+                phase: "Phase 6: Post-Harvest & Autumn Sanitation (October 15 – November 15)",
+                type: "Pest Defense",
+                startDate: "2026-10-15",
+                endDate: "2026-11-15",
+                tags: ["Black Oxford", "SnowSweet", "NY 414-1", "Williams' Pride (Whip)"],
+                instructions: "Tree Trunk Painting & Hardware Guard Check: Verify white latex/water trunk paint coverage on young whips to block southwest winter sun scald. Ensure wire hardware mesh guards are tight to the ground line to exclude voles."
             }
         ];
 
@@ -1237,7 +1352,7 @@
         function loadLocalState() {
             var stored = localStorage.getItem('orchard_state_full');
             if (stored) state = JSON.parse(stored);
-            if (!state.scheduleData) state.scheduleData = defaultScheduleSeed;
+            if (!state.scheduleData || state.scheduleData.length === 0) state.scheduleData = defaultScheduleSeed;
             renderAll();
         }
 
@@ -1512,7 +1627,6 @@
 
             if (!state.scheduleData) state.scheduleData = defaultScheduleSeed;
 
-            // Group schedule items by Phase
             var phaseGroups = {};
             state.scheduleData.forEach((item, index) => {
                 var p = item.phase || "General Management";
@@ -1611,7 +1725,6 @@
             document.getElementById('schedDateEnd').value = item.endDate || getTodayISO();
             document.getElementById('schedInstructions').value = item.instructions || '';
 
-            // Check checkboxes
             var allCb = document.getElementById('sched_tag_all');
             if (item.tags && item.tags.includes("All Cultivars")) {
                 if (allCb) allCb.checked = true;

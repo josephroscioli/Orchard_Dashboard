@@ -982,1656 +982,1699 @@
         </div>
     </div>
 
-    <script>
-        // BACKEND SYNC CONFIGURATION
-        const WORKER_URL = "https://orchard-dashboard-sync.joseph-roscioli.workers.dev";
+    <<script>
+    // BACKEND SYNC CONFIGURATION
+    const WORKER_URL = "https://orchard-dashboard-sync.joseph-roscioli.workers.dev";
 
-        // DEFAULT ORCHARD INVENTORY SEED DATA
-        var defaultInventorySeed = [
-            { cultivar: "Freedom", lat: 42.5952388, lon: -71.33682947, ageCat: "bearing", yearPlanted: "2019", ageAtPlanting: "1 yr", rootstock: "Dwarf G.11", load: "125-175", bags: "200", color: "#1b4332", directives: "Primary bearing block." },
-            { cultivar: "NY-35", lat: 42.595319, lon: -71.336875, ageCat: "bearing", yearPlanted: "2022", ageAtPlanting: "2 yrs", rootstock: "Semi-Std G.935", load: "37", bags: "37", color: "#6b21a8", directives: "Structural warning." },
-            { cultivar: "Enterprise", lat: 42.595299, lon: -71.336907, ageCat: "bearing", yearPlanted: "2021", ageAtPlanting: "2 yrs", rootstock: "Semi-Std M.111", load: "10", bags: "10", color: "#9b2c2c", directives: "Keep nitrogen low." },
-            { cultivar: "Novamac", lat: 42.595264, lon: -71.336946, ageCat: "bearing", yearPlanted: "2021", ageAtPlanting: "1 yr", rootstock: "Semi-Std M.7", load: "17", bags: "17", color: "#2b6cb0", directives: "Bagging audited." },
-            { cultivar: "Galarina", lat: 42.595296, lon: -71.33695, ageCat: "bearing", yearPlanted: "2022", ageAtPlanting: "2 yrs", rootstock: "Semi-Std G.890", load: "20", bags: "20", color: "#06dbcd", directives: "Shallow water tables." },
-            { cultivar: "Sansa", lat: 42.595298, lon: -71.336773, ageCat: "established", yearPlanted: "2024", ageAtPlanting: "1 yr", rootstock: "Semi-Std G.969", load: "0", bags: "0", color: "#059669", directives: "Framework pruning priority." },
-            { cultivar: "Seckel (Pear)", lat: 42.59585878, lon: -71.33648269, ageCat: "established", yearPlanted: "2024", ageAtPlanting: "1 yr", rootstock: "Semi-Std OHxF 87", load: "0", bags: "0", color: "#65a30d", directives: "Fire-blight resistant." },
-            { cultivar: "Williams' Pride (Older)", lat: 42.595269, lon: -71.3368, ageCat: "established", yearPlanted: "2025", ageAtPlanting: "1 yr", rootstock: "G.969", load: "0", bags: "0", color: "#0284c7", directives: "Push root and vegetative frameworks." },
-            { cultivar: "Williams' Pride (Whip)", lat: 42.595283, lon: -71.337098, ageCat: "new", yearPlanted: "2026", ageAtPlanting: "0 yr", rootstock: "B.118", load: "0", bags: "0", color: "#0ea5e9", directives: "Keep drip zone clear." },
-            { cultivar: "Liberty", lat: 42.595245, lon: -71.336833, ageCat: "established", yearPlanted: "2025", ageAtPlanting: "1 yr", rootstock: "Semi-Std G.890", load: "0", bags: "0", color: "#16a34a", directives: "High tolerance for wet roots." },
-            { cultivar: "Sundance", lat: 42.595249, lon: -71.337035, ageCat: "established", yearPlanted: "2025", ageAtPlanting: "1 yr", rootstock: "Semi-Std B.118", load: "0", bags: "0", color: "#ca8a04", directives: "Extreme vigor rootstock." },
-            { cultivar: "Black Oxford", lat: 42.595261, lon: -71.337073, ageCat: "new", yearPlanted: "2026", ageAtPlanting: "0 yr", rootstock: "Semi-Std B.118", load: "0", bags: "0", color: "#334155", directives: "Verify white trunk paint." },
-            { cultivar: "SnowSweet", lat: 42.59520842, lon: -71.33716877, ageCat: "new", yearPlanted: "2026", ageAtPlanting: "0 yr", rootstock: "Semi-Std B.118", load: "0", bags: "0", color: "#db2777", directives: "Ensure wire trunk mesh is tight." },
-            { cultivar: "NY 414-1", lat: 42.59518773, lon: -71.33713298, ageCat: "new", yearPlanted: "2026", ageAtPlanting: "0 yr", rootstock: "Semi-Std G.969", load: "0", bags: "0", color: "#475569", directives: "Monitor shallow roots." }
-        ];
+    // DEFAULT ORCHARD INVENTORY SEED DATA
+    var defaultInventorySeed = [
+        { cultivar: "Freedom", lat: 42.5952388, lon: -71.33682947, ageCat: "bearing", yearPlanted: "2019", ageAtPlanting: "1 yr", rootstock: "Dwarf G.11", load: "125-175", bags: "200", color: "#1b4332", directives: "Primary bearing block." },
+        { cultivar: "NY-35", lat: 42.595319, lon: -71.336875, ageCat: "bearing", yearPlanted: "2022", ageAtPlanting: "2 yrs", rootstock: "Semi-Std G.935", load: "37", bags: "37", color: "#6b21a8", directives: "Structural warning." },
+        { cultivar: "Enterprise", lat: 42.595299, lon: -71.336907, ageCat: "bearing", yearPlanted: "2021", ageAtPlanting: "2 yrs", rootstock: "Semi-Std M.111", load: "10", bags: "10", color: "#9b2c2c", directives: "Keep nitrogen low." },
+        { cultivar: "Novamac", lat: 42.595264, lon: -71.336946, ageCat: "bearing", yearPlanted: "2021", ageAtPlanting: "1 yr", rootstock: "Semi-Std M.7", load: "17", bags: "17", color: "#2b6cb0", directives: "Bagging audited." },
+        { cultivar: "Galarina", lat: 42.595296, lon: -71.33695, ageCat: "bearing", yearPlanted: "2022", ageAtPlanting: "2 yrs", rootstock: "Semi-Std G.890", load: "20", bags: "20", color: "#06dbcd", directives: "Shallow water tables." },
+        { cultivar: "Sansa", lat: 42.595298, lon: -71.336773, ageCat: "established", yearPlanted: "2024", ageAtPlanting: "1 yr", rootstock: "Semi-Std G.969", load: "0", bags: "0", color: "#059669", directives: "Framework pruning priority." },
+        { cultivar: "Seckel (Pear)", lat: 42.59585878, lon: -71.33648269, ageCat: "established", yearPlanted: "2024", ageAtPlanting: "1 yr", rootstock: "Semi-Std OHxF 87", load: "0", bags: "0", color: "#65a30d", directives: "Fire-blight resistant." },
+        { cultivar: "Williams' Pride (Older)", lat: 42.595269, lon: -71.3368, ageCat: "established", yearPlanted: "2025", ageAtPlanting: "1 yr", rootstock: "G.969", load: "0", bags: "0", color: "#0284c7", directives: "Push root and vegetative frameworks." },
+        { cultivar: "Williams' Pride (Whip)", lat: 42.595283, lon: -71.337098, ageCat: "new", yearPlanted: "2026", ageAtPlanting: "0 yr", rootstock: "B.118", load: "0", bags: "0", color: "#0ea5e9", directives: "Keep drip zone clear." },
+        { cultivar: "Liberty", lat: 42.595245, lon: -71.336833, ageCat: "established", yearPlanted: "2025", ageAtPlanting: "1 yr", rootstock: "Semi-Std G.890", load: "0", bags: "0", color: "#16a34a", directives: "High tolerance for wet roots." },
+        { cultivar: "Sundance", lat: 42.595249, lon: -71.337035, ageCat: "established", yearPlanted: "2025", ageAtPlanting: "1 yr", rootstock: "Semi-Std B.118", load: "0", bags: "0", color: "#ca8a04", directives: "Extreme vigor rootstock." },
+        { cultivar: "Black Oxford", lat: 42.595261, lon: -71.337073, ageCat: "new", yearPlanted: "2026", ageAtPlanting: "0 yr", rootstock: "Semi-Std B.118", load: "0", bags: "0", color: "#334155", directives: "Verify white trunk paint." },
+        { cultivar: "SnowSweet", lat: 42.59520842, lon: -71.33716877, ageCat: "new", yearPlanted: "2026", ageAtPlanting: "0 yr", rootstock: "Semi-Std B.118", load: "0", bags: "0", color: "#db2777", directives: "Ensure wire trunk mesh is tight." },
+        { cultivar: "NY 414-1", lat: 42.59518773, lon: -71.33713298, ageCat: "new", yearPlanted: "2026", ageAtPlanting: "0 yr", rootstock: "Semi-Std G.969", load: "0", bags: "0", color: "#475569", directives: "Monitor shallow roots." }
+    ];
 
-        // COMPLETE ITEMIZED TREATMENT SCHEDULE SEED DATA
-        var defaultScheduleSeed = [
-            // PHASE 1
-            {
-                phase: "Phase 1: Dormant & Delayed-Dormant Window (March 15 – April 15)",
-                type: "Pest Defense",
-                startDate: "2026-03-15",
-                endDate: "2026-03-30",
-                tags: ["All Cultivars"],
-                instructions: "Dormant Scale & Mite Smother: Apply Dormant Oil (2% dilution) to all tree canopies on a sunny day with temps above 45°F to smother overwintering mite/scale and aphid eggs in bark crevices."
-            },
-            {
-                phase: "Phase 1: Dormant & Delayed-Dormant Window (March 15 – April 15)",
-                type: "Pest Defense",
-                startDate: "2026-03-15",
-                endDate: "2026-03-30",
-                tags: ["All Cultivars"],
-                instructions: "Trunk & Base Drench Wash: Spray lower trunks and graft unions with Ferti-lome Triple Action—especially trees showing structural issues—to force overwintering borer/scale insects out of hiding and smother bark furrows."
-            },
-            {
-                phase: "Phase 1: Dormant & Delayed-Dormant Window (March 15 – April 15)",
-                type: "Nutrition",
-                startDate: "2026-04-01",
-                endDate: "2026-04-15",
-                tags: ["All Cultivars"],
-                instructions: "Soil Foundation & Base Nutrition: Apply a 1/2 dose of Tree-Tone paired with a 2/3 dose of Coop Poop across all drip lines. Broadcast over mulch to supply organic calcium, nitrogen, and micronutrients early so spring rains wash them down to root depth."
-            },
+    // COMPLETE ITEMIZED TREATMENT SCHEDULE SEED DATA
+    var defaultScheduleSeed = [
+        // PHASE 1
+        {
+            phase: "Phase 1: Dormant & Delayed-Dormant Window (March 15 – April 15)",
+            type: "Pest Defense",
+            startDate: "2026-03-15",
+            endDate: "2026-03-30",
+            tags: ["All Cultivars"],
+            instructions: "Dormant Scale & Mite Smother: Apply Dormant Oil (2% dilution) to all tree canopies on a sunny day with temps above 45°F to smother overwintering mite/scale and aphid eggs in bark crevices."
+        },
+        {
+            phase: "Phase 1: Dormant & Delayed-Dormant Window (March 15 – April 15)",
+            type: "Pest Defense",
+            startDate: "2026-03-15",
+            endDate: "2026-03-30",
+            tags: ["All Cultivars"],
+            instructions: "Trunk & Base Drench Wash: Spray lower trunks and graft unions with Ferti-lome Triple Action—especially trees showing structural issues—to force overwintering borer/scale insects out of hiding and smother bark furrows."
+        },
+        {
+            phase: "Phase 1: Dormant & Delayed-Dormant Window (March 15 – April 15)",
+            type: "Nutrition",
+            startDate: "2026-04-01",
+            endDate: "2026-04-15",
+            tags: ["All Cultivars"],
+            instructions: "Soil Foundation & Base Nutrition: Apply a 1/2 dose of Tree-Tone paired with a 2/3 dose of Coop Poop across all drip lines. Broadcast over mulch to supply organic calcium, nitrogen, and micronutrients early so spring rains wash them down to root depth."
+        },
 
-            // PHASE 2
-            {
-                phase: "Phase 2: Pre-Bloom & Bloom Phase (April 20 – May 15)",
-                type: "Pest Defense",
-                startDate: "2026-04-20",
-                endDate: "2026-04-30",
-                tags: ["All Cultivars"],
-                instructions: "Early Contact & Fungicide Pass: Apply Ferti-lome Triple Action to canopy foliage before blossom buds open. The Pyrethrin content flushes out overwintering aphid clusters, leafrollers, and mites, while neem oil provides early suppression against fungal spores (Apple Scab, Rust)."
-            },
-            {
-                phase: "Phase 2: Pre-Bloom & Bloom Phase (April 20 – May 15)",
-                type: "Sanitation",
-                startDate: "2026-05-01",
-                endDate: "2026-05-15",
-                tags: ["All Cultivars"],
-                instructions: "STRICT SPRAY HALT (Full Bloom): Cease all canopy sprays during bloom. Pyrethrins and sprays are toxic to active pollinators—never spray open blossoms."
-            },
+        // PHASE 2
+        {
+            phase: "Phase 2: Pre-Bloom & Bloom Phase (April 20 – May 15)",
+            type: "Pest Defense",
+            startDate: "2026-04-20",
+            endDate: "2026-04-30",
+            tags: ["All Cultivars"],
+            instructions: "Early Contact & Fungicide Pass: Apply Ferti-lome Triple Action to canopy foliage before blossom buds open. The Pyrethrin content flushes out overwintering aphid clusters, leafrollers, and mites, while neem oil provides early suppression against fungal spores (Apple Scab, Rust)."
+        },
+        {
+            phase: "Phase 2: Pre-Bloom & Bloom Phase (April 20 – May 15)",
+            type: "Sanitation",
+            startDate: "2026-05-01",
+            endDate: "2026-05-15",
+            tags: ["All Cultivars"],
+            instructions: "STRICT SPRAY HALT (Full Bloom): Cease all canopy sprays during bloom. Pyrethrins and sprays are toxic to active pollinators—never spray open blossoms."
+        },
 
-            // PHASE 3
-            {
-                phase: "Phase 3: Petal Fall & Curculio Inundation (May 16 – June 10)",
-                type: "Pest Defense",
-                startDate: "2026-05-16",
-                endDate: "2026-05-22",
-                tags: ["Freedom", "NY-35", "Enterprise", "Novamac", "Galarina"],
-                instructions: "Kaolin Barrier (Petal Fall): Apply high-density Surround WP (2.5 cups/gallon) immediately at petal fall to mature bearing trees. Target high-pressure blocks heavily. Reapply every 7-10 days or immediately following 1.0\"+ rainfall to keep developing fruitlets fully coated."
-            },
-            {
-                phase: "Phase 3: Petal Fall & Curculio Inundation (May 16 – June 10)",
-                type: "Pest Defense",
-                startDate: "2026-05-16",
-                endDate: "2026-05-22",
-                tags: ["All Cultivars"],
-                instructions: "Caterpillar Strike: Tank-mix Bt (Bacillus thuringiensis) with the Surround WP application to target leafrollers, winter moth caterpillars, and early codling moth larvae feeding on new shoot tissue."
-            },
-            {
-                phase: "Phase 3: Petal Fall & Curculio Inundation (May 16 – June 10)",
-                type: "Sanitation",
-                startDate: "2026-06-01",
-                endDate: "2026-06-10",
-                tags: ["Freedom", "NY-35", "Enterprise", "Novamac", "Galarina"],
-                instructions: "Manual Hand-Thinning & Drop Sanitation: Hand-thin worst curculio-stung and double-clustered fruitlets down to 1 fruit per spur. Daily drop sanitation (collecting drops off the floor) is critical to disrupt pest reproduction before larvae exit fruitlets."
-            },
-            {
-                phase: "Phase 3: Petal Fall & Curculio Inundation (May 16 – June 10)",
-                type: "Nutrition",
-                startDate: "2026-06-01",
-                endDate: "2026-06-10",
-                tags: ["Black Oxford", "SnowSweet", "NY 414-1", "Williams' Pride (Whip)"],
-                instructions: "Tree-Tone Whip Booster: Apply a secondary 1/2 dose of Tree-Tone exclusively around newly planted 0-year whips to drive vegetative framework development. Strict halt on all nitrogen inputs on established non-bearing blocks (especially Seckel Pear) to induce tissue hardening and eliminate fire blight risks."
-            },
+        // PHASE 3
+        {
+            phase: "Phase 3: Petal Fall & Curculio Inundation (May 16 – June 10)",
+            type: "Pest Defense",
+            startDate: "2026-05-16",
+            endDate: "2026-05-22",
+            tags: ["Freedom", "NY-35", "Enterprise", "Novamac", "Galarina"],
+            instructions: "Kaolin Barrier (Petal Fall): Apply high-density Surround WP (2.5 cups/gallon) immediately at petal fall to mature bearing trees. Target high-pressure blocks heavily. Reapply every 7-10 days or immediately following 1.0\"+ rainfall to keep developing fruitlets fully coated."
+        },
+        {
+            phase: "Phase 3: Petal Fall & Curculio Inundation (May 16 – June 10)",
+            type: "Pest Defense",
+            startDate: "2026-05-16",
+            endDate: "2026-05-22",
+            tags: ["All Cultivars"],
+            instructions: "Caterpillar Strike: Tank-mix Bt (Bacillus thuringiensis) with the Surround WP application to target leafrollers, winter moth caterpillars, and early codling moth larvae feeding on new shoot tissue."
+        },
+        {
+            phase: "Phase 3: Petal Fall & Curculio Inundation (May 16 – June 10)",
+            type: "Sanitation",
+            startDate: "2026-06-01",
+            endDate: "2026-06-10",
+            tags: ["Freedom", "NY-35", "Enterprise", "Novamac", "Galarina"],
+            instructions: "Manual Hand-Thinning & Drop Sanitation: Hand-thin worst curculio-stung and double-clustered fruitlets down to 1 fruit per spur. Daily drop sanitation (collecting drops off the floor) is critical to disrupt pest reproduction before larvae exit fruitlets."
+        },
+        {
+            phase: "Phase 3: Petal Fall & Curculio Inundation (May 16 – June 10)",
+            type: "Nutrition",
+            startDate: "2026-06-01",
+            endDate: "2026-06-10",
+            tags: ["Black Oxford", "SnowSweet", "NY 414-1", "Williams' Pride (Whip)"],
+            instructions: "Tree-Tone Whip Booster: Apply a secondary 1/2 dose of Tree-Tone exclusively around newly planted 0-year whips to drive vegetative framework development. Strict halt on all nitrogen inputs on established non-bearing blocks (especially Seckel Pear) to induce tissue hardening and eliminate fire blight risks."
+        },
 
-            // PHASE 4
-            {
-                phase: "Phase 4: Bagging Pass & Biological Soil Armor (June 11 – July 10)",
-                type: "Pest Defense",
-                startDate: "2026-06-11",
-                endDate: "2026-06-20",
-                tags: ["Freedom", "NY-35", "Enterprise", "Novamac", "Galarina"],
-                instructions: "Fruit Bagging Pass: Bag fruitlets larger than quarter-size across all bearing blocks with organza/paper bags. Bags physically insulate crop loads from mid-summer codling moth, apple maggot fly, and pin-prick stings."
-            },
-            {
-                phase: "Phase 4: Bagging Pass & Biological Soil Armor (June 11 – July 10)",
-                type: "Soil Armor",
-                startDate: "2026-06-25",
-                endDate: "2026-06-30",
-                tags: ["All Cultivars"],
-                instructions: "Primary Nematode Soil Strike: Weed-whack grass under canopy drip lines and execute a deep sub-surface pre-soak. Apply Beneficial Nematodes (Steinernema carpocapsae - ~8 Million Units) during evening/twilight hours. Concentrate heavily under high-pressure bearing trees to attack subterranean grubs and Plum Curculio larvae diving into sandy loam topsoil."
-            },
-            {
-                phase: "Phase 4: Bagging Pass & Biological Soil Armor (June 11 – July 10)",
-                type: "Soil Armor",
-                startDate: "2026-07-01",
-                endDate: "2026-07-10",
-                tags: ["All Cultivars"],
-                instructions: "Secondary Nematode Rain Synergy: Apply a follow-up soil drench of Beneficial Nematodes (Residual ~5 Million Units) right before a forecasted summer rainstorm to lock in moisture film transport and ensure complete subsurface colonization."
-            },
+        // PHASE 4
+        {
+            phase: "Phase 4: Bagging Pass & Biological Soil Armor (June 11 – July 10)",
+            type: "Pest Defense",
+            startDate: "2026-06-11",
+            endDate: "2026-06-20",
+            tags: ["Freedom", "NY-35", "Enterprise", "Novamac", "Galarina"],
+            instructions: "Fruit Bagging Pass: Bag fruitlets larger than quarter-size across all bearing blocks with organza/paper bags. Bags physically insulate crop loads from mid-summer codling moth, apple maggot fly, and pin-prick stings."
+        },
+        {
+            phase: "Phase 4: Bagging Pass & Biological Soil Armor (June 11 – July 10)",
+            type: "Soil Armor",
+            startDate: "2026-06-25",
+            endDate: "2026-06-30",
+            tags: ["All Cultivars"],
+            instructions: "Primary Nematode Soil Strike: Weed-whack grass under canopy drip lines and execute a deep sub-surface pre-soak. Apply Beneficial Nematodes (Steinernema carpocapsae - ~8 Million Units) during evening/twilight hours. Concentrate heavily under high-pressure bearing trees to attack subterranean grubs and Plum Curculio larvae diving into sandy loam topsoil."
+        },
+        {
+            phase: "Phase 4: Bagging Pass & Biological Soil Armor (June 11 – July 10)",
+            type: "Soil Armor",
+            startDate: "2026-07-01",
+            endDate: "2026-07-10",
+            tags: ["All Cultivars"],
+            instructions: "Secondary Nematode Rain Synergy: Apply a follow-up soil drench of Beneficial Nematodes (Residual ~5 Million Units) right before a forecasted summer rainstorm to lock in moisture film transport and ensure complete subsurface colonization."
+        },
 
-            // PHASE 5
-            {
-                phase: "Phase 5: Mid-to-Late Summer Protection & Trapping (July 11 – August 31)",
-                type: "Pest Defense",
-                startDate: "2026-07-15",
-                endDate: "2026-07-31",
-                tags: ["All Cultivars"],
-                instructions: "Targeted Pest Knockdown: Use Ferti-lome Triple Action as a targeted spot spray on unbagged perimeter shoots if aphid outbreaks, spider mites, or leafhoppers flare up. Apply late in the evening near sunset (below 85°F) to avoid leaf scorch and protect foraging bees."
-            },
-            {
-                phase: "Phase 5: Mid-to-Late Summer Protection & Trapping (July 11 – August 31)",
-                type: "Pest Defense",
-                startDate: "2026-08-01",
-                endDate: "2026-08-31",
-                tags: ["All Cultivars"],
-                instructions: "Perimeter Hornet Trapping: Hang perimeter hornet/wasp traps (filled with Apple Cider Vinegar, sugar, water, and a drop of dish soap) 15-20 feet away from the canopy line. Maintain and refill lure liquid regularly through peak harvest to intercept yellowjackets, hornets, and fruit flies before they target ripening fruit."
-            },
-            {
-                phase: "Phase 5: Mid-to-Late Summer Protection & Trapping (July 11 – August 31)",
-                type: "Pest Defense",
-                startDate: "2026-08-01",
-                endDate: "2026-08-31",
-                tags: ["Freedom", "NY-35", "Enterprise", "Novamac", "Galarina"],
-                instructions: "Surround WP Sunburn & Rot Dusting: Apply a light dusting of Surround WP to exposed upper-canopy fruit on bearing trees to shield skin from solar burn and secondary entry points for bitter rot."
-            },
-            {
-                phase: "Phase 5: Mid-to-Late Summer Protection & Trapping (July 11 – August 31)",
-                type: "Pest Defense",
-                startDate: "2026-08-01",
-                endDate: "2026-08-31",
-                tags: ["All Cultivars"],
-                instructions: "Bt Re-Application: Apply Bt if second-generation codling moth or leafroller larvae activity is noted on unbagged shoot tips."
-            },
-            {
-                phase: "Phase 5: Mid-to-Late Summer Protection & Trapping (July 11 – August 31)",
-                type: "Sanitation",
-                startDate: "2026-08-15",
-                endDate: "2026-08-31",
-                tags: ["Freedom", "NY-35", "Enterprise", "Novamac", "Galarina"],
-                instructions: "Debagging Paper-Bagged Apples: Remove opaque paper bags 2 to 3 weeks before expected harvest on an overcast day so fruit skins acclimate to sunlight without sunburn shock. Organza bags remain on the tree until harvest."
-            },
+        // PHASE 5
+        {
+            phase: "Phase 5: Mid-to-Late Summer Protection & Trapping (July 11 – August 31)",
+            type: "Pest Defense",
+            startDate: "2026-07-15",
+            endDate: "2026-07-31",
+            tags: ["All Cultivars"],
+            instructions: "Targeted Pest Knockdown: Use Ferti-lome Triple Action as a targeted spot spray on unbagged perimeter shoots if aphid outbreaks, spider mites, or leafhoppers flare up. Apply late in the evening near sunset (below 85°F) to avoid leaf scorch and protect foraging bees."
+        },
+        {
+            phase: "Phase 5: Mid-to-Late Summer Protection & Trapping (July 11 – August 31)",
+            type: "Pest Defense",
+            startDate: "2026-08-01",
+            endDate: "2026-08-31",
+            tags: ["All Cultivars"],
+            instructions: "Perimeter Hornet Trapping: Hang perimeter hornet/wasp traps (filled with Apple Cider Vinegar, sugar, water, and a drop of dish soap) 15-20 feet away from the canopy line. Maintain and refill lure liquid regularly through peak harvest to intercept yellowjackets, hornets, and fruit flies before they target ripening fruit."
+        },
+        {
+            phase: "Phase 5: Mid-to-Late Summer Protection & Trapping (July 11 – August 31)",
+            type: "Pest Defense",
+            startDate: "2026-08-01",
+            endDate: "2026-08-31",
+            tags: ["Freedom", "NY-35", "Enterprise", "Novamac", "Galarina"],
+            instructions: "Surround WP Sunburn & Rot Dusting: Apply a light dusting of Surround WP to exposed upper-canopy fruit on bearing trees to shield skin from solar burn and secondary entry points for bitter rot."
+        },
+        {
+            phase: "Phase 5: Mid-to-Late Summer Protection & Trapping (July 11 – August 31)",
+            type: "Pest Defense",
+            startDate: "2026-08-01",
+            endDate: "2026-08-31",
+            tags: ["All Cultivars"],
+            instructions: "Bt Re-Application: Apply Bt if second-generation codling moth or leafroller larvae activity is noted on unbagged shoot tips."
+        },
+        {
+            phase: "Phase 5: Mid-to-Late Summer Protection & Trapping (July 11 – August 31)",
+            type: "Sanitation",
+            startDate: "2026-08-15",
+            endDate: "2026-08-31",
+            tags: ["Freedom", "NY-35", "Enterprise", "Novamac", "Galarina"],
+            instructions: "Debagging Paper-Bagged Apples: Remove opaque paper bags 2 to 3 weeks before expected harvest on an overcast day so fruit skins acclimate to sunlight without sunburn shock. Organza bags remain on the tree until harvest."
+        },
 
-            // PHASE 6
-            {
-                phase: "Phase 6: Post-Harvest & Autumn Sanitation (October 15 – November 15)",
-                type: "Sanitation",
-                startDate: "2026-10-15",
-                endDate: "2026-11-15",
-                tags: ["All Cultivars"],
-                instructions: "Orchard Floor Sanitation: Rake, remove, or flail-mow all fallen apple leaves and dropped fruit. Clearing canopy leaf litter eliminates overwintering scab pseudothecia, curculio, and moth habitat on the soil floor."
-            },
-            {
-                phase: "Phase 6: Post-Harvest & Autumn Sanitation (October 15 – November 15)",
-                type: "Pest Defense",
-                startDate: "2026-10-15",
-                endDate: "2026-11-15",
-                tags: ["Black Oxford", "SnowSweet", "NY 414-1", "Williams' Pride (Whip)"],
-                instructions: "Tree Trunk Painting & Hardware Guard Check: Verify white latex/water trunk paint coverage on young whips to block southwest winter sun scald. Ensure wire hardware mesh guards are tight to the ground line to exclude voles."
-            }
-        ];
-
-        // MASTER DATA STATE
-        var state = {
-            lastUpdated: "Loading...",
-            lastUpdatedBy: "System",
-            inventoryData: defaultInventorySeed,
-            scheduleData: defaultScheduleSeed,
-            metricsRegistry: [],
-            activeGraphKeys: [],
-            growthData: [],
-            harvestLogsData: [],
-            logsData: []
-        };
-
-        var mapInstance = null;
-        var mapMarkersLayerGroup = null;
-        var graphScaleConfig = {};
-        var currentUserAuthor = localStorage.getItem('orchard_active_author') || '';
-        var currentUserPin = localStorage.getItem('orchard_user_pin') || '';
-        var chartInstances = {};
-
-        function getTodayISO() {
-            var today = new Date();
-            var yyyy = today.getFullYear();
-            var mm = String(today.getMonth() + 1).padStart(2, '0');
-            var dd = String(today.getDate()).padStart(2, '0');
-            return `${yyyy}-${mm}-${dd}`;
+        // PHASE 6
+        {
+            phase: "Phase 6: Post-Harvest & Autumn Sanitation (October 15 – November 15)",
+            type: "Sanitation",
+            startDate: "2026-10-15",
+            endDate: "2026-11-15",
+            tags: ["All Cultivars"],
+            instructions: "Orchard Floor Sanitation: Rake, remove, or flail-mow all fallen apple leaves and dropped fruit. Clearing canopy leaf litter eliminates overwintering scab pseudothecia, curculio, and moth habitat on the soil floor."
+        },
+        {
+            phase: "Phase 6: Post-Harvest & Autumn Sanitation (October 15 – November 15)",
+            type: "Pest Defense",
+            startDate: "2026-10-15",
+            endDate: "2026-11-15",
+            tags: ["Black Oxford", "SnowSweet", "NY 414-1", "Williams' Pride (Whip)"],
+            instructions: "Tree Trunk Painting & Hardware Guard Check: Verify white latex/water trunk paint coverage on young whips to block southwest winter sun scald. Ensure wire hardware mesh guards are tight to the ground line to exclude voles."
         }
+    ];
 
-        function setDefaultDates() {
-            var todayStr = getTodayISO();
-            var dateInputs = ['entryDate', 'harvestDate', 'invBloomStart', 'invBloomEnd', 'invRipeningStart', 'invRipeningEnd', 'schedDateStart', 'schedDateEnd'];
-            dateInputs.forEach(id => {
-                var el = document.getElementById(id);
-                if (el && !el.value) el.value = todayStr;
-            });
-            var logDateEl = document.getElementById('newLogDate');
-            if (logDateEl && !logDateEl.value) logDateEl.value = todayStr;
-        }
+    // MASTER DATA STATE
+    var state = {
+        lastUpdated: "Loading...",
+        lastUpdatedBy: "System",
+        inventoryData: defaultInventorySeed,
+        scheduleData: defaultScheduleSeed,
+        metricsRegistry: [],
+        activeGraphKeys: [],
+        growthData: [],
+        harvestLogsData: [],
+        logsData: []
+    };
 
-        function toggleUtilitiesModal(show) {
-            var modal = document.getElementById('utilitiesModal');
-            if (modal) modal.style.display = show ? 'flex' : 'none';
-        }
+    var mapInstance = null;
+    var mapMarkersLayerGroup = null;
+    var graphScaleConfig = {};
+    var currentUserAuthor = localStorage.getItem('orchard_active_author') || '';
+    var currentUserPin = localStorage.getItem('orchard_user_pin') || '';
+    var chartInstances = {};
 
-        function archiveCurrentSeason() {
-            var tag = document.getElementById('archiveSeasonTag').value.trim() || '2026';
-            var fileName = `${tag}_orchard_data.json`;
-            var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state, null, 2));
-            var downloadAnchor = document.createElement('a');
-            downloadAnchor.setAttribute("href", dataStr);
-            downloadAnchor.setAttribute("download", fileName);
-            document.body.appendChild(downloadAnchor);
-            downloadAnchor.click();
-            downloadAnchor.remove();
-        }
-
-        // EXPORT ALL DASHBOARD DATA TO MULTI-TAB EXCEL (.XLSX) FILE WITH PROPER COLUMN WIDTHS & TABLE HEADERS
-function exportDashboardToXLSX() {
-    if (typeof XLSX === 'undefined') {
-        alert("Excel export library failed to load. Please check internet connection.");
-        return;
+    function getTodayISO() {
+        var today = new Date();
+        var yyyy = today.getFullYear();
+        var mm = String(today.getMonth() + 1).padStart(2, '0');
+        var dd = String(today.getDate()).padStart(2, '0');
+        return `${yyyy}-${mm}-${dd}`;
     }
 
-    var wb = XLSX.utils.book_new();
-    var seasonTag = document.getElementById('archiveSeasonTag') ? document.getElementById('archiveSeasonTag').value.trim() : '';
-    var fileName = seasonTag ? `orchard_dashboard_${seasonTag}.xlsx` : `orchard_dashboard_${getTodayISO()}.xlsx`;
-
-    // HELPER FUNCTION: Calculate autofit column widths and add header auto-filters
-    function formatWorksheet(ws, rowsData) {
-        if (!rowsData || rowsData.length === 0) return;
-
-        var keys = Object.keys(rowsData[0]);
-        var colWidths = keys.map(key => {
-            // Find max length between header string and all row values in that column
-            var maxLen = key.toString().length;
-            rowsData.forEach(row => {
-                var val = row[key];
-                if (val !== null && val !== undefined) {
-                    var len = val.toString().length;
-                    if (len > maxLen) maxLen = len;
-                }
-            });
-            // Add padding so text isn't cramped against cell borders (min width: 12, max width: 60)
-            return { wch: Math.min(60, Math.max(12, maxLen + 4)) };
+    function setDefaultDates() {
+        var todayStr = getTodayISO();
+        var dateInputs = ['entryDate', 'harvestDate', 'invBloomStart', 'invBloomEnd', 'invRipeningStart', 'invRipeningEnd', 'schedDateStart', 'schedDateEnd'];
+        dateInputs.forEach(id => {
+            var el = document.getElementById(id);
+            if (el && !el.value) el.value = todayStr;
         });
-
-        // Set column widths
-        ws['!cols'] = colWidths;
-
-        // Apply native Excel Auto-Filter dropdowns on header row
-        if (ws['!ref']) {
-            var range = XLSX.utils.decode_range(ws['!ref']);
-            ws['!autofilter'] = { ref: XLSX.utils.encode_range({ s: { r: 0, c: 0 }, e: { r: range.e.r, c: range.e.c } }) };
-        }
+        var logDateEl = document.getElementById('newLogDate');
+        if (logDateEl && !logDateEl.value) logDateEl.value = todayStr;
     }
 
-    // 1. MASTER INVENTORY TAB
-    var invRows = state.inventoryData.map(item => ({
-        "Cultivar": item.cultivar,
-        "Age Classification": item.ageCat || '—',
-        "Year Planted": item.yearPlanted || '—',
-        "Age at Planting": item.ageAtPlanting || '—',
-        "Rootstock": item.rootstock || '—',
-        "Latitude": item.lat || '',
-        "Longitude": item.lon || '',
-        "Bloom Start": item.bloomStart || '',
-        "Bloom End": item.bloomEnd || '',
-        "Ripening Start": item.ripeningStart || '',
-        "Ripening End": item.ripeningEnd || '',
-        "Est. Load": item.load || '0',
-        "Act. Load": calculateActualLoad(item.cultivar),
-        "Bags Hung": item.bags || '0',
-        "Directives & Action Items": item.directives || ''
-    }));
-    var wsInv = XLSX.utils.json_to_sheet(invRows);
-    formatWorksheet(wsInv, invRows);
-    XLSX.utils.book_append_sheet(wb, wsInv, "Master Inventory");
+    function toggleUtilitiesModal(show) {
+        var modal = document.getElementById('utilitiesModal');
+        if (modal) modal.style.display = show ? 'flex' : 'none';
+    }
 
-    // 2. TREATMENT SCHEDULES TAB
-    var schedRows = state.scheduleData.map(s => ({
-        "Phase Category": s.phase,
-        "Treatment Type": s.type,
-        "Start Date": s.startDate || '',
-        "End Date": s.endDate || '',
-        "Target Cultivars / Tags": (s.tags || ["All Cultivars"]).join(", "),
-        "Instructions & Strategy": s.instructions
-    }));
-    var wsSched = XLSX.utils.json_to_sheet(schedRows);
-    formatWorksheet(wsSched, schedRows);
-    XLSX.utils.book_append_sheet(wb, wsSched, "Treatment Schedules");
+    function archiveCurrentSeason() {
+        var tag = document.getElementById('archiveSeasonTag').value.trim() || '2026';
+        var fileName = `${tag}_orchard_data.json`;
+        var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state, null, 2));
+        var downloadAnchor = document.createElement('a');
+        downloadAnchor.setAttribute("href", dataStr);
+        downloadAnchor.setAttribute("download", fileName);
+        document.body.appendChild(downloadAnchor);
+        downloadAnchor.click();
+        downloadAnchor.remove();
+    }
 
-    // 3. GROWTH METRICS TAB
-    var growthRows = state.growthData.map(g => {
-        var rowObj = {
-            "Measurement Date": g.date,
-            "Cultivar / Tree": g.tree,
-            "Logged By": g.loggedBy || 'Rob'
-        };
-        state.metricsRegistry.forEach(m => {
-            rowObj[`${m.name} (${m.unit})`] = g[m.key] !== undefined && g[m.key] !== null ? g[m.key] : '';
-        });
-        return rowObj;
-    });
-    var wsGrowth = XLSX.utils.json_to_sheet(growthRows);
-    formatWorksheet(wsGrowth, growthRows);
-    XLSX.utils.book_append_sheet(wb, wsGrowth, "Growth Metrics");
+    // EXPORT ALL DASHBOARD DATA TO MULTI-TAB EXCEL (.XLSX) FILE WITH PROPER COLUMN WIDTHS & TABLE HEADERS
+    function exportDashboardToXLSX() {
+        if (typeof XLSX === 'undefined') {
+            alert("Excel export library failed to load. Please check internet connection.");
+            return;
+        }
 
-    // 4. HARVEST LOGS TAB
-    var harvestRows = state.harvestLogsData.map(h => ({
-        "Harvest Date": h.date,
-        "Cultivar": h.cultivar,
-        "Quantity (# apples)": h.quantity,
-        "Logged By": h.loggedBy || 'Rob'
-    }));
-    var wsHarvest = XLSX.utils.json_to_sheet(harvestRows);
-    formatWorksheet(wsHarvest, harvestRows);
-    XLSX.utils.book_append_sheet(wb, wsHarvest, "Harvest Logs");
+        var wb = XLSX.utils.book_new();
+        var seasonTag = document.getElementById('archiveSeasonTag') ? document.getElementById('archiveSeasonTag').value.trim() : '';
+        var fileName = seasonTag ? `orchard_dashboard_${seasonTag}.xlsx` : `orchard_dashboard_${getTodayISO()}.xlsx`;
 
-    // 5. FIELD LOGS & NOTES TAB
-    var logRows = state.logsData.map(l => ({
-        "Log Date": l.date,
-        "Title": l.title || '',
-        "Type / Category": l.type,
-        "Age Class Filter": l.age || 'all',
-        "Cultivar Tags": (l.tags || ["All Cultivars"]).join(", "),
-        "Log Details & Observations": l.body,
-        "Logged By": l.loggedBy || 'Rob'
-    }));
-    var wsLogs = XLSX.utils.json_to_sheet(logRows);
-    formatWorksheet(wsLogs, logRows);
-    XLSX.utils.book_append_sheet(wb, wsLogs, "Field Logs & Notes");
+        // HELPER FUNCTION: Calculate autofit column widths and add header auto-filters
+        function formatWorksheet(ws, rowsData) {
+            if (!rowsData || rowsData.length === 0) return;
 
-    // 6. CROP ABUNDANCES TAB
-    var abundanceRows = state.inventoryData.map(item => ({
-        "Cultivar": item.cultivar,
-        "Age Class": item.ageCat,
-        "Est. Load": item.load,
-        "Bags Hung": item.bags,
-        "Act. Harvested Total": calculateActualLoad(item.cultivar)
-    }));
-    var wsAbundance = XLSX.utils.json_to_sheet(abundanceRows);
-    formatWorksheet(wsAbundance, abundanceRows);
-    XLSX.utils.book_append_sheet(wb, wsAbundance, "Crop Abundances");
-
-    // WRITE FILE DOWNLOAD
-    XLSX.writeFile(wb, fileName);
-}
-
-        function loadArchivedJsonFile() {
-            var fileInput = document.getElementById('importJsonFileInput');
-            if (!fileInput.files || fileInput.files.length === 0) {
-                alert("Please select a JSON file to import.");
-                return;
-            }
-            var file = fileInput.files[0];
-            var reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    var imported = JSON.parse(e.target.result);
-                    if (imported && typeof imported === 'object') {
-                        state = {
-                            lastUpdated: imported.lastUpdated || getTodayISO(),
-                            lastUpdatedBy: imported.lastUpdatedBy || currentUserAuthor || "Rob",
-                            inventoryData: imported.inventoryData || defaultInventorySeed,
-                            scheduleData: imported.scheduleData || defaultScheduleSeed,
-                            metricsRegistry: imported.metricsRegistry || [],
-                            activeGraphKeys: imported.activeGraphKeys || [],
-                            growthData: imported.growthData || [],
-                            harvestLogsData: imported.harvestLogsData || [],
-                            logsData: imported.logsData || []
-                        };
-                        saveState();
-                        toggleUtilitiesModal(false);
-                        alert("Archived dataset loaded successfully!");
+            var keys = Object.keys(rowsData[0]);
+            var colWidths = keys.map(key => {
+                var maxLen = key.toString().length;
+                rowsData.forEach(row => {
+                    var val = row[key];
+                    if (val !== null && val !== undefined) {
+                        var len = val.toString().length;
+                        if (len > maxLen) maxLen = len;
                     }
-                } catch (err) {
-                    alert("Error parsing JSON file: " + err.message);
-                }
-            };
-            reader.readAsText(file);
-        }
-
-        function clearAllDashboardData() {
-            if (!confirm("⚠️ WARNING: You are about to clear all seasonal data. Proceed?")) return;
-            var verification = prompt("🔒 DOUBLE VERIFICATION REQUIRED:\nType 'DELETE ALL DATA' below to confirm:");
-            if (verification === "DELETE ALL DATA") {
-                state.inventoryData.forEach(item => { item.load = "0"; item.bags = "0"; });
-                state.growthData = [];
-                state.harvestLogsData = [];
-                state.logsData = [];
-                saveState();
-                toggleUtilitiesModal(false);
-                alert("Active season records cleared!");
-            }
-        }
-
-        function handleAuthToggle() {
-            if (currentUserAuthor || currentUserPin) {
-                currentUserAuthor = ''; currentUserPin = '';
-                localStorage.removeItem('orchard_active_author');
-                localStorage.removeItem('orchard_user_pin');
-                updateAuthorDisplayUI();
-            } else {
-                promptPinLogin();
-            }
-        }
-
-        function updateAuthorDisplayUI() {
-            var displayEl = document.getElementById('active-user-display');
-            var tagEl = document.getElementById('author-display-tag');
-            var toggleBtn = document.getElementById('login-toggle-btn');
-
-            if (currentUserAuthor) {
-                if (displayEl) displayEl.innerText = `${currentUserAuthor} logged in`;
-                if (tagEl) tagEl.innerText = `(Authenticated via Worker PIN • Last sync: ${state.lastUpdatedBy || currentUserAuthor})`;
-                if (toggleBtn) { toggleBtn.innerText = "🔓 Logout"; toggleBtn.style.backgroundColor = "#c53030"; }
-            } else {
-                if (displayEl) displayEl.innerText = "Not Logged In";
-                if (tagEl) tagEl.innerText = `(Click "🔒 Login" to authenticate PIN)`;
-                if (toggleBtn) { toggleBtn.innerText = "🔒 Login"; toggleBtn.style.backgroundColor = "#d69e2e"; }
-            }
-        }
-
-        async function promptPinLogin() {
-            var inputPin = prompt("Enter Operator Security PIN:");
-            if (!inputPin) return;
-            try {
-                var res = await fetch(WORKER_URL, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json", "X-Orchard-Auth": inputPin.trim() },
-                    body: JSON.stringify({ action: "verify_pin" })
                 });
-                var resData = await res.json().catch(() => ({}));
-                if (!res.ok || resData.error) throw new Error(resData.error || "Authentication failed.");
-                if (resData.author) {
-                    currentUserAuthor = resData.author;
-                    currentUserPin = inputPin;
-                    localStorage.setItem('orchard_active_author', currentUserAuthor);
-                    localStorage.setItem('orchard_user_pin', currentUserPin);
-                    state.lastUpdatedBy = currentUserAuthor;
-                    saveState();
-                }
-            } catch (err) { alert("Login Failed: " + err.message); }
-        }
+                return { wch: Math.min(60, Math.max(12, maxLen + 4)) };
+            });
 
-        function getActiveAuthorName() { return currentUserAuthor || 'Rob'; }
+            ws['!cols'] = colWidths;
 
-        async function fetchRepoData(isManualTrigger = false) {
-            var loadBtn = document.getElementById('load-file-btn');
-            if (loadBtn && isManualTrigger) { loadBtn.innerText = "⏳ Loading..."; loadBtn.disabled = true; }
-            try {
-                var res = await fetch('./data.json?v=' + new Date().getTime());
-                if (!res.ok) throw new Error("Failed fetching data.json");
-                var data = await res.json();
-                state = {
-                    lastUpdated: data.lastUpdated || getTodayISO(),
-                    lastUpdatedBy: data.lastUpdatedBy || "Rob",
-                    inventoryData: (data.inventoryData && data.inventoryData.length > 0) ? data.inventoryData : defaultInventorySeed,
-                    scheduleData: (data.scheduleData && data.scheduleData.length > 0) ? data.scheduleData : defaultScheduleSeed,
-                    metricsRegistry: data.metricsRegistry || [],
-                    activeGraphKeys: data.activeGraphKeys || [],
-                    growthData: data.growthData || [],
-                    harvestLogsData: data.harvestLogsData || [],
-                    logsData: data.logsData || []
-                };
-                saveLocalState();
-                renderAll();
-                if (loadBtn && isManualTrigger) loadBtn.innerText = "✅ Loaded!";
-            } catch (err) {
-                console.warn("Cloud read failed, using default state/local storage:", err);
-                loadLocalState();
-            } finally {
-                if (loadBtn && isManualTrigger) {
-                    setTimeout(() => { loadBtn.innerText = "📥 Load Latest"; loadBtn.disabled = false; }, 2500);
-                }
+            if (ws['!ref']) {
+                var range = XLSX.utils.decode_range(ws['!ref']);
+                ws['!autofilter'] = { ref: XLSX.utils.encode_range({ s: { r: 0, c: 0 }, e: { r: range.e.r, c: range.e.c } }) };
             }
         }
 
-        function saveLocalState() {
-            localStorage.setItem('orchard_state_full', JSON.stringify(state));
-            var disp = document.getElementById('last-updated-display');
-            if (disp) disp.innerText = `Last Synced: ${state.lastUpdated} (${state.lastUpdatedBy || 'Rob'})`;
-        }
+        // 1. MASTER INVENTORY TAB
+        var invRows = state.inventoryData.map(item => ({
+            "Cultivar": item.cultivar,
+            "Age Classification": item.ageCat || '—',
+            "Year Planted": item.yearPlanted || '—',
+            "Age at Planting": item.ageAtPlanting || '—',
+            "Rootstock": item.rootstock || '—',
+            "Latitude": item.lat || '',
+            "Longitude": item.lon || '',
+            "Bloom Start": item.bloomStart || '',
+            "Bloom End": item.bloomEnd || '',
+            "Ripening Start": item.ripeningStart || '',
+            "Ripening End": item.ripeningEnd || '',
+            "Est. Load": item.load || '0',
+            "Act. Load": calculateActualLoad(item.cultivar),
+            "Bags Hung": item.bags || '0',
+            "Directives & Action Items": item.directives || ''
+        }));
+        var wsInv = XLSX.utils.json_to_sheet(invRows);
+        formatWorksheet(wsInv, invRows);
+        XLSX.utils.book_append_sheet(wb, wsInv, "Master Inventory");
 
-        function loadLocalState() {
-            var stored = localStorage.getItem('orchard_state_full');
-            if (stored) state = JSON.parse(stored);
-            if (!state.scheduleData || state.scheduleData.length === 0) state.scheduleData = defaultScheduleSeed;
-            renderAll();
-        }
+        // 2. TREATMENT SCHEDULES TAB
+        var schedRows = state.scheduleData.map(s => ({
+            "Phase Category": s.phase,
+            "Treatment Type": s.type,
+            "Start Date": s.startDate || '',
+            "End Date": s.endDate || '',
+            "Target Cultivars / Tags": (s.tags || ["All Cultivars"]).join(", "),
+            "Instructions & Strategy": s.instructions
+        }));
+        var wsSched = XLSX.utils.json_to_sheet(schedRows);
+        formatWorksheet(wsSched, schedRows);
+        XLSX.utils.book_append_sheet(wb, wsSched, "Treatment Schedules");
 
-        function saveState() {
+        // 3. GROWTH METRICS TAB
+        var growthRows = state.growthData.map(g => {
+            var rowObj = {
+                "Measurement Date": g.date,
+                "Cultivar / Tree": g.tree,
+                "Logged By": g.loggedBy || 'Rob'
+            };
+            state.metricsRegistry.forEach(m => {
+                rowObj[`${m.name} (${m.unit})`] = g[m.key] !== undefined && g[m.key] !== null ? g[m.key] : '';
+            });
+            return rowObj;
+        });
+        var wsGrowth = XLSX.utils.json_to_sheet(growthRows);
+        formatWorksheet(wsGrowth, growthRows);
+        XLSX.utils.book_append_sheet(wb, wsGrowth, "Growth Metrics");
+
+        // 4. HARVEST LOGS TAB
+        var harvestRows = state.harvestLogsData.map(h => ({
+            "Harvest Date": h.date,
+            "Cultivar": h.cultivar,
+            "Quantity (# apples)": h.quantity,
+            "Logged By": h.loggedBy || 'Rob'
+        }));
+        var wsHarvest = XLSX.utils.json_to_sheet(harvestRows);
+        formatWorksheet(wsHarvest, harvestRows);
+        XLSX.utils.book_append_sheet(wb, wsHarvest, "Harvest Logs");
+
+        // 5. FIELD LOGS & NOTES TAB
+        var logRows = state.logsData.map(l => ({
+            "Log Date": l.date,
+            "Title": l.title || '',
+            "Type / Category": l.type,
+            "Age Class Filter": l.age || 'all',
+            "Cultivar Tags": (l.tags || ["All Cultivars"]).join(", "),
+            "Log Details & Observations": l.body,
+            "Logged By": l.loggedBy || 'Rob'
+        }));
+        var wsLogs = XLSX.utils.json_to_sheet(logRows);
+        formatWorksheet(wsLogs, logRows);
+        XLSX.utils.book_append_sheet(wb, wsLogs, "Field Logs & Notes");
+
+        // 6. CROP ABUNDANCES TAB
+        var abundanceRows = state.inventoryData.map(item => ({
+            "Cultivar": item.cultivar,
+            "Age Class": item.ageCat,
+            "Est. Load": item.load,
+            "Bags Hung": item.bags,
+            "Act. Harvested Total": calculateActualLoad(item.cultivar)
+        }));
+        var wsAbundance = XLSX.utils.json_to_sheet(abundanceRows);
+        formatWorksheet(wsAbundance, abundanceRows);
+        XLSX.utils.book_append_sheet(wb, wsAbundance, "Crop Abundances");
+
+        // WRITE FILE DOWNLOAD
+        XLSX.writeFile(wb, fileName);
+    }
+
+    function loadArchivedJsonFile() {
+        var fileInput = document.getElementById('importJsonFileInput');
+        if (!fileInput.files || fileInput.files.length === 0) {
+            alert("Please select a JSON file to import.");
+            return;
+        }
+        var file = fileInput.files[0];
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                var imported = JSON.parse(e.target.result);
+                if (imported && typeof imported === 'object') {
+                    state = {
+                        lastUpdated: imported.lastUpdated || getTodayISO(),
+                        lastUpdatedBy: imported.lastUpdatedBy || currentUserAuthor || "Rob",
+                        inventoryData: imported.inventoryData || defaultInventorySeed,
+                        scheduleData: imported.scheduleData || defaultScheduleSeed,
+                        metricsRegistry: imported.metricsRegistry || [],
+                        activeGraphKeys: imported.activeGraphKeys || [],
+                        growthData: imported.growthData || [],
+                        harvestLogsData: imported.harvestLogsData || [],
+                        logsData: imported.logsData || []
+                    };
+                    cleanupUnusedMetrics();
+                    saveState();
+                    toggleUtilitiesModal(false);
+                    alert("Archived dataset loaded successfully!");
+                }
+            } catch (err) {
+                alert("Error parsing JSON file: " + err.message);
+            }
+        };
+        reader.readAsText(file);
+    }
+
+    function clearAllDashboardData() {
+        if (!confirm("⚠️ WARNING: You are about to clear all seasonal data. Proceed?")) return;
+        var verification = prompt("🔒 DOUBLE VERIFICATION REQUIRED:\nType 'DELETE ALL DATA' below to confirm:");
+        if (verification === "DELETE ALL DATA") {
+            state.inventoryData.forEach(item => { item.load = "0"; item.bags = "0"; });
+            state.growthData = [];
+            state.harvestLogsData = [];
+            state.logsData = [];
+            cleanupUnusedMetrics();
+            saveState();
+            toggleUtilitiesModal(false);
+            alert("Active season records cleared!");
+        }
+    }
+
+    function handleAuthToggle() {
+        if (currentUserAuthor || currentUserPin) {
+            currentUserAuthor = ''; currentUserPin = '';
+            localStorage.removeItem('orchard_active_author');
+            localStorage.removeItem('orchard_user_pin');
+            updateAuthorDisplayUI();
+        } else {
+            promptPinLogin();
+        }
+    }
+
+    function updateAuthorDisplayUI() {
+        var displayEl = document.getElementById('active-user-display');
+        var tagEl = document.getElementById('author-display-tag');
+        var toggleBtn = document.getElementById('login-toggle-btn');
+
+        if (currentUserAuthor) {
+            if (displayEl) displayEl.innerText = `${currentUserAuthor} logged in`;
+            if (tagEl) tagEl.innerText = `(Authenticated via Worker PIN • Last sync: ${state.lastUpdatedBy || currentUserAuthor})`;
+            if (toggleBtn) { toggleBtn.innerText = "🔓 Logout"; toggleBtn.style.backgroundColor = "#c53030"; }
+        } else {
+            if (displayEl) displayEl.innerText = "Not Logged In";
+            if (tagEl) tagEl.innerText = `(Click "🔒 Login" to authenticate PIN)`;
+            if (toggleBtn) { toggleBtn.innerText = "🔒 Login"; toggleBtn.style.backgroundColor = "#d69e2e"; }
+        }
+    }
+
+    async function promptPinLogin() {
+        var inputPin = prompt("Enter Operator Security PIN:");
+        if (!inputPin) return;
+        try {
+            var res = await fetch(WORKER_URL, {
+                method: "POST",
+                headers: { "Content-Type": "application/json", "X-Orchard-Auth": inputPin.trim() },
+                body: JSON.stringify({ action: "verify_pin" })
+            });
+            var resData = await res.json().catch(() => ({}));
+            if (!res.ok || resData.error) throw new Error(resData.error || "Authentication failed.");
+            if (resData.author) {
+                currentUserAuthor = resData.author;
+                currentUserPin = inputPin;
+                localStorage.setItem('orchard_active_author', currentUserAuthor);
+                localStorage.setItem('orchard_user_pin', currentUserPin);
+                state.lastUpdatedBy = currentUserAuthor;
+                saveState();
+            }
+        } catch (err) { alert("Login Failed: " + err.message); }
+    }
+
+    function getActiveAuthorName() { return currentUserAuthor || 'Rob'; }
+
+    async function fetchRepoData(isManualTrigger = false) {
+        var loadBtn = document.getElementById('load-file-btn');
+        if (loadBtn && isManualTrigger) { loadBtn.innerText = "⏳ Loading..."; loadBtn.disabled = true; }
+        try {
+            var res = await fetch('./data.json?v=' + new Date().getTime());
+            if (!res.ok) throw new Error("Failed fetching data.json");
+            var data = await res.json();
+            state = {
+                lastUpdated: data.lastUpdated || getTodayISO(),
+                lastUpdatedBy: data.lastUpdatedBy || "Rob",
+                inventoryData: (data.inventoryData && data.inventoryData.length > 0) ? data.inventoryData : defaultInventorySeed,
+                scheduleData: (data.scheduleData && data.scheduleData.length > 0) ? data.scheduleData : defaultScheduleSeed,
+                metricsRegistry: data.metricsRegistry || [],
+                activeGraphKeys: data.activeGraphKeys || [],
+                growthData: data.growthData || [],
+                harvestLogsData: data.harvestLogsData || [],
+                logsData: data.logsData || []
+            };
+            cleanupUnusedMetrics();
             saveLocalState();
             renderAll();
+            if (loadBtn && isManualTrigger) loadBtn.innerText = "✅ Loaded!";
+        } catch (err) {
+            console.warn("Cloud read failed, using default state/local storage:", err);
+            loadLocalState();
+        } finally {
+            if (loadBtn && isManualTrigger) {
+                setTimeout(() => { loadBtn.innerText = "📥 Load Latest"; loadBtn.disabled = false; }, 2500);
+            }
         }
+    }
 
-        async function saveDashboardFile() {
-            var btn = document.getElementById('save-file-btn');
-            if (!currentUserPin) { await promptPinLogin(); if (!currentUserPin) return; }
-            if (!btn || btn.disabled) return;
+    function saveLocalState() {
+        localStorage.setItem('orchard_state_full', JSON.stringify(state));
+        var disp = document.getElementById('last-updated-display');
+        if (disp) disp.innerText = `Last Synced: ${state.lastUpdated} (${state.lastUpdatedBy || 'Rob'})`;
+    }
 
-            try {
-                var now = new Date();
-                state.lastUpdated = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-                btn.innerText = "⏳ Syncing..."; btn.disabled = true;
+    function loadLocalState() {
+        var stored = localStorage.getItem('orchard_state_full');
+        if (stored) state = JSON.parse(stored);
+        if (!state.scheduleData || state.scheduleData.length === 0) state.scheduleData = defaultScheduleSeed;
+        cleanupUnusedMetrics();
+        renderAll();
+    }
 
-                var res = await fetch(WORKER_URL, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json", "X-Orchard-Auth": String(currentUserPin).trim() },
-                    body: JSON.stringify({ data: state })
-                });
+    function saveState() {
+        cleanupUnusedMetrics();
+        saveLocalState();
+        renderAll();
+    }
 
-                var resData = await res.json().catch(() => ({}));
-                if (!res.ok || resData.error) throw new Error(resData.error || `HTTP ${res.status}`);
-                if (resData.author) {
-                    currentUserAuthor = resData.author;
-                    state.lastUpdatedBy = resData.author;
-                    localStorage.setItem('orchard_active_author', currentUserAuthor);
+    // AUTOMATIC GARBAGE COLLECTION FOR METRICS WITH ZERO ACTIVE DATA ENTRIES
+    function cleanupUnusedMetrics() {
+        if (!state.metricsRegistry) return;
+
+        var usedKeys = new Set();
+        state.growthData.forEach(row => {
+            Object.keys(row).forEach(k => {
+                if (row[k] !== null && row[k] !== undefined && row[k] !== '') {
+                    usedKeys.add(k);
                 }
-                saveState();
-                btn.innerText = `✅ Committed (${state.lastUpdatedBy})!`;
-            } catch (err) {
-                alert("Sync push failed: " + err.message);
-                btn.innerText = "❌ Sync Failed";
-            } finally {
-                setTimeout(() => { btn.innerText = "💾 Save & Sync"; btn.disabled = false; }, 3000);
-            }
-        }
-
-        function renderAll() {
-            updateAuthorDisplayUI();
-            setDefaultDates();
-            renderInventoryTable();
-            renderAllCultivarFilterOptions();
-            renderLogs();
-            renderGrowthTabUI();
-            renderHarvestLogs();
-            renderAbundances();
-            renderHarvestTimeline();
-            renderMapMarkers();
-            renderScheduleTabUI();
-        }
-
-        function renderAllCultivarFilterOptions() {
-            var options = '<option value="all">All Cultivars</option>' + state.inventoryData.map(i => `<option value="${i.cultivar}">${i.cultivar}</option>`).join('');
-            ['logCultivarFilter', 'harvestCultivarFilter', 'growthCultivarFilter', 'mapCultivarFilter'].forEach(id => {
-                var el = document.getElementById(id);
-                if (el) { var curr = el.value; el.innerHTML = options; el.value = curr || 'all'; }
             });
-            renderScheduleCultivarCheckboxes();
-            renderLogCultivarControls();
-        }
+        });
 
-        function formatDateRange(startDateStr, endDateStr, defaultText) {
-            if (!startDateStr && !endDateStr) return defaultText || '—';
-            var formatSingle = function(dStr) {
-                if (!dStr) return '';
-                var parts = dStr.split('-');
-                if (parts.length < 3) return dStr;
-                var dt = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
-                return dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-            };
-            var startFmt = formatSingle(startDateStr);
-            var endFmt = formatSingle(endDateStr);
-            if (startFmt && endFmt) return `${startFmt} - ${endFmt}`;
-            return startFmt || endFmt || defaultText || '—';
-        }
+        // Retain metric if it has entries in growthData OR was just created (inCreation flag)
+        state.metricsRegistry = state.metricsRegistry.filter(m => usedKeys.has(m.key) || m.inCreation);
+        var activeKeysSet = new Set(state.metricsRegistry.map(m => m.key));
+        state.activeGraphKeys = state.activeGraphKeys.filter(k => activeKeysSet.has(k));
+    }
 
-        function getTreeColors() {
-            var colors = {};
-            state.inventoryData.forEach(item => { colors[item.cultivar] = item.color || '#1b4332'; });
-            return colors;
-        }
+    async function saveDashboardFile() {
+        var btn = document.getElementById('save-file-btn');
+        if (!currentUserPin) { await promptPinLogin(); if (!currentUserPin) return; }
+        if (!btn || btn.disabled) return;
 
-        function parseLoadNumeric(loadStr) {
-            if (!loadStr) return 0;
-            var str = String(loadStr).trim();
-            if (str.includes('-')) {
-                var parts = str.split('-');
-                return ((parseFloat(parts[0]) || 0) + (parseFloat(parts[1]) || 0)) / 2;
-            }
-            return parseFloat(str) || 0;
-        }
+        try {
+            var now = new Date();
+            state.lastUpdated = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+            btn.innerText = "⏳ Syncing..."; btn.disabled = true;
 
-        function calculateActualLoad(cultivarName) {
-            return state.harvestLogsData.filter(log => log.cultivar === cultivarName).reduce((sum, log) => sum + (parseInt(log.quantity) || 0), 0);
-        }
-
-        function getLatestMetricValue(treeName, metricKey) {
-            var matchingEntries = state.growthData.filter(d => d.tree === treeName && d[metricKey] !== null && d[metricKey] !== undefined && d[metricKey] !== '');
-            if (matchingEntries.length === 0) return '—';
-            matchingEntries.sort((a, b) => new Date(b.date) - new Date(a.date));
-            var latestVal = matchingEntries[0][metricKey];
-            return (metricKey === 'height' || metricKey === 'dia') ? latestVal + '"' : latestVal;
-        }
-
-        function renderInventoryTable() {
-            var tbody = document.getElementById('inventoryTableBody');
-            if (!tbody) return;
-            tbody.innerHTML = '';
-
-            state.inventoryData.forEach((item, index) => {
-                var latestHeight = getLatestMetricValue(item.cultivar, 'height');
-                var latestDia = getLatestMetricValue(item.cultivar, 'dia');
-                var bloomDisplay = formatDateRange(item.bloomStart, item.bloomEnd, item.bloom);
-                var ripeningDisplay = formatDateRange(item.ripeningStart, item.ripeningEnd, item.ripening);
-                var actLoad = calculateActualLoad(item.cultivar);
-                var gpsDisplay = (item.lat && item.lon) ? `${parseFloat(item.lat).toFixed(5)}, ${parseFloat(item.lon).toFixed(5)}` : '—';
-
-                var tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td><strong>${item.cultivar}</strong></td>
-                    <td>${item.yearPlanted || '—'}</td>
-                    <td>${item.ageAtPlanting || '—'}</td>
-                    <td>${latestHeight}</td>
-                    <td>${latestDia}</td>
-                    <td>${item.rootstock}</td>
-                    <td><span style="font-family: monospace; font-size: 8pt; color: #0284c7;">${gpsDisplay}</span></td>
-                    <td>${bloomDisplay}</td>
-                    <td>${ripeningDisplay}</td>
-                    <td>${item.load}</td>
-                    <td><strong>${actLoad}</strong></td>
-                    <td>${item.bags}</td>
-                    <td>${item.directives}</td>
-                    <td style="text-align: right;">
-                        <div class="table-actions-cell">
-                            <button class="btn-action" style="background-color: #2b6cb0;" onclick="editInventoryRecord(${index})">Edit</button>
-                            <button class="btn-action" style="background-color: #9b2c2c;" onclick="deleteInventoryRecord(${index})">Delete</button>
-                        </div>
-                    </td>
-                `;
-                tbody.appendChild(tr);
+            var res = await fetch(WORKER_URL, {
+                method: "POST",
+                headers: { "Content-Type": "application/json", "X-Orchard-Auth": String(currentUserPin).trim() },
+                body: JSON.stringify({ data: state })
             });
 
-            renderMetricTreeOptions();
-            renderHarvestTreeOptions();
-            renderLogCultivarControls();
-        }
-
-        function saveInventoryRecord() {
-            var cultivar = document.getElementById('invCultivar').value.trim();
-            if (!cultivar) { alert('Please enter a cultivar name.'); return; }
-
-            var record = {
-                cultivar: cultivar,
-                ageCat: document.getElementById('invAgeCat').value,
-                yearPlanted: document.getElementById('invYearPlanted').value.trim() || '—',
-                ageAtPlanting: document.getElementById('invAgeAtPlanting').value.trim() || '—',
-                rootstock: document.getElementById('invRootstock').value.trim() || '—',
-                lat: document.getElementById('invLat').value ? parseFloat(document.getElementById('invLat').value) : null,
-                lon: document.getElementById('invLon').value ? parseFloat(document.getElementById('invLon').value) : null,
-                bloomStart: document.getElementById('invBloomStart').value,
-                bloomEnd: document.getElementById('invBloomEnd').value,
-                ripeningStart: document.getElementById('invRipeningStart').value,
-                ripeningEnd: document.getElementById('invRipeningEnd').value,
-                bloom: formatDateRange(document.getElementById('invBloomStart').value, document.getElementById('invBloomEnd').value, ''),
-                ripening: formatDateRange(document.getElementById('invRipeningStart').value, document.getElementById('invRipeningEnd').value, ''),
-                load: document.getElementById('invLoad').value.trim() || '0',
-                bags: document.getElementById('invBags').value.trim() || '0',
-                color: document.getElementById('invColor').value || '#1b4332',
-                directives: document.getElementById('invDirectives').value.trim() || '—'
-            };
-
-            var editIndex = parseInt(document.getElementById('editInventoryIndex').value);
-            if (editIndex >= 0 && editIndex < state.inventoryData.length) {
-                var oldName = state.inventoryData[editIndex].cultivar;
-                state.inventoryData[editIndex] = record;
-                if (oldName !== cultivar) {
-                    state.growthData.forEach(g => { if (g.tree === oldName) g.tree = cultivar; });
-                    state.harvestLogsData.forEach(h => { if (h.cultivar === oldName) h.cultivar = cultivar; });
-                    state.logsData.forEach(l => { if (l.tags) l.tags = l.tags.map(t => t === oldName ? cultivar : t); });
-                }
-            } else {
-                state.inventoryData.push(record);
+            var resData = await res.json().catch(() => ({}));
+            if (!res.ok || resData.error) throw new Error(resData.error || `HTTP ${res.status}`);
+            if (resData.author) {
+                currentUserAuthor = resData.author;
+                state.lastUpdatedBy = resData.author;
+                localStorage.setItem('orchard_active_author', currentUserAuthor);
             }
-
-            resetInventoryForm();
             saveState();
+            btn.innerText = `✅ Committed (${state.lastUpdatedBy})!`;
+        } catch (err) {
+            alert("Sync push failed: " + err.message);
+            btn.innerText = "❌ Sync Failed";
+        } finally {
+            setTimeout(() => { btn.innerText = "💾 Save & Sync"; btn.disabled = false; }, 3000);
         }
+    }
 
-        function editInventoryRecord(index) {
-            var item = state.inventoryData[index];
-            if (!item) return;
-            document.getElementById('editInventoryIndex').value = index;
-            document.getElementById('invCultivar').value = item.cultivar;
-            document.getElementById('invAgeCat').value = item.ageCat || 'bearing';
-            document.getElementById('invYearPlanted').value = item.yearPlanted || '';
-            document.getElementById('invAgeAtPlanting').value = item.ageAtPlanting || '';
-            document.getElementById('invRootstock').value = item.rootstock || '';
-            document.getElementById('invLat').value = item.lat || '';
-            document.getElementById('invLon').value = item.lon || '';
-            document.getElementById('invBloomStart').value = item.bloomStart || getTodayISO();
-            document.getElementById('invBloomEnd').value = item.bloomEnd || getTodayISO();
-            document.getElementById('invRipeningStart').value = item.ripeningStart || getTodayISO();
-            document.getElementById('invRipeningEnd').value = item.ripeningEnd || getTodayISO();
-            document.getElementById('invLoad').value = item.load || '';
-            document.getElementById('invBags').value = item.bags || '';
-            document.getElementById('invColor').value = item.color || '#1b4332';
-            document.getElementById('invDirectives').value = item.directives || '';
-            document.getElementById('saveInventoryBtn').innerText = 'Update Master Cultivar';
-            document.getElementById('cancelInventoryBtn').style.display = 'inline-block';
-            document.getElementById('inventoryFormGrid').scrollIntoView({ behavior: 'smooth' });
+    function renderAll() {
+        updateAuthorDisplayUI();
+        setDefaultDates();
+        renderInventoryTable();
+        renderAllCultivarFilterOptions();
+        renderLogs();
+        renderGrowthTabUI();
+        renderHarvestLogs();
+        renderAbundances();
+        renderHarvestTimeline();
+        renderMapMarkers();
+        renderScheduleTabUI();
+    }
+
+    function renderAllCultivarFilterOptions() {
+        var options = '<option value="all">All Cultivars</option>' + state.inventoryData.map(i => `<option value="${i.cultivar}">${i.cultivar}</option>`).join('');
+        ['logCultivarFilter', 'harvestCultivarFilter', 'growthCultivarFilter', 'mapCultivarFilter'].forEach(id => {
+            var el = document.getElementById(id);
+            if (el) { var curr = el.value; el.innerHTML = options; el.value = curr || 'all'; }
+        });
+        renderScheduleCultivarCheckboxes();
+        renderLogCultivarControls();
+    }
+
+    function formatDateRange(startDateStr, endDateStr, defaultText) {
+        if (!startDateStr && !endDateStr) return defaultText || '—';
+        var formatSingle = function(dStr) {
+            if (!dStr) return '';
+            var parts = dStr.split('-');
+            if (parts.length < 3) return dStr;
+            var dt = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+            return dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        };
+        var startFmt = formatSingle(startDateStr);
+        var endFmt = formatSingle(endDateStr);
+        if (startFmt && endFmt) return `${startFmt} - ${endFmt}`;
+        return startFmt || endFmt || defaultText || '—';
+    }
+
+    function getTreeColors() {
+        var colors = {};
+        state.inventoryData.forEach(item => { colors[item.cultivar] = item.color || '#1b4332'; });
+        return colors;
+    }
+
+    function parseLoadNumeric(loadStr) {
+        if (!loadStr) return 0;
+        var str = String(loadStr).trim();
+        if (str.includes('-')) {
+            var parts = str.split('-');
+            return ((parseFloat(parts[0]) || 0) + (parseFloat(parts[1]) || 0)) / 2;
         }
+        return parseFloat(str) || 0;
+    }
 
-        function deleteInventoryRecord(index) {
-            var item = state.inventoryData[index];
-            if (!item) return;
-            if (!confirm(`Are you sure you want to delete "${item.cultivar}" from the Master Inventory?`)) return;
-            var confirmName = prompt(`⚠️ SECURITY CONFIRMATION:\nType '${item.cultivar}' below to confirm deletion:`);
-            if (confirmName === item.cultivar) {
-                state.inventoryData.splice(index, 1);
-                saveState();
-            } else { alert("Deletion cancelled."); }
-        }
+    function calculateActualLoad(cultivarName) {
+        return state.harvestLogsData.filter(log => log.cultivar === cultivarName).reduce((sum, log) => sum + (parseInt(log.quantity) || 0), 0);
+    }
 
-        function resetInventoryForm() {
-            var todayStr = getTodayISO();
-            document.getElementById('editInventoryIndex').value = -1;
-            document.getElementById('invCultivar').value = '';
-            document.getElementById('invAgeCat').value = 'bearing';
-            document.getElementById('invYearPlanted').value = '';
-            document.getElementById('invAgeAtPlanting').value = '';
-            document.getElementById('invRootstock').value = '';
-            document.getElementById('invLat').value = '';
-            document.getElementById('invLon').value = '';
-            document.getElementById('invBloomStart').value = todayStr;
-            document.getElementById('invBloomEnd').value = todayStr;
-            document.getElementById('invRipeningStart').value = todayStr;
-            document.getElementById('invRipeningEnd').value = todayStr;
-            document.getElementById('invLoad').value = '';
-            document.getElementById('invBags').value = '';
-            document.getElementById('invColor').value = '#1b4332';
-            document.getElementById('invDirectives').value = '';
-            document.getElementById('saveInventoryBtn').innerText = 'Save Cultivar to Master Inventory';
-            document.getElementById('cancelInventoryBtn').style.display = 'none';
-        }
+    function getLatestMetricValue(treeName, metricKey) {
+        var matchingEntries = state.growthData.filter(d => d.tree === treeName && d[metricKey] !== null && d[metricKey] !== undefined && d[metricKey] !== '');
+        if (matchingEntries.length === 0) return '—';
+        matchingEntries.sort((a, b) => new Date(b.date) - new Date(a.date));
+        var latestVal = matchingEntries[0][metricKey];
+        return (metricKey === 'height' || metricKey === 'dia') ? latestVal + '"' : latestVal;
+    }
 
-        // TREATMENT SCHEDULE TAB LOGIC
-        function renderScheduleCultivarCheckboxes() {
-            var grid = document.getElementById('schedCultivarCheckboxes');
-            if (!grid) return;
-            grid.innerHTML = `<label class="checkbox-item" style="font-weight: bold; width: 100%; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px; margin-bottom: 4px;">
-                <input type="checkbox" id="sched_tag_all" onchange="toggleAllSchedCultivars(this.checked)"> All Cultivars
-            </label>` + state.inventoryData.map(i => `<label class="checkbox-item"><input type="checkbox" class="sched-cultivar-cb" value="${i.cultivar}"> <span>${i.cultivar}</span></label>`).join('');
-        }
+    function renderInventoryTable() {
+        var tbody = document.getElementById('inventoryTableBody');
+        if (!tbody) return;
+        tbody.innerHTML = '';
 
-        function toggleAllSchedCultivars(checked) {
-            document.querySelectorAll('.sched-cultivar-cb').forEach(cb => { cb.checked = checked; });
-        }
+        state.inventoryData.forEach((item, index) => {
+            var latestHeight = getLatestMetricValue(item.cultivar, 'height');
+            var latestDia = getLatestMetricValue(item.cultivar, 'dia');
+            var bloomDisplay = formatDateRange(item.bloomStart, item.bloomEnd, item.bloom);
+            var ripeningDisplay = formatDateRange(item.ripeningStart, item.ripeningEnd, item.ripening);
+            var actLoad = calculateActualLoad(item.cultivar);
+            var gpsDisplay = (item.lat && item.lon) ? `${parseFloat(item.lat).toFixed(5)}, ${parseFloat(item.lon).toFixed(5)}` : '—';
 
-        function getSelectedSchedTags() {
-            var allCb = document.getElementById('sched_tag_all');
-            if (allCb && allCb.checked) return ["All Cultivars"];
-            var selected = Array.from(document.querySelectorAll('.sched-cultivar-cb:checked')).map(cb => cb.value);
-            return selected.length > 0 ? selected : ["All Cultivars"];
-        }
-
-        function renderScheduleTabUI() {
-            var container = document.getElementById('schedulesContainer');
-            if (!container) return;
-            container.innerHTML = '';
-
-            if (!state.scheduleData) state.scheduleData = defaultScheduleSeed;
-
-            var phaseGroups = {};
-            state.scheduleData.forEach((item, index) => {
-                var p = item.phase || "General Management";
-                if (!phaseGroups[p]) phaseGroups[p] = [];
-                phaseGroups[p].push({ item, index });
-            });
-
-            for (var phaseName in phaseGroups) {
-                var itemsArray = phaseGroups[phaseName];
-                var card = document.createElement('div');
-                card.className = 'card';
-
-                var rowsHTML = itemsArray.map(obj => {
-                    var s = obj.item;
-                    var idx = obj.index;
-                    var dateDisplay = formatDateRange(s.startDate, s.endDate, s.targetWindow || '—');
-                    var badgeClass = 'badge badge-pest';
-                    if (s.type === 'Soil Armor') badgeClass = 'badge badge-soil';
-                    else if (s.type === 'Nutrition') badgeClass = 'badge badge-nutrition';
-                    else if (s.type === 'Irrigation') badgeClass = 'badge badge-irrigation';
-                    else if (s.type === 'Sanitation') badgeClass = 'badge badge-bearing';
-
-                    var tagsHTML = (s.tags || ["All Cultivars"]).map(t => `<span class="badge badge-tag" style="margin-right:2px;">${t}</span>`).join('');
-
-                    return `
-                        <tr>
-                            <td><strong>${dateDisplay}</strong><br><div style="margin-top:4px;">${tagsHTML}</div></td>
-                            <td><span class="${badgeClass}">${s.type}</span></td>
-                            <td>${s.instructions}</td>
-                            <td style="text-align: right;">
-                                <div class="table-actions-cell">
-                                    <button class="btn-action" style="background-color: #2b6cb0;" onclick="editScheduleRecord(${idx})">Edit</button>
-                                    <button class="btn-action" style="background-color: #9b2c2c;" onclick="deleteScheduleRecord(${idx})">Delete</button>
-                                </div>
-                            </td>
-                        </tr>
-                    `;
-                }).join('');
-
-                card.innerHTML = `
-                    <div class="card-title" style="color: #1b4332; border-bottom: 2px solid #d8f3dc; padding-bottom: 4px;">
-                        ${phaseName.toUpperCase()}
+            var tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><strong>${item.cultivar}</strong></td>
+                <td>${item.yearPlanted || '—'}</td>
+                <td>${item.ageAtPlanting || '—'}</td>
+                <td>${latestHeight}</td>
+                <td>${latestDia}</td>
+                <td>${item.rootstock}</td>
+                <td><span style="font-family: monospace; font-size: 8pt; color: #0284c7;">${gpsDisplay}</span></td>
+                <td>${bloomDisplay}</td>
+                <td>${ripeningDisplay}</td>
+                <td>${item.load}</td>
+                <td><strong>${actLoad}</strong></td>
+                <td>${item.bags}</td>
+                <td>${item.directives}</td>
+                <td style="text-align: right;">
+                    <div class="table-actions-cell">
+                        <button class="btn-action" style="background-color: #2b6cb0;" onclick="editInventoryRecord(${index})">Edit</button>
+                        <button class="btn-action" style="background-color: #9b2c2c;" onclick="deleteInventoryRecord(${index})">Delete</button>
                     </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table style="width: 100%; margin-top: 8px;">
-                                <thead>
-                                    <tr>
-                                        <th style="width: 25%;">Target Window &amp; Cultivars</th>
-                                        <th style="width: 20%;">Type</th>
-                                        <th style="width: 43%;">Operational Instructions &amp; Strategy</th>
-                                        <th style="width: 12%; text-align: right;">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    ${rowsHTML}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                `;
-                container.appendChild(card);
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        renderMetricTreeOptions();
+        renderHarvestTreeOptions();
+        renderLogCultivarControls();
+    }
+
+    function saveInventoryRecord() {
+        var cultivar = document.getElementById('invCultivar').value.trim();
+        if (!cultivar) { alert('Please enter a cultivar name.'); return; }
+
+        var record = {
+            cultivar: cultivar,
+            ageCat: document.getElementById('invAgeCat').value,
+            yearPlanted: document.getElementById('invYearPlanted').value.trim() || '—',
+            ageAtPlanting: document.getElementById('invAgeAtPlanting').value.trim() || '—',
+            rootstock: document.getElementById('invRootstock').value.trim() || '—',
+            lat: document.getElementById('invLat').value ? parseFloat(document.getElementById('invLat').value) : null,
+            lon: document.getElementById('invLon').value ? parseFloat(document.getElementById('invLon').value) : null,
+            bloomStart: document.getElementById('invBloomStart').value,
+            bloomEnd: document.getElementById('invBloomEnd').value,
+            ripeningStart: document.getElementById('invRipeningStart').value,
+            ripeningEnd: document.getElementById('invRipeningEnd').value,
+            bloom: formatDateRange(document.getElementById('invBloomStart').value, document.getElementById('invBloomEnd').value, ''),
+            ripening: formatDateRange(document.getElementById('invRipeningStart').value, document.getElementById('invRipeningEnd').value, ''),
+            load: document.getElementById('invLoad').value.trim() || '0',
+            bags: document.getElementById('invBags').value.trim() || '0',
+            color: document.getElementById('invColor').value || '#1b4332',
+            directives: document.getElementById('invDirectives').value.trim() || '—'
+        };
+
+        var editIndex = parseInt(document.getElementById('editInventoryIndex').value);
+        if (editIndex >= 0 && editIndex < state.inventoryData.length) {
+            var oldName = state.inventoryData[editIndex].cultivar;
+            state.inventoryData[editIndex] = record;
+            if (oldName !== cultivar) {
+                state.growthData.forEach(g => { if (g.tree === oldName) g.tree = cultivar; });
+                state.harvestLogsData.forEach(h => { if (h.cultivar === oldName) h.cultivar = cultivar; });
+                state.logsData.forEach(l => { if (l.tags) l.tags = l.tags.map(t => t === oldName ? cultivar : t); });
             }
+        } else {
+            state.inventoryData.push(record);
         }
 
-        function saveScheduleRecord() {
-            var phase = document.getElementById('schedPhase').value;
-            var type = document.getElementById('schedType').value;
-            var startDate = document.getElementById('schedDateStart').value;
-            var endDate = document.getElementById('schedDateEnd').value;
-            var instructions = document.getElementById('schedInstructions').value.trim();
-            var tags = getSelectedSchedTags();
+        resetInventoryForm();
+        saveState();
+    }
 
-            if (!instructions) {
-                alert("Please enter operational instructions for this treatment.");
-                return;
-            }
+    function editInventoryRecord(index) {
+        var item = state.inventoryData[index];
+        if (!item) return;
+        document.getElementById('editInventoryIndex').value = index;
+        document.getElementById('invCultivar').value = item.cultivar;
+        document.getElementById('invAgeCat').value = item.ageCat || 'bearing';
+        document.getElementById('invYearPlanted').value = item.yearPlanted || '';
+        document.getElementById('invAgeAtPlanting').value = item.ageAtPlanting || '';
+        document.getElementById('invRootstock').value = item.rootstock || '';
+        document.getElementById('invLat').value = item.lat || '';
+        document.getElementById('invLon').value = item.lon || '';
+        document.getElementById('invBloomStart').value = item.bloomStart || getTodayISO();
+        document.getElementById('invBloomEnd').value = item.bloomEnd || getTodayISO();
+        document.getElementById('invRipeningStart').value = item.ripeningStart || getTodayISO();
+        document.getElementById('invRipeningEnd').value = item.ripeningEnd || getTodayISO();
+        document.getElementById('invLoad').value = item.load || '';
+        document.getElementById('invBags').value = item.bags || '';
+        document.getElementById('invColor').value = item.color || '#1b4332';
+        document.getElementById('invDirectives').value = item.directives || '';
+        document.getElementById('saveInventoryBtn').innerText = 'Update Master Cultivar';
+        document.getElementById('cancelInventoryBtn').style.display = 'inline-block';
+        document.getElementById('inventoryFormGrid').scrollIntoView({ behavior: 'smooth' });
+    }
 
-            var record = { phase, type, startDate, endDate, tags, instructions };
-
-            var editIndex = parseInt(document.getElementById('editScheduleIndex').value);
-            if (editIndex >= 0 && editIndex < state.scheduleData.length) {
-                state.scheduleData[editIndex] = record;
-            } else {
-                state.scheduleData.push(record);
-            }
-
-            resetScheduleForm();
+    function deleteInventoryRecord(index) {
+        var item = state.inventoryData[index];
+        if (!item) return;
+        if (!confirm(`Are you sure you want to delete "${item.cultivar}" from the Master Inventory?`)) return;
+        var confirmName = prompt(`⚠️ SECURITY CONFIRMATION:\nType '${item.cultivar}' below to confirm deletion:`);
+        if (confirmName === item.cultivar) {
+            state.inventoryData.splice(index, 1);
             saveState();
+        } else { alert("Deletion cancelled."); }
+    }
+
+    function resetInventoryForm() {
+        var todayStr = getTodayISO();
+        document.getElementById('editInventoryIndex').value = -1;
+        document.getElementById('invCultivar').value = '';
+        document.getElementById('invAgeCat').value = 'bearing';
+        document.getElementById('invYearPlanted').value = '';
+        document.getElementById('invAgeAtPlanting').value = '';
+        document.getElementById('invRootstock').value = '';
+        document.getElementById('invLat').value = '';
+        document.getElementById('invLon').value = '';
+        document.getElementById('invBloomStart').value = todayStr;
+        document.getElementById('invBloomEnd').value = todayStr;
+        document.getElementById('invRipeningStart').value = todayStr;
+        document.getElementById('invRipeningEnd').value = todayStr;
+        document.getElementById('invLoad').value = '';
+        document.getElementById('invBags').value = '';
+        document.getElementById('invColor').value = '#1b4332';
+        document.getElementById('invDirectives').value = '';
+        document.getElementById('saveInventoryBtn').innerText = 'Save Cultivar to Master Inventory';
+        document.getElementById('cancelInventoryBtn').style.display = 'none';
+    }
+
+    // TREATMENT SCHEDULE TAB LOGIC
+    function renderScheduleCultivarCheckboxes() {
+        var grid = document.getElementById('schedCultivarCheckboxes');
+        if (!grid) return;
+        grid.innerHTML = `<label class="checkbox-item" style="font-weight: bold; width: 100%; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px; margin-bottom: 4px;">
+            <input type="checkbox" id="sched_tag_all" onchange="toggleAllSchedCultivars(this.checked)"> All Cultivars
+        </label>` + state.inventoryData.map(i => `<label class="checkbox-item"><input type="checkbox" class="sched-cultivar-cb" value="${i.cultivar}"> <span>${i.cultivar}</span></label>`).join('');
+    }
+
+    function toggleAllSchedCultivars(checked) {
+        document.querySelectorAll('.sched-cultivar-cb').forEach(cb => { cb.checked = checked; });
+    }
+
+    function getSelectedSchedTags() {
+        var allCb = document.getElementById('sched_tag_all');
+        if (allCb && allCb.checked) return ["All Cultivars"];
+        var selected = Array.from(document.querySelectorAll('.sched-cultivar-cb:checked')).map(cb => cb.value);
+        return selected.length > 0 ? selected : ["All Cultivars"];
+    }
+
+    function renderScheduleTabUI() {
+        var container = document.getElementById('schedulesContainer');
+        if (!container) return;
+        container.innerHTML = '';
+
+        if (!state.scheduleData) state.scheduleData = defaultScheduleSeed;
+
+        var phaseGroups = {};
+        state.scheduleData.forEach((item, index) => {
+            var p = item.phase || "General Management";
+            if (!phaseGroups[p]) phaseGroups[p] = [];
+            phaseGroups[p].push({ item, index });
+        });
+
+        for (var phaseName in phaseGroups) {
+            var itemsArray = phaseGroups[phaseName];
+            var card = document.createElement('div');
+            card.className = 'card';
+
+            var rowsHTML = itemsArray.map(obj => {
+                var s = obj.item;
+                var idx = obj.index;
+                var dateDisplay = formatDateRange(s.startDate, s.endDate, s.targetWindow || '—');
+                var badgeClass = 'badge badge-pest';
+                if (s.type === 'Soil Armor') badgeClass = 'badge badge-soil';
+                else if (s.type === 'Nutrition') badgeClass = 'badge badge-nutrition';
+                else if (s.type === 'Irrigation') badgeClass = 'badge badge-irrigation';
+                else if (s.type === 'Sanitation') badgeClass = 'badge badge-bearing';
+
+                var tagsHTML = (s.tags || ["All Cultivars"]).map(t => `<span class="badge badge-tag" style="margin-right:2px;">${t}</span>`).join('');
+
+                return `
+                    <tr>
+                        <td><strong>${dateDisplay}</strong><br><div style="margin-top:4px;">${tagsHTML}</div></td>
+                        <td><span class="${badgeClass}">${s.type}</span></td>
+                        <td>${s.instructions}</td>
+                        <td style="text-align: right;">
+                            <div class="table-actions-cell">
+                                <button class="btn-action" style="background-color: #2b6cb0;" onclick="editScheduleRecord(${idx})">Edit</button>
+                                <button class="btn-action" style="background-color: #9b2c2c;" onclick="deleteScheduleRecord(${idx})">Delete</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            card.innerHTML = `
+                <div class="card-title" style="color: #1b4332; border-bottom: 2px solid #d8f3dc; padding-bottom: 4px;">
+                    ${phaseName.toUpperCase()}
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table style="width: 100%; margin-top: 8px;">
+                            <thead>
+                                <tr>
+                                    <th style="width: 25%;">Target Window &amp; Cultivars</th>
+                                    <th style="width: 20%;">Type</th>
+                                    <th style="width: 43%;">Operational Instructions &amp; Strategy</th>
+                                    <th style="width: 12%; text-align: right;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${rowsHTML}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+            container.appendChild(card);
+        }
+    }
+
+    function saveScheduleRecord() {
+        var phase = document.getElementById('schedPhase').value;
+        var type = document.getElementById('schedType').value;
+        var startDate = document.getElementById('schedDateStart').value;
+        var endDate = document.getElementById('schedDateEnd').value;
+        var instructions = document.getElementById('schedInstructions').value.trim();
+        var tags = getSelectedSchedTags();
+
+        if (!instructions) {
+            alert("Please enter operational instructions for this treatment.");
+            return;
         }
 
-        function editScheduleRecord(index) {
-            var item = state.scheduleData[index];
-            if (!item) return;
+        var record = { phase, type, startDate, endDate, tags, instructions };
 
-            document.getElementById('editScheduleIndex').value = index;
-            document.getElementById('schedPhase').value = item.phase;
-            document.getElementById('schedType').value = item.type;
-            document.getElementById('schedDateStart').value = item.startDate || getTodayISO();
-            document.getElementById('schedDateEnd').value = item.endDate || getTodayISO();
-            document.getElementById('schedInstructions').value = item.instructions || '';
-
-            var allCb = document.getElementById('sched_tag_all');
-            if (item.tags && item.tags.includes("All Cultivars")) {
-                if (allCb) allCb.checked = true;
-                toggleAllSchedCultivars(true);
-            } else {
-                if (allCb) allCb.checked = false;
-                toggleAllSchedCultivars(false);
-                document.querySelectorAll('.sched-cultivar-cb').forEach(cb => {
-                    if (item.tags && item.tags.includes(cb.value)) cb.checked = true;
-                });
-            }
-
-            document.getElementById('saveScheduleBtn').innerText = 'Update Treatment Schedule Item';
-            document.getElementById('cancelScheduleBtn').style.display = 'inline-block';
-            document.getElementById('scheduleFormGrid').scrollIntoView({ behavior: 'smooth' });
+        var editIndex = parseInt(document.getElementById('editScheduleIndex').value);
+        if (editIndex >= 0 && editIndex < state.scheduleData.length) {
+            state.scheduleData[editIndex] = record;
+        } else {
+            state.scheduleData.push(record);
         }
 
-        function deleteScheduleRecord(index) {
-            if (confirm("Delete this treatment schedule item?")) {
-                state.scheduleData.splice(index, 1);
-                saveState();
-            }
-        }
+        resetScheduleForm();
+        saveState();
+    }
 
-        function resetScheduleForm() {
-            var todayStr = getTodayISO();
-            document.getElementById('editScheduleIndex').value = -1;
-            document.getElementById('schedDateStart').value = todayStr;
-            document.getElementById('schedDateEnd').value = todayStr;
-            document.getElementById('schedInstructions').value = '';
-            var allCb = document.getElementById('sched_tag_all');
+    function editScheduleRecord(index) {
+        var item = state.scheduleData[index];
+        if (!item) return;
+
+        document.getElementById('editScheduleIndex').value = index;
+        document.getElementById('schedPhase').value = item.phase;
+        document.getElementById('schedType').value = item.type;
+        document.getElementById('schedDateStart').value = item.startDate || getTodayISO();
+        document.getElementById('schedDateEnd').value = item.endDate || getTodayISO();
+        document.getElementById('schedInstructions').value = item.instructions || '';
+
+        var allCb = document.getElementById('sched_tag_all');
+        if (item.tags && item.tags.includes("All Cultivars")) {
+            if (allCb) allCb.checked = true;
+            toggleAllSchedCultivars(true);
+        } else {
             if (allCb) allCb.checked = false;
             toggleAllSchedCultivars(false);
-            document.getElementById('saveScheduleBtn').innerText = 'Add Treatment Schedule Item';
-            document.getElementById('cancelScheduleBtn').style.display = 'none';
-        }
-
-        // INITIALIZE AND RENDER INTERACTIVE GOOGLE SATELLITE MAP
-        function initOrchardMap() {
-            if (mapInstance) return;
-            var mapEl = document.getElementById('mapContainer');
-            if (!mapEl) return;
-
-            var defaultLat = 42.59524, defaultLon = -71.33690;
-            mapInstance = L.map('mapContainer').setView([defaultLat, defaultLon], 19);
-
-            L.tileLayer('https://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
-                maxZoom: 22,
-                subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-                attribution: '&copy; Google Maps Imagery'
-            }).addTo(mapInstance);
-
-            mapMarkersLayerGroup = L.layerGroup().addTo(mapInstance);
-        }
-
-        function renderMapMarkers() {
-            if (!mapInstance) initOrchardMap();
-            if (!mapMarkersLayerGroup) return;
-
-            mapMarkersLayerGroup.clearLayers();
-            var filterVal = document.getElementById('mapCultivarFilter') ? document.getElementById('mapCultivarFilter').value : 'all';
-            var bounds = [];
-
-            state.inventoryData.forEach(item => {
-                if (!item.lat || !item.lon) return;
-                if (filterVal !== 'all' && item.cultivar !== filterVal) return;
-
-                var lat = parseFloat(item.lat);
-                var lon = parseFloat(item.lon);
-                if (isNaN(lat) || isNaN(lon)) return;
-
-                bounds.push([lat, lon]);
-
-                var circleMarker = L.circleMarker([lat, lon], {
-                    radius: 9,
-                    fillColor: item.color || '#38bdf8',
-                    color: '#ffffff',
-                    weight: 2,
-                    opacity: 1,
-                    fillOpacity: 0.9
-                });
-
-                circleMarker.bindTooltip(item.cultivar, {
-                    permanent: true,
-                    direction: 'top',
-                    className: 'tree-map-label',
-                    offset: [0, -10]
-                });
-
-                var popupContent = `
-                    <div style="font-family: sans-serif; padding: 4px;">
-                        <h4 style="margin: 0 0 4px 0; color: #1b4332;">${item.cultivar}</h4>
-                        <div style="font-size: 8.5pt; color: #475569;">
-                            <strong>Age Class:</strong> ${item.ageCat || 'N/A'}<br>
-                            <strong>Rootstock:</strong> ${item.rootstock || 'N/A'}<br>
-                            <strong>Est. Load:</strong> ${item.load || '0'} apples<br>
-                            <strong>GPS:</strong> ${lat.toFixed(6)}, ${lon.toFixed(6)}
-                        </div>
-                    </div>
-                `;
-                circleMarker.bindPopup(popupContent);
-                mapMarkersLayerGroup.addLayer(circleMarker);
-            });
-
-            if (bounds.length > 0 && mapInstance) {
-                mapInstance.fitBounds(bounds, { padding: [50, 50], maxZoom: 20 });
-            }
-        }
-
-        function updateAbundanceValue(index, val) {
-            if (index >= 0 && index < state.inventoryData.length) {
-                state.inventoryData[index].load = val;
-                saveState();
-            }
-        }
-
-        function updateBagsValue(index, val) {
-            if (index >= 0 && index < state.inventoryData.length) {
-                state.inventoryData[index].bags = val;
-                saveState();
-            }
-        }
-
-        function renderAbundances() {
-            var chartContainer = document.getElementById('abundanceChart');
-            var tableBody = document.getElementById('abundanceTableBody');
-            var summaryDiv = document.getElementById('abundanceBaselineSummary');
-            if (!chartContainer || !tableBody) return;
-
-            chartContainer.innerHTML = ''; tableBody.innerHTML = '';
-            var maxVal = 0;
-            state.inventoryData.forEach(item => {
-                var val = parseLoadNumeric(item.load);
-                if (val > maxVal) maxVal = val;
-            });
-            if (maxVal === 0) maxVal = 100;
-
-            var sortedList = [...state.inventoryData].sort((a, b) => parseLoadNumeric(b.load) - parseLoadNumeric(a.load));
-            sortedList.forEach(item => {
-                var val = parseLoadNumeric(item.load);
-                var pct = Math.min(100, Math.round((val / maxVal) * 100));
-                var rowDiv = document.createElement('div');
-                rowDiv.className = 'chart-row';
-                rowDiv.innerHTML = `
-                    <div class="chart-label">${item.cultivar}</div>
-                    <div class="chart-bar-wrapper">
-                        <div class="chart-bar" style="width: ${pct}%; background: ${item.color || '#40916c'}; opacity: ${val === 0 ? 0.3 : 1.0};"></div>
-                    </div>
-                    <div class="chart-value">${item.load || '0'}</div>
-                `;
-                chartContainer.appendChild(rowDiv);
-            });
-
-            var freedomRem = 0, activeBaggedTotal = 0;
-            state.inventoryData.forEach((item, originalIndex) => {
-                var numLoad = parseLoadNumeric(item.load);
-                if (item.cultivar === 'Freedom') freedomRem = numLoad;
-                else activeBaggedTotal += (parseInt(item.bags) || 0);
-
-                var ripeningDisplay = formatDateRange(item.ripeningStart, item.ripeningEnd, item.ripening);
-                var tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td><strong>${item.cultivar}</strong></td>
-                    <td><span class="badge badge-${item.ageCat}">${item.ageCat}</span></td>
-                    <td>${ripeningDisplay}</td>
-                    <td><input type="text" class="abundance-edit-input" value="${item.load}" onchange="updateAbundanceValue(${originalIndex}, this.value)"></td>
-                    <td><input type="text" class="abundance-edit-input" style="width: 70px;" value="${item.bags}" onchange="updateBagsValue(${originalIndex}, this.value)"></td>
-                    <td style="text-align: right;">
-                        <div class="table-actions-cell">
-                            <button class="btn-action" style="background-color: #2b6cb0;" onclick="editInventoryRecord(${originalIndex})">Edit</button>
-                            <button class="btn-action" style="background-color: #9b2c2c;" onclick="deleteInventoryRecord(${originalIndex})">Delete</button>
-                        </div>
-                    </td>
-                `;
-                tableBody.appendChild(tr);
-            });
-
-            if (summaryDiv) {
-                summaryDiv.innerHTML = `<strong>Current Inventory Baseline:</strong> ~${freedomRem} apples remaining on Freedom with ${activeBaggedTotal} verified bags across non-Freedom cultivars (~${freedomRem + activeBaggedTotal} total active apples).`;
-            }
-        }
-
-        var timelineWeeks = [
-            { name: "Late Aug", start: new Date(2026, 7, 16), end: new Date(2026, 7, 31) },
-            { name: "Early Sept", start: new Date(2026, 8, 1), end: new Date(2026, 8, 10) },
-            { name: "Mid Sept", start: new Date(2026, 8, 11), end: new Date(2026, 8, 20) },
-            { name: "Late Sept", start: new Date(2026, 8, 21), end: new Date(2026, 8, 30) },
-            { name: "Early Oct", start: new Date(2026, 9, 1), end: new Date(2026, 9, 10) },
-            { name: "Mid Oct", start: new Date(2026, 9, 11), end: new Date(2026, 9, 20) },
-            { name: "Late Oct", start: new Date(2026, 9, 21), end: new Date(2026, 9, 31) }
-        ];
-
-        function getHarvestWindowSpec(item) {
-            if (item.ripeningStart && item.ripeningEnd) {
-                var sParts = item.ripeningStart.split('-');
-                var eParts = item.ripeningEnd.split('-');
-                var startDate = new Date(parseInt(sParts[0]), parseInt(sParts[1]) - 1, parseInt(sParts[2]));
-                var endDate = new Date(parseInt(eParts[0]), parseInt(eParts[1]) - 1, parseInt(eParts[2]));
-
-                var rangeStart = new Date(2026, 7, 16), rangeEnd = new Date(2026, 9, 31);
-                var totalDays = (rangeEnd - rangeStart) / (1000 * 60 * 60 * 24);
-
-                var clampedStart = Math.max(rangeStart, Math.min(rangeEnd, startDate));
-                var clampedEnd = Math.max(rangeStart, Math.min(rangeEnd, endDate));
-
-                var leftPct = Math.max(0, Math.min(100, ((clampedStart - rangeStart) / (1000 * 60 * 60 * 24) / totalDays) * 100));
-                var rightPct = Math.max(0, Math.min(100, ((clampedEnd - rangeStart) / (1000 * 60 * 60 * 24) / totalDays) * 100));
-                var widthPct = Math.max(4, rightPct - leftPct);
-
-                var activeWeeks = [];
-                timelineWeeks.forEach((w, idx) => {
-                    if (startDate <= w.end && endDate >= w.start) activeWeeks.push(idx);
-                });
-
-                return { left: leftPct.toFixed(2), width: widthPct.toFixed(2), weeks: activeWeeks, display: formatDateRange(item.ripeningStart, item.ripeningEnd, item.ripening) };
-            }
-            return { left: 42.84, width: 14.28, weeks: [3], display: item.ripening || "Late Sept" };
-        }
-
-        function renderHarvestTimeline() {
-            var container = document.getElementById('dynamicTimelineRowsContainer');
-            var gantryContainer = document.getElementById('invertedVolumeGantry');
-            if (!container || !gantryContainer) return;
-
-            container.innerHTML = ''; gantryContainer.innerHTML = '';
-            var weeklyTotals = [0, 0, 0, 0, 0, 0, 0];
-            state.inventoryData.forEach(item => {
-                var loadNum = parseLoadNumeric(item.load);
-                var spec = getHarvestWindowSpec(item);
-                var isPear = item.cultivar.toLowerCase().includes('pear') || item.cultivar.toLowerCase().includes('seckel');
-                var isZero = loadNum === 0;
-
-                var row = document.createElement('div');
-                row.className = 'timeline-row-item';
-
-                var barClass = 'timeline-span-bar';
-                if (isPear) barClass += ' pear';
-                if (isZero) barClass += ' zero-load';
-
-                var barStyle = `left: ${spec.left}%; width: ${spec.width}%;`;
-                if (!isZero && item.color) barStyle += ` background: ${item.color};`;
-
-                row.innerHTML = `
-                    <div class="grid-side-label">${item.cultivar}</div>
-                    <div class="grid-main-content">
-                        <div class="timeline-track-lane">
-                            <div class="${barClass}" style="${barStyle}">
-                                ${spec.display} ${isZero ? '(0)' : '(' + item.load + ')'}
-                            </div>
-                        </div>
-                    </div>
-                `;
-                container.appendChild(row);
-
-                if (loadNum > 0 && spec.weeks.length > 0) {
-                    var perWeek = loadNum / spec.weeks.length;
-                    spec.weeks.forEach(wIdx => { if (wIdx >= 0 && wIdx < 7) weeklyTotals[wIdx] += perWeek; });
-                }
-            });
-
-            var maxWeekly = Math.max(...weeklyTotals) || 100;
-            weeklyTotals.forEach((total) => {
-                var col = document.createElement('div');
-                col.className = 'volume-vertical-column';
-                var heightPx = total === 0 ? 0 : Math.round((total / maxWeekly) * 115);
-                var isPeak = total === maxWeekly && total > 0;
-                col.innerHTML = `
-                    <div class="inverted-vol-bar ${isPeak ? 'peak-surge' : ''}" style="height: ${heightPx}px;"></div>
-                    <div class="vol-numerical-tag ${isPeak ? 'peak-text' : ''}">${Math.round(total)}</div>
-                `;
-                gantryContainer.appendChild(col);
+            document.querySelectorAll('.sched-cultivar-cb').forEach(cb => {
+                if (item.tags && item.tags.includes(cb.value)) cb.checked = true;
             });
         }
 
-        function renderMetricTreeOptions() {
-            var select = document.getElementById('entryTree');
-            if (!select) return;
-            select.innerHTML = state.inventoryData.map(i => `<option value="${i.cultivar}">${i.cultivar}</option>`).join('');
-        }
+        document.getElementById('saveScheduleBtn').innerText = 'Update Treatment Schedule Item';
+        document.getElementById('cancelScheduleBtn').style.display = 'inline-block';
+        document.getElementById('scheduleFormGrid').scrollIntoView({ behavior: 'smooth' });
+    }
 
-        function renderHarvestTreeOptions() {
-            var select = document.getElementById('harvestCultivar');
-            if (!select) return;
-            select.innerHTML = state.inventoryData.map(i => `<option value="${i.cultivar}">${i.cultivar}</option>`).join('');
-        }
-
-        function renderLogCultivarControls() {
-            var grid = document.getElementById('logCultivarCheckboxes');
-            if (grid) {
-                grid.innerHTML = `<label class="checkbox-item" style="font-weight: bold; width: 100%; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px; margin-bottom: 4px;">
-                    <input type="checkbox" id="tag_all_cultivars" onchange="toggleAllLogCultivars(this.checked)"> All Cultivars
-                </label>` + state.inventoryData.map(i => `<label class="checkbox-item"><input type="checkbox" class="log-cultivar-cb" value="${i.cultivar}"> <span>${i.cultivar}</span></label>`).join('');
-            }
-        }
-
-        function toggleAllLogCultivars(checked) {
-            document.querySelectorAll('.log-cultivar-cb').forEach(cb => { cb.checked = checked; });
-        }
-
-        function getSelectedLogTags() {
-            var allCb = document.getElementById('tag_all_cultivars');
-            if (allCb && allCb.checked) return ["All Cultivars"];
-            var selected = Array.from(document.querySelectorAll('.log-cultivar-cb:checked')).map(cb => cb.value);
-            return selected.length > 0 ? selected : ["All Cultivars"];
-        }
-
-        function renderHarvestLogs() {
-            var tbody = document.getElementById('harvestTableBody');
-            if (!tbody) return;
-            tbody.innerHTML = '';
-            var selectedCultivar = document.getElementById('harvestCultivarFilter') ? document.getElementById('harvestCultivarFilter').value : 'all';
-
-            state.harvestLogsData.forEach((log, index) => {
-                if (selectedCultivar !== 'all' && log.cultivar !== selectedCultivar) return;
-                var authorName = (log.loggedBy === 'Joe') ? 'Rob' : (log.loggedBy || 'Rob');
-                var tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${log.date}</td>
-                    <td><strong>${log.cultivar}</strong></td>
-                    <td>${log.quantity}</td>
-                    <td><span class="user-tag">${authorName}</span></td>
-                    <td style="text-align: right;">
-                        <div class="table-actions-cell">
-                            <button class="btn-action" style="background-color: #2b6cb0;" onclick="editHarvestLog(${index})">Edit</button>
-                            <button class="btn-action" style="background-color: #9b2c2c;" onclick="deleteHarvestLog(${index})">Delete</button>
-                        </div>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function saveHarvestLog() {
-            var dateVal = document.getElementById('harvestDate').value;
-            var cultivarVal = document.getElementById('harvestCultivar').value;
-            var quantityVal = parseInt(document.getElementById('harvestQuantity').value);
-            if (!dateVal || !cultivarVal || isNaN(quantityVal)) return;
-
-            var log = { date: dateVal, cultivar: cultivarVal, quantity: quantityVal, loggedBy: getActiveAuthorName() };
-            var editIndex = parseInt(document.getElementById('editHarvestIndex').value);
-            if (editIndex >= 0 && editIndex < state.harvestLogsData.length) state.harvestLogsData[editIndex] = log;
-            else state.harvestLogsData.unshift(log);
-
-            resetHarvestForm();
+    function deleteScheduleRecord(index) {
+        if (confirm("Delete this treatment schedule item?")) {
+            state.scheduleData.splice(index, 1);
             saveState();
         }
+    }
 
-        function editHarvestLog(index) {
-            var log = state.harvestLogsData[index];
-            if (!log) return;
-            document.getElementById('editHarvestIndex').value = index;
-            document.getElementById('harvestDate').value = log.date;
-            document.getElementById('harvestCultivar').value = log.cultivar;
-            document.getElementById('harvestQuantity').value = log.quantity;
-            document.getElementById('saveHarvestBtn').innerText = 'Update Harvest Log';
-            document.getElementById('cancelHarvestBtn').style.display = 'inline-block';
-        }
+    function resetScheduleForm() {
+        var todayStr = getTodayISO();
+        document.getElementById('editScheduleIndex').value = -1;
+        document.getElementById('schedDateStart').value = todayStr;
+        document.getElementById('schedDateEnd').value = todayStr;
+        document.getElementById('schedInstructions').value = '';
+        var allCb = document.getElementById('sched_tag_all');
+        if (allCb) allCb.checked = false;
+        toggleAllSchedCultivars(false);
+        document.getElementById('saveScheduleBtn').innerText = 'Add Treatment Schedule Item';
+        document.getElementById('cancelScheduleBtn').style.display = 'none';
+    }
 
-        function deleteHarvestLog(index) {
-            if (confirm('Delete harvest log entry?')) {
-                state.harvestLogsData.splice(index, 1);
-                saveState();
-            }
-        }
+    // INITIALIZE AND RENDER INTERACTIVE GOOGLE SATELLITE MAP
+    function initOrchardMap() {
+        if (mapInstance) return;
+        var mapEl = document.getElementById('mapContainer');
+        if (!mapEl) return;
 
-        function resetHarvestForm() {
-            document.getElementById('editHarvestIndex').value = -1;
-            document.getElementById('harvestDate').value = getTodayISO();
-            document.getElementById('harvestQuantity').value = '';
-            document.getElementById('saveHarvestBtn').innerText = 'Log Harvest';
-            document.getElementById('cancelHarvestBtn').style.display = 'none';
-        }
+        var defaultLat = 42.59524, defaultLon = -71.33690;
+        mapInstance = L.map('mapContainer').setView([defaultLat, defaultLon], 19);
 
-        function renderLogs() {
-            var container = document.getElementById('logsContainer');
-            if (!container) return;
-            container.innerHTML = '';
+        L.tileLayer('https://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
+            maxZoom: 22,
+            subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+            attribution: '&copy; Google Maps Imagery'
+        }).addTo(mapInstance);
 
-            var selectedCultivar = document.getElementById('logCultivarFilter') ? document.getElementById('logCultivarFilter').value : 'all';
-            state.logsData.forEach((log, index) => {
-                var tags = log.tags || ["All Cultivars"];
-                if (selectedCultivar !== 'all' && !tags.includes("All Cultivars") && !tags.includes(selectedCultivar)) return;
-                var authorName = (log.loggedBy === 'Joe') ? 'Rob' : (log.loggedBy || 'Rob');
+        mapMarkersLayerGroup = L.layerGroup().addTo(mapInstance);
+    }
 
-                var card = document.createElement('div');
-                card.className = 'card';
-                var tagBadgesHTML = tags.map(t => `<span class="badge badge-tag">${t}</span>`).join(' ');
+    function renderMapMarkers() {
+        if (!mapInstance) initOrchardMap();
+        if (!mapMarkersLayerGroup) return;
 
-                card.innerHTML = `
-                    <div class="card-title">${log.date} - ${log.title || 'Field Observation'}</div>
-                    <div class="card-meta">
-                        <span class="user-tag">${authorName}</span> • <span class="badge badge-bearing">${log.type}</span> • Tags: ${tagBadgesHTML}
-                    </div>
-                    <div class="card-body">${log.body}</div>
-                    <div style="margin-top: 10px; display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap;">
-                        <button class="btn-action" style="background-color: #2b6cb0;" onclick="editLogRecord(${index})">Edit</button>
-                        <button class="btn-action" style="background-color: #9b2c2c;" onclick="deleteLogRecord(${index})">Delete</button>
-                    </div>
-                `;
-                container.appendChild(card);
+        mapMarkersLayerGroup.clearLayers();
+        var filterVal = document.getElementById('mapCultivarFilter') ? document.getElementById('mapCultivarFilter').value : 'all';
+        var bounds = [];
+
+        state.inventoryData.forEach(item => {
+            if (!item.lat || !item.lon) return;
+            if (filterVal !== 'all' && item.cultivar !== filterVal) return;
+
+            var lat = parseFloat(item.lat);
+            var lon = parseFloat(item.lon);
+            if (isNaN(lat) || isNaN(lon)) return;
+
+            bounds.push([lat, lon]);
+
+            var circleMarker = L.circleMarker([lat, lon], {
+                radius: 9,
+                fillColor: item.color || '#38bdf8',
+                color: '#ffffff',
+                weight: 2,
+                opacity: 1,
+                fillOpacity: 0.9
             });
+
+            circleMarker.bindTooltip(item.cultivar, {
+                permanent: true,
+                direction: 'top',
+                className: 'tree-map-label',
+                offset: [0, -10]
+            });
+
+            var popupContent = `
+                <div style="font-family: sans-serif; padding: 4px;">
+                    <h4 style="margin: 0 0 4px 0; color: #1b4332;">${item.cultivar}</h4>
+                    <div style="font-size: 8.5pt; color: #475569;">
+                        <strong>Age Class:</strong> ${item.ageCat || 'N/A'}<br>
+                        <strong>Rootstock:</strong> ${item.rootstock || 'N/A'}<br>
+                        <strong>Est. Load:</strong> ${item.load || '0'} apples<br>
+                        <strong>GPS:</strong> ${lat.toFixed(6)}, ${lon.toFixed(6)}
+                    </div>
+                </div>
+            `;
+            circleMarker.bindPopup(popupContent);
+            mapMarkersLayerGroup.addLayer(circleMarker);
+        });
+
+        if (bounds.length > 0 && mapInstance) {
+            mapInstance.fitBounds(bounds, { padding: [50, 50], maxZoom: 20 });
         }
+    }
 
-        function saveLogEntry() {
-            var dateVal = document.getElementById('newLogDate').value.trim();
-            var titleVal = document.getElementById('newLogTitle').value.trim() || 'Field Observation';
-            var bodyVal = document.getElementById('newLogBody').value.trim();
-            if (!dateVal || !bodyVal) {
-                alert("Please ensure both the Log Date and Log Details fields are filled out.");
-                return;
-            }
-
-            var entry = {
-                date: dateVal, title: titleVal,
-                type: document.getElementById('newLogType').value,
-                tags: getSelectedLogTags(),
-                age: document.getElementById('newLogAge').value,
-                body: bodyVal,
-                loggedBy: getActiveAuthorName()
-            };
-
-            var editIndex = parseInt(document.getElementById('editLogIndex').value);
-            if (editIndex >= 0 && editIndex < state.logsData.length) state.logsData[editIndex] = entry;
-            else state.logsData.unshift(entry);
-
-            resetLogForm();
+    function updateAbundanceValue(index, val) {
+        if (index >= 0 && index < state.inventoryData.length) {
+            state.inventoryData[index].load = val;
             saveState();
         }
+    }
 
-        function editLogRecord(index) {
-            var log = state.logsData[index];
-            if (!log) return;
-            document.getElementById('editLogIndex').value = index;
-            document.getElementById('newLogDate').value = log.date;
-            document.getElementById('newLogTitle').value = log.title || '';
-            document.getElementById('newLogType').value = log.type;
-            document.getElementById('newLogAge').value = log.age || 'all';
-            document.getElementById('newLogBody').value = log.body;
-            document.getElementById('saveLogBtn').innerText = 'Update Log Entry';
-            document.getElementById('cancelLogBtn').style.display = 'inline-block';
+    function updateBagsValue(index, val) {
+        if (index >= 0 && index < state.inventoryData.length) {
+            state.inventoryData[index].bags = val;
+            saveState();
+        }
+    }
+
+    function renderAbundances() {
+        var chartContainer = document.getElementById('abundanceChart');
+        var tableBody = document.getElementById('abundanceTableBody');
+        var summaryDiv = document.getElementById('abundanceBaselineSummary');
+        if (!chartContainer || !tableBody) return;
+
+        chartContainer.innerHTML = ''; tableBody.innerHTML = '';
+        var maxVal = 0;
+        state.inventoryData.forEach(item => {
+            var val = parseLoadNumeric(item.load);
+            if (val > maxVal) maxVal = val;
+        });
+        if (maxVal === 0) maxVal = 100;
+
+        var sortedList = [...state.inventoryData].sort((a, b) => parseLoadNumeric(b.load) - parseLoadNumeric(a.load));
+        sortedList.forEach(item => {
+            var val = parseLoadNumeric(item.load);
+            var pct = Math.min(100, Math.round((val / maxVal) * 100));
+            var rowDiv = document.createElement('div');
+            rowDiv.className = 'chart-row';
+            rowDiv.innerHTML = `
+                <div class="chart-label">${item.cultivar}</div>
+                <div class="chart-bar-wrapper">
+                    <div class="chart-bar" style="width: ${pct}%; background: ${item.color || '#40916c'}; opacity: ${val === 0 ? 0.3 : 1.0};"></div>
+                </div>
+                <div class="chart-value">${item.load || '0'}</div>
+            `;
+            chartContainer.appendChild(rowDiv);
+        });
+
+        var freedomRem = 0, activeBaggedTotal = 0;
+        state.inventoryData.forEach((item, originalIndex) => {
+            var numLoad = parseLoadNumeric(item.load);
+            if (item.cultivar === 'Freedom') freedomRem = numLoad;
+            else activeBaggedTotal += (parseInt(item.bags) || 0);
+
+            var ripeningDisplay = formatDateRange(item.ripeningStart, item.ripeningEnd, item.ripening);
+            var tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><strong>${item.cultivar}</strong></td>
+                <td><span class="badge badge-${item.ageCat}">${item.ageCat}</span></td>
+                <td>${ripeningDisplay}</td>
+                <td><input type="text" class="abundance-edit-input" value="${item.load}" onchange="updateAbundanceValue(${originalIndex}, this.value)"></td>
+                <td><input type="text" class="abundance-edit-input" style="width: 70px;" value="${item.bags}" onchange="updateBagsValue(${originalIndex}, this.value)"></td>
+                <td style="text-align: right;">
+                    <div class="table-actions-cell">
+                        <button class="btn-action" style="background-color: #2b6cb0;" onclick="editInventoryRecord(${originalIndex})">Edit</button>
+                        <button class="btn-action" style="background-color: #9b2c2c;" onclick="deleteInventoryRecord(${originalIndex})">Delete</button>
+                    </div>
+                </td>
+            `;
+            tableBody.appendChild(tr);
+        });
+
+        if (summaryDiv) {
+            summaryDiv.innerHTML = `<strong>Current Inventory Baseline:</strong> ~${freedomRem} apples remaining on Freedom with ${activeBaggedTotal} verified bags across non-Freedom cultivars (~${freedomRem + activeBaggedTotal} total active apples).`;
+        }
+    }
+
+    var timelineWeeks = [
+        { name: "Late Aug", start: new Date(2026, 7, 16), end: new Date(2026, 7, 31) },
+        { name: "Early Sept", start: new Date(2026, 8, 1), end: new Date(2026, 8, 10) },
+        { name: "Mid Sept", start: new Date(2026, 8, 11), end: new Date(2026, 8, 20) },
+        { name: "Late Sept", start: new Date(2026, 8, 21), end: new Date(2026, 8, 30) },
+        { name: "Early Oct", start: new Date(2026, 9, 1), end: new Date(2026, 9, 10) },
+        { name: "Mid Oct", start: new Date(2026, 9, 11), end: new Date(2026, 9, 20) },
+        { name: "Late Oct", start: new Date(2026, 9, 21), end: new Date(2026, 9, 31) }
+    ];
+
+    function getHarvestWindowSpec(item) {
+        if (item.ripeningStart && item.ripeningEnd) {
+            var sParts = item.ripeningStart.split('-');
+            var eParts = item.ripeningEnd.split('-');
+            var startDate = new Date(parseInt(sParts[0]), parseInt(sParts[1]) - 1, parseInt(sParts[2]));
+            var endDate = new Date(parseInt(eParts[0]), parseInt(eParts[1]) - 1, parseInt(eParts[2]));
+
+            var rangeStart = new Date(2026, 7, 16), rangeEnd = new Date(2026, 9, 31);
+            var totalDays = (rangeEnd - rangeStart) / (1000 * 60 * 60 * 24);
+
+            var clampedStart = Math.max(rangeStart, Math.min(rangeEnd, startDate));
+            var clampedEnd = Math.max(rangeStart, Math.min(rangeEnd, endDate));
+
+            var leftPct = Math.max(0, Math.min(100, ((clampedStart - rangeStart) / (1000 * 60 * 60 * 24) / totalDays) * 100));
+            var rightPct = Math.max(0, Math.min(100, ((clampedEnd - rangeStart) / (1000 * 60 * 60 * 24) / totalDays) * 100));
+            var widthPct = Math.max(4, rightPct - leftPct);
+
+            var activeWeeks = [];
+            timelineWeeks.forEach((w, idx) => {
+                if (startDate <= w.end && endDate >= w.start) activeWeeks.push(idx);
+            });
+
+            return { left: leftPct.toFixed(2), width: widthPct.toFixed(2), weeks: activeWeeks, display: formatDateRange(item.ripeningStart, item.ripeningEnd, item.ripening) };
+        }
+        return { left: 42.84, width: 14.28, weeks: [3], display: item.ripening || "Late Sept" };
+    }
+
+    function renderHarvestTimeline() {
+        var container = document.getElementById('dynamicTimelineRowsContainer');
+        var gantryContainer = document.getElementById('invertedVolumeGantry');
+        if (!container || !gantryContainer) return;
+
+        container.innerHTML = ''; gantryContainer.innerHTML = '';
+        var weeklyTotals = [0, 0, 0, 0, 0, 0, 0];
+        state.inventoryData.forEach(item => {
+            var loadNum = parseLoadNumeric(item.load);
+            var spec = getHarvestWindowSpec(item);
+            var isPear = item.cultivar.toLowerCase().includes('pear') || item.cultivar.toLowerCase().includes('seckel');
+            var isZero = loadNum === 0;
+
+            var row = document.createElement('div');
+            row.className = 'timeline-row-item';
+
+            var barClass = 'timeline-span-bar';
+            if (isPear) barClass += ' pear';
+            if (isZero) barClass += ' zero-load';
+
+            var barStyle = `left: ${spec.left}%; width: ${spec.width}%;`;
+            if (!isZero && item.color) barStyle += ` background: ${item.color};`;
+
+            row.innerHTML = `
+                <div class="grid-side-label">${item.cultivar}</div>
+                <div class="grid-main-content">
+                    <div class="timeline-track-lane">
+                        <div class="${barClass}" style="${barStyle}">
+                            ${spec.display} ${isZero ? '(0)' : '(' + item.load + ')'}
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.appendChild(row);
+
+            if (loadNum > 0 && spec.weeks.length > 0) {
+                var perWeek = loadNum / spec.weeks.length;
+                spec.weeks.forEach(wIdx => { if (wIdx >= 0 && wIdx < 7) weeklyTotals[wIdx] += perWeek; });
+            }
+        });
+
+        var maxWeekly = Math.max(...weeklyTotals) || 100;
+        weeklyTotals.forEach((total) => {
+            var col = document.createElement('div');
+            col.className = 'volume-vertical-column';
+            var heightPx = total === 0 ? 0 : Math.round((total / maxWeekly) * 115);
+            var isPeak = total === maxWeekly && total > 0;
+            col.innerHTML = `
+                <div class="inverted-vol-bar ${isPeak ? 'peak-surge' : ''}" style="height: ${heightPx}px;"></div>
+                <div class="vol-numerical-tag ${isPeak ? 'peak-text' : ''}">${Math.round(total)}</div>
+            `;
+            gantryContainer.appendChild(col);
+        });
+    }
+
+    function renderMetricTreeOptions() {
+        var select = document.getElementById('entryTree');
+        if (!select) return;
+        select.innerHTML = state.inventoryData.map(i => `<option value="${i.cultivar}">${i.cultivar}</option>`).join('');
+    }
+
+    function renderHarvestTreeOptions() {
+        var select = document.getElementById('harvestCultivar');
+        if (!select) return;
+        select.innerHTML = state.inventoryData.map(i => `<option value="${i.cultivar}">${i.cultivar}</option>`).join('');
+    }
+
+    function renderLogCultivarControls() {
+        var grid = document.getElementById('logCultivarCheckboxes');
+        if (grid) {
+            grid.innerHTML = `<label class="checkbox-item" style="font-weight: bold; width: 100%; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px; margin-bottom: 4px;">
+                <input type="checkbox" id="tag_all_cultivars" onchange="toggleAllLogCultivars(this.checked)"> All Cultivars
+            </label>` + state.inventoryData.map(i => `<label class="checkbox-item"><input type="checkbox" class="log-cultivar-cb" value="${i.cultivar}"> <span>${i.cultivar}</span></label>`).join('');
+        }
+    }
+
+    function toggleAllLogCultivars(checked) {
+        document.querySelectorAll('.log-cultivar-cb').forEach(cb => { cb.checked = checked; });
+    }
+
+    function getSelectedLogTags() {
+        var allCb = document.getElementById('tag_all_cultivars');
+        if (allCb && allCb.checked) return ["All Cultivars"];
+        var selected = Array.from(document.querySelectorAll('.log-cultivar-cb:checked')).map(cb => cb.value);
+        return selected.length > 0 ? selected : ["All Cultivars"];
+    }
+
+    function renderHarvestLogs() {
+        var tbody = document.getElementById('harvestTableBody');
+        if (!tbody) return;
+        tbody.innerHTML = '';
+        var selectedCultivar = document.getElementById('harvestCultivarFilter') ? document.getElementById('harvestCultivarFilter').value : 'all';
+
+        state.harvestLogsData.forEach((log, index) => {
+            if (selectedCultivar !== 'all' && log.cultivar !== selectedCultivar) return;
+            var authorName = (log.loggedBy === 'Joe') ? 'Rob' : (log.loggedBy || 'Rob');
+            var tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${log.date}</td>
+                <td><strong>${log.cultivar}</strong></td>
+                <td>${log.quantity}</td>
+                <td><span class="user-tag">${authorName}</span></td>
+                <td style="text-align: right;">
+                    <div class="table-actions-cell">
+                        <button class="btn-action" style="background-color: #2b6cb0;" onclick="editHarvestLog(${index})">Edit</button>
+                        <button class="btn-action" style="background-color: #9b2c2c;" onclick="deleteHarvestLog(${index})">Delete</button>
+                    </div>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function saveHarvestLog() {
+        var dateVal = document.getElementById('harvestDate').value;
+        var cultivarVal = document.getElementById('harvestCultivar').value;
+        var quantityVal = parseInt(document.getElementById('harvestQuantity').value);
+        if (!dateVal || !cultivarVal || isNaN(quantityVal)) return;
+
+        var log = { date: dateVal, cultivar: cultivarVal, quantity: quantityVal, loggedBy: getActiveAuthorName() };
+        var editIndex = parseInt(document.getElementById('editHarvestIndex').value);
+        if (editIndex >= 0 && editIndex < state.harvestLogsData.length) state.harvestLogsData[editIndex] = log;
+        else state.harvestLogsData.unshift(log);
+
+        resetHarvestForm();
+        saveState();
+    }
+
+    function editHarvestLog(index) {
+        var log = state.harvestLogsData[index];
+        if (!log) return;
+        document.getElementById('editHarvestIndex').value = index;
+        document.getElementById('harvestDate').value = log.date;
+        document.getElementById('harvestCultivar').value = log.cultivar;
+        document.getElementById('harvestQuantity').value = log.quantity;
+        document.getElementById('saveHarvestBtn').innerText = 'Update Harvest Log';
+        document.getElementById('cancelHarvestBtn').style.display = 'inline-block';
+    }
+
+    function deleteHarvestLog(index) {
+        if (confirm('Delete harvest log entry?')) {
+            state.harvestLogsData.splice(index, 1);
+            saveState();
+        }
+    }
+
+    function resetHarvestForm() {
+        document.getElementById('editHarvestIndex').value = -1;
+        document.getElementById('harvestDate').value = getTodayISO();
+        document.getElementById('harvestQuantity').value = '';
+        document.getElementById('saveHarvestBtn').innerText = 'Log Harvest';
+        document.getElementById('cancelHarvestBtn').style.display = 'none';
+    }
+
+    function renderLogs() {
+        var container = document.getElementById('logsContainer');
+        if (!container) return;
+        container.innerHTML = '';
+
+        var selectedCultivar = document.getElementById('logCultivarFilter') ? document.getElementById('logCultivarFilter').value : 'all';
+        state.logsData.forEach((log, index) => {
+            var tags = log.tags || ["All Cultivars"];
+            if (selectedCultivar !== 'all' && !tags.includes("All Cultivars") && !tags.includes(selectedCultivar)) return;
+            var authorName = (log.loggedBy === 'Joe') ? 'Rob' : (log.loggedBy || 'Rob');
+
+            var card = document.createElement('div');
+            card.className = 'card';
+            var tagBadgesHTML = tags.map(t => `<span class="badge badge-tag">${t}</span>`).join(' ');
+
+            card.innerHTML = `
+                <div class="card-title">${log.date} - ${log.title || 'Field Observation'}</div>
+                <div class="card-meta">
+                    <span class="user-tag">${authorName}</span> • <span class="badge badge-bearing">${log.type}</span> • Tags: ${tagBadgesHTML}
+                </div>
+                <div class="card-body">${log.body}</div>
+                <div style="margin-top: 10px; display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap;">
+                    <button class="btn-action" style="background-color: #2b6cb0;" onclick="editLogRecord(${index})">Edit</button>
+                    <button class="btn-action" style="background-color: #9b2c2c;" onclick="deleteLogRecord(${index})">Delete</button>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    function saveLogEntry() {
+        var dateVal = document.getElementById('newLogDate').value.trim();
+        var titleVal = document.getElementById('newLogTitle').value.trim() || 'Field Observation';
+        var bodyVal = document.getElementById('newLogBody').value.trim();
+        if (!dateVal || !bodyVal) {
+            alert("Please ensure both the Log Date and Log Details fields are filled out.");
+            return;
         }
 
-        function deleteLogRecord(index) {
-            if (confirm('Delete log entry?')) {
-                state.logsData.splice(index, 1);
-                saveState();
+        var entry = {
+            date: dateVal, title: titleVal,
+            type: document.getElementById('newLogType').value,
+            tags: getSelectedLogTags(),
+            age: document.getElementById('newLogAge').value,
+            body: bodyVal,
+            loggedBy: getActiveAuthorName()
+        };
+
+        var editIndex = parseInt(document.getElementById('editLogIndex').value);
+        if (editIndex >= 0 && editIndex < state.logsData.length) state.logsData[editIndex] = entry;
+        else state.logsData.unshift(entry);
+
+        resetLogForm();
+        saveState();
+    }
+
+    function editLogRecord(index) {
+        var log = state.logsData[index];
+        if (!log) return;
+        document.getElementById('editLogIndex').value = index;
+        document.getElementById('newLogDate').value = log.date;
+        document.getElementById('newLogTitle').value = log.title || '';
+        document.getElementById('newLogType').value = log.type;
+        document.getElementById('newLogAge').value = log.age || 'all';
+        document.getElementById('newLogBody').value = log.body;
+        document.getElementById('saveLogBtn').innerText = 'Update Log Entry';
+        document.getElementById('cancelLogBtn').style.display = 'inline-block';
+    }
+
+    function deleteLogRecord(index) {
+        if (confirm('Delete log entry?')) {
+            state.logsData.splice(index, 1);
+            saveState();
+        }
+    }
+
+    function resetLogForm() {
+        document.getElementById('editLogIndex').value = -1;
+        document.getElementById('newLogDate').value = getTodayISO();
+        document.getElementById('newLogTitle').value = '';
+        document.getElementById('newLogBody').value = '';
+        document.getElementById('saveLogBtn').innerText = 'Add Log Entry';
+        document.getElementById('cancelLogBtn').style.display = 'none';
+    }
+
+    // CREATE NEW METRIC WITH IMMEDIATE AVAILABILITY FLAG
+    function addNewMetricFromBuilder() {
+        var nameInput = document.getElementById('newMetricName');
+        var unitInput = document.getElementById('newMetricUnit');
+        var name = nameInput.value.trim();
+        var unit = unitInput.value.trim();
+        if (!name) return;
+
+        var key = 'metric_' + name.toLowerCase().replace(/[^a-z0-9]/g, '_');
+        
+        // Prevent duplicates
+        if (!state.metricsRegistry.some(m => m.key === key)) {
+            state.metricsRegistry.push({
+                key: key,
+                name: name,
+                unit: unit || 'units',
+                isCustom: true,
+                isGraphed: true,
+                inCreation: true // Flag to keep active before first log entry is saved
+            });
+            if (!state.activeGraphKeys.includes(key)) {
+                state.activeGraphKeys.push(key);
             }
         }
 
-        function resetLogForm() {
-            document.getElementById('editLogIndex').value = -1;
-            document.getElementById('newLogDate').value = getTodayISO();
-            document.getElementById('newLogTitle').value = '';
-            document.getElementById('newLogBody').value = '';
-            document.getElementById('saveLogBtn').innerText = 'Add Log Entry';
-            document.getElementById('cancelLogBtn').style.display = 'none';
-        }
+        nameInput.value = '';
+        unitInput.value = '';
+        saveState();
+    }
 
-        function addNewMetricFromBuilder() {
-            var name = document.getElementById('newMetricName').value.trim();
-            var unit = document.getElementById('newMetricUnit').value.trim();
-            if (!name) return;
-            var key = 'metric_' + name.toLowerCase().replace(/[^a-z0-9]/g, '_');
-            state.metricsRegistry.push({ key, name, unit: unit || 'units', isCustom: true, isGraphed: true });
+    function addGraphFromSelect() {
+        var key = document.getElementById('existingMetricSelect').value;
+        if (key && !state.activeGraphKeys.includes(key)) {
             state.activeGraphKeys.push(key);
             saveState();
         }
+    }
 
-        function addGraphFromSelect() {
-            var key = document.getElementById('existingMetricSelect').value;
-            if (key && !state.activeGraphKeys.includes(key)) {
-                state.activeGraphKeys.push(key);
-                saveState();
-            }
-        }
+    function removeGraph(key) {
+        state.activeGraphKeys = state.activeGraphKeys.filter(k => k !== key);
+        delete graphScaleConfig[key];
+        saveState();
+    }
 
-        function removeGraph(key) {
-            state.activeGraphKeys = state.activeGraphKeys.filter(k => k !== key);
-            delete graphScaleConfig[key];
-            saveState();
-        }
+    function renderGrowthTabUI() {
+        renderMetricSelectOptions();
+        renderDynamicFormInputs();
+        renderActiveGraphsHTML();
+        renderGrowthCharts();
+        renderGrowthTable();
+    }
 
-        function renderGrowthTabUI() {
-            renderMetricSelectOptions();
-            renderDynamicFormInputs();
-            renderActiveGraphsHTML();
-            renderGrowthCharts();
-            renderGrowthTable();
-        }
+    function renderMetricSelectOptions() {
+        var select = document.getElementById('existingMetricSelect');
+        if (!select) return;
+        select.innerHTML = state.metricsRegistry.filter(m => !state.activeGraphKeys.includes(m.key)).map(m => `<option value="${m.key}">${m.name} (${m.unit})</option>`).join('');
+    }
 
-        function renderMetricSelectOptions() {
-            var select = document.getElementById('existingMetricSelect');
-            if (!select) return;
-            select.innerHTML = state.metricsRegistry.filter(m => !state.activeGraphKeys.includes(m.key)).map(m => `<option value="${m.key}">${m.name} (${m.unit})</option>`).join('');
-        }
+    function renderDynamicFormInputs() {
+        var container = document.getElementById('dynamicObservationInputs');
+        if (!container) return;
+        container.innerHTML = state.metricsRegistry.map(m => `
+            <div class="control-group">
+                <label for="entry_${m.key}"><span>${m.name} (${m.unit})</span></label>
+                <input type="number" id="entry_${m.key}" step="any" placeholder="e.g. 1.25">
+            </div>
+        `).join('');
+    }
 
-        function renderDynamicFormInputs() {
-            var container = document.getElementById('dynamicObservationInputs');
-            if (!container) return;
-            container.innerHTML = state.metricsRegistry.map(m => `
-                <div class="control-group">
-                    <label for="entry_${m.key}"><span>${m.name} (${m.unit})</span></label>
-                    <input type="number" id="entry_${m.key}" step="any" placeholder="e.g. 1.25">
+    function makeGraphResizable(wrapperId, key) {
+        var wrapper = document.getElementById(wrapperId);
+        var handle = document.getElementById(wrapperId + '_handle');
+        if (!wrapper || !handle) return;
+        var startY, startH;
+        var onPointerMove = function(e) {
+            var clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            var newH = Math.max(200, startH + (clientY - startY));
+            wrapper.style.height = newH + 'px';
+            if (chartInstances[key]) chartInstances[key].resize();
+        };
+        var onPointerUp = function() {
+            window.removeEventListener('mousemove', onPointerMove);
+            window.removeEventListener('mouseup', onPointerUp);
+            window.removeEventListener('touchmove', onPointerMove);
+            window.removeEventListener('touchend', onPointerUp);
+        };
+        var onPointerDown = function(e) {
+            startY = e.touches ? e.touches[0].clientY : e.clientY;
+            startH = wrapper.offsetHeight;
+            window.addEventListener('mousemove', onPointerMove);
+            window.addEventListener('mouseup', onPointerUp);
+            window.addEventListener('touchmove', onPointerMove, { passive: false });
+            window.addEventListener('touchend', onPointerUp);
+        };
+        handle.addEventListener('mousedown', onPointerDown);
+        handle.addEventListener('touchstart', onPointerDown, { passive: false });
+    }
+
+    function updateGraphScale(key, field, value) {
+        if (!graphScaleConfig[key]) graphScaleConfig[key] = {};
+        graphScaleConfig[key][field] = value ? value : null;
+        renderGrowthCharts();
+    }
+
+    function autoScaleGraphAxis(key, field) {
+        if (graphScaleConfig[key]) graphScaleConfig[key][field] = null;
+        var el = document.getElementById(`${key}_${field}`);
+        if (el) el.value = '';
+        renderGrowthCharts();
+    }
+
+    function renderActiveGraphsHTML() {
+        var container = document.getElementById('activeGraphsContainer');
+        if (!container) return;
+        container.innerHTML = '';
+        var treeOptionsHTML = '<option value="all">-- All / None --</option>' + state.inventoryData.map(item => `<option value="${item.cultivar}">${item.cultivar}</option>`).join('');
+
+        state.activeGraphKeys.forEach(key => {
+            var m = state.metricsRegistry.find(item => item.key === key);
+            if (!m) return;
+            var cfg = graphScaleConfig[key] || {};
+            var card = document.createElement('div');
+            card.innerHTML = `
+                <div class="graph-card-header">
+                    <h3>${m.name} vs Time</h3>
+                    <button class="btn-close-x" onclick="removeGraph('${m.key}')">×</button>
                 </div>
-            `).join('');
-        }
-
-        function makeGraphResizable(wrapperId, key) {
-            var wrapper = document.getElementById(wrapperId);
-            var handle = document.getElementById(wrapperId + '_handle');
-            if (!wrapper || !handle) return;
-            var startY, startH;
-            var onPointerMove = function(e) {
-                var clientY = e.touches ? e.touches[0].clientY : e.clientY;
-                var newH = Math.max(200, startH + (clientY - startY));
-                wrapper.style.height = newH + 'px';
-                if (chartInstances[key]) chartInstances[key].resize();
-            };
-            var onPointerUp = function() {
-                window.removeEventListener('mousemove', onPointerMove);
-                window.removeEventListener('mouseup', onPointerUp);
-                window.removeEventListener('touchmove', onPointerMove);
-                window.removeEventListener('touchend', onPointerUp);
-            };
-            var onPointerDown = function(e) {
-                startY = e.touches ? e.touches[0].clientY : e.clientY;
-                startH = wrapper.offsetHeight;
-                window.addEventListener('mousemove', onPointerMove);
-                window.addEventListener('mouseup', onPointerUp);
-                window.addEventListener('touchmove', onPointerMove, { passive: false });
-                window.addEventListener('touchend', onPointerUp);
-            };
-            handle.addEventListener('mousedown', onPointerDown);
-            handle.addEventListener('touchstart', onPointerDown, { passive: false });
-        }
-
-        function updateGraphScale(key, field, value) {
-            if (!graphScaleConfig[key]) graphScaleConfig[key] = {};
-            graphScaleConfig[key][field] = value ? value : null;
-            renderGrowthCharts();
-        }
-
-        function autoScaleGraphAxis(key, field) {
-            if (graphScaleConfig[key]) graphScaleConfig[key][field] = null;
-            var el = document.getElementById(`${key}_${field}`);
-            if (el) el.value = '';
-            renderGrowthCharts();
-        }
-
-        function renderActiveGraphsHTML() {
-            var container = document.getElementById('activeGraphsContainer');
-            if (!container) return;
-            container.innerHTML = '';
-            var treeOptionsHTML = '<option value="all">-- All / None --</option>' + state.inventoryData.map(item => `<option value="${item.cultivar}">${item.cultivar}</option>`).join('');
-
-            state.activeGraphKeys.forEach(key => {
-                var m = state.metricsRegistry.find(item => item.key === key);
-                if (!m) return;
-                var cfg = graphScaleConfig[key] || {};
-                var card = document.createElement('div');
-                card.innerHTML = `
-                    <div class="graph-card-header">
-                        <h3>${m.name} vs Time</h3>
-                        <button class="btn-close-x" onclick="removeGraph('${m.key}')">×</button>
+                <div class="controls-grid">
+                    <div class="control-group control-group-span-2" style="grid-column: 1 / -1;">
+                        <label style="font-weight: bold; color: #2d3748;">Highlight Tree / Cultivar</label>
+                        <select id="${m.key}HighlightSelect" onchange="renderGrowthCharts()">${treeOptionsHTML}</select>
                     </div>
-                    <div class="controls-grid">
-                        <div class="control-group control-group-span-2" style="grid-column: 1 / -1;">
-                            <label style="font-weight: bold; color: #2d3748;">Highlight Tree / Cultivar</label>
-                            <select id="${m.key}HighlightSelect" onchange="renderGrowthCharts()">${treeOptionsHTML}</select>
-                        </div>
-                        <div class="control-group">
-                            <label>X-Min (Date / auto) <button class="btn-autoscale" onclick="autoScaleGraphAxis('${m.key}', 'xMin')">auto scale</button></label>
-                            <input type="date" id="${m.key}_xMin" value="${cfg.xMin || ''}" onchange="updateGraphScale('${m.key}', 'xMin', this.value)">
-                        </div>
-                        <div class="control-group">
-                            <label>X-Max (Date / auto) <button class="btn-autoscale" onclick="autoScaleGraphAxis('${m.key}', 'xMax')">auto scale</button></label>
-                            <input type="date" id="${m.key}_xMax" value="${cfg.xMax || ''}" onchange="updateGraphScale('${m.key}', 'xMax', this.value)">
-                        </div>
-                        <div class="control-group">
-                            <label>Y-Min (${m.unit} / auto) <button class="btn-autoscale" onclick="autoScaleGraphAxis('${m.key}', 'yMin')">auto scale</button></label>
-                            <input type="number" step="any" id="${m.key}_yMin" value="${cfg.yMin !== undefined && cfg.yMin !== null ? cfg.yMin : ''}" onchange="updateGraphScale('${m.key}', 'yMin', this.value)">
-                        </div>
-                        <div class="control-group">
-                            <label>Y-Max (${m.unit} / auto) <button class="btn-autoscale" onclick="autoScaleGraphAxis('${m.key}', 'yMax')">auto scale</button></label>
-                            <input type="number" step="any" id="${m.key}_yMax" value="${cfg.yMax !== undefined && cfg.yMax !== null ? cfg.yMax : ''}" onchange="updateGraphScale('${m.key}', 'yMax', this.value)">
-                        </div>
+                    <div class="control-group">
+                        <label>X-Min (Date / auto) <button class="btn-autoscale" onclick="autoScaleGraphAxis('${m.key}', 'xMin')">auto scale</button></label>
+                        <input type="date" id="${m.key}_xMin" value="${cfg.xMin || ''}" onchange="updateGraphScale('${m.key}', 'xMin', this.value)">
                     </div>
-                    <div class="plot-wrapper" id="${m.key}_wrapper"><canvas id="${m.key}Chart"></canvas></div>
-                    <div class="graph-resize-handle" id="${m.key}_wrapper_handle" title="Drag to resize graph height"></div>
-                `;
-                container.appendChild(card);
-                setTimeout(() => makeGraphResizable(`${m.key}_wrapper`, key), 50);
-            });
-        }
+                    <div class="control-group">
+                        <label>X-Max (Date / auto) <button class="btn-autoscale" onclick="autoScaleGraphAxis('${m.key}', 'xMax')">auto scale</button></label>
+                        <input type="date" id="${m.key}_xMax" value="${cfg.xMax || ''}" onchange="updateGraphScale('${m.key}', 'xMax', this.value)">
+                    </div>
+                    <div class="control-group">
+                        <label>Y-Min (${m.unit} / auto) <button class="btn-autoscale" onclick="autoScaleGraphAxis('${m.key}', 'yMin')">auto scale</button></label>
+                        <input type="number" step="any" id="${m.key}_yMin" value="${cfg.yMin !== undefined && cfg.yMin !== null ? cfg.yMin : ''}" onchange="updateGraphScale('${m.key}', 'yMin', this.value)">
+                    </div>
+                    <div class="control-group">
+                        <label>Y-Max (${m.unit} / auto) <button class="btn-autoscale" onclick="autoScaleGraphAxis('${m.key}', 'yMax')">auto scale</button></label>
+                        <input type="number" step="any" id="${m.key}_yMax" value="${cfg.yMax !== undefined && cfg.yMax !== null ? cfg.yMax : ''}" onchange="updateGraphScale('${m.key}', 'yMax', this.value)">
+                    </div>
+                </div>
+                <div class="plot-wrapper" id="${m.key}_wrapper"><canvas id="${m.key}Chart"></canvas></div>
+                <div class="graph-resize-handle" id="${m.key}_wrapper_handle" title="Drag to resize graph height"></div>
+            `;
+            container.appendChild(card);
+            setTimeout(() => makeGraphResizable(`${m.key}_wrapper`, key), 50);
+        });
+    }
 
-        function renderGrowthCharts() {
-            var treeColorMap = getTreeColors();
-            var trees = state.inventoryData.map(i => i.cultivar);
+    function renderGrowthCharts() {
+        var treeColorMap = getTreeColors();
+        var trees = state.inventoryData.map(i => i.cultivar);
 
-            state.activeGraphKeys.forEach(key => {
-                var m = state.metricsRegistry.find(item => item.key === key);
-                if (!m) return;
-                var highlightSelect = document.getElementById(key + 'HighlightSelect');
-                var selectedTree = highlightSelect ? highlightSelect.value : 'all';
+        state.activeGraphKeys.forEach(key => {
+            var m = state.metricsRegistry.find(item => item.key === key);
+            if (!m) return;
+            var highlightSelect = document.getElementById(key + 'HighlightSelect');
+            var selectedTree = highlightSelect ? highlightSelect.value : 'all';
 
-                var datasets = [];
-                trees.forEach(tree => {
-                    var pts = state.growthData
-                        .filter(d => d.tree === tree && d[m.key] !== null && d[m.key] !== undefined)
-                        .map(d => ({ x: d.date, y: d[m.key] }));
-                    if (pts.length > 0) {
-                        var isHighlighted = (selectedTree === 'all' || selectedTree === tree);
-                        datasets.push({
-                            label: tree,
-                            data: pts,
-                            borderColor: isHighlighted ? (treeColorMap[tree] || '#1b4332') : '#cbd5e1',
-                            borderWidth: isHighlighted ? 2 : 1,
-                            tension: 0.1
-                        });
-                    }
-                });
-
-                var cfg = graphScaleConfig[key] || {};
-                var xScaleOpts = { type: 'time' };
-                if (cfg.xMin) xScaleOpts.min = cfg.xMin;
-                if (cfg.xMax) xScaleOpts.max = cfg.xMax;
-
-                var yScaleOpts = {};
-                if (cfg.yMin !== undefined && cfg.yMin !== null && cfg.yMin !== '') yScaleOpts.min = parseFloat(cfg.yMin);
-                if (cfg.yMax !== undefined && cfg.yMax !== null && cfg.yMax !== '') yScaleOpts.max = parseFloat(cfg.yMax);
-
-                if (chartInstances[m.key]) chartInstances[m.key].destroy();
-                var canvas = document.getElementById(m.key + 'Chart');
-                if (canvas) {
-                    chartInstances[m.key] = new Chart(canvas.getContext('2d'), {
-                        type: 'line',
-                        data: { datasets: datasets },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            scales: { x: xScaleOpts, y: yScaleOpts }
-                        }
+            var datasets = [];
+            trees.forEach(tree => {
+                var pts = state.growthData
+                    .filter(d => d.tree === tree && d[m.key] !== null && d[m.key] !== undefined)
+                    .map(d => ({ x: d.date, y: d[m.key] }));
+                if (pts.length > 0) {
+                    var isHighlighted = (selectedTree === 'all' || selectedTree === tree);
+                    datasets.push({
+                        label: tree,
+                        data: pts,
+                        borderColor: isHighlighted ? (treeColorMap[tree] || '#1b4332') : '#cbd5e1',
+                        borderWidth: isHighlighted ? 2 : 1,
+                        tension: 0.1
                     });
                 }
             });
-        }
 
-        function addMeasurementRecord() {
-            var dateVal = document.getElementById('entryDate').value;
-            var treeVal = document.getElementById('entryTree').value;
-            if (!dateVal || !treeVal) return;
+            var cfg = graphScaleConfig[key] || {};
+            var xScaleOpts = { type: 'time' };
+            if (cfg.xMin) xScaleOpts.min = cfg.xMin;
+            if (cfg.xMax) xScaleOpts.max = cfg.xMax;
 
-            var rec = { date: dateVal, tree: treeVal, loggedBy: getActiveAuthorName() };
-            state.metricsRegistry.forEach(m => {
-                var el = document.getElementById('entry_' + m.key);
-                if (el && el.value !== '') rec[m.key] = parseFloat(el.value);
-            });
+            var yScaleOpts = {};
+            if (cfg.yMin !== undefined && cfg.yMin !== null && cfg.yMin !== '') yScaleOpts.min = parseFloat(cfg.yMin);
+            if (cfg.yMax !== undefined && cfg.yMax !== null && cfg.yMax !== '') yScaleOpts.max = parseFloat(cfg.yMax);
 
-            var editIndex = parseInt(document.getElementById('editGrowthIndex').value);
-            if (editIndex >= 0 && editIndex < state.growthData.length) state.growthData[editIndex] = rec;
-            else state.growthData.push(rec);
+            if (chartInstances[m.key]) chartInstances[m.key].destroy();
+            var canvas = document.getElementById(m.key + 'Chart');
+            if (canvas) {
+                chartInstances[m.key] = new Chart(canvas.getContext('2d'), {
+                    type: 'line',
+                    data: { datasets: datasets },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: { x: xScaleOpts, y: yScaleOpts }
+                    }
+                });
+            }
+        });
+    }
 
-            resetGrowthForm();
+    function addMeasurementRecord() {
+        var dateVal = document.getElementById('entryDate').value;
+        var treeVal = document.getElementById('entryTree').value;
+        if (!dateVal || !treeVal) return;
+
+        var rec = { date: dateVal, tree: treeVal, loggedBy: getActiveAuthorName() };
+        state.metricsRegistry.forEach(m => {
+            var el = document.getElementById('entry_' + m.key);
+            if (el && el.value !== '') {
+                rec[m.key] = parseFloat(el.value);
+                delete m.inCreation; // Metric is now officially used in growthData
+            }
+        });
+
+        var editIndex = parseInt(document.getElementById('editGrowthIndex').value);
+        if (editIndex >= 0 && editIndex < state.growthData.length) state.growthData[editIndex] = rec;
+        else state.growthData.push(rec);
+
+        resetGrowthForm();
+        saveState();
+    }
+
+    function editGrowthRecord(index) {
+        var rec = state.growthData[index];
+        if (!rec) return;
+        document.getElementById('editGrowthIndex').value = index;
+        document.getElementById('entryDate').value = rec.date;
+        document.getElementById('entryTree').value = rec.tree;
+        state.metricsRegistry.forEach(m => {
+            var el = document.getElementById('entry_' + m.key);
+            if (el) el.value = rec[m.key] !== undefined ? rec[m.key] : '';
+        });
+        document.getElementById('saveGrowthBtn').innerText = 'Update Measurement';
+        document.getElementById('cancelGrowthBtn').style.display = 'inline-block';
+    }
+
+    function deleteGrowthRecord(index) {
+        if (confirm('Delete measurement entry?')) {
+            state.growthData.splice(index, 1);
             saveState();
         }
+    }
 
-        function editGrowthRecord(index) {
-            var rec = state.growthData[index];
-            if (!rec) return;
-            document.getElementById('editGrowthIndex').value = index;
-            document.getElementById('entryDate').value = rec.date;
-            document.getElementById('entryTree').value = rec.tree;
-            state.metricsRegistry.forEach(m => {
-                var el = document.getElementById('entry_' + m.key);
-                if (el) el.value = rec[m.key] !== undefined ? rec[m.key] : '';
-            });
-            document.getElementById('saveGrowthBtn').innerText = 'Update Measurement';
-            document.getElementById('cancelGrowthBtn').style.display = 'inline-block';
+    function resetGrowthForm() {
+        document.getElementById('editGrowthIndex').value = -1;
+        document.getElementById('entryDate').value = getTodayISO();
+        state.metricsRegistry.forEach(m => {
+            var el = document.getElementById('entry_' + m.key);
+            if (el) el.value = '';
+        });
+        document.getElementById('saveGrowthBtn').innerText = 'Log Measurement';
+        document.getElementById('cancelGrowthBtn').style.display = 'none';
+    }
+
+    function renderGrowthTable() {
+        var headerRow = document.getElementById('growthTableHeaderRow');
+        if (headerRow) {
+            headerRow.innerHTML = `<th>Date</th><th>Tree</th>${state.metricsRegistry.map(m => `<th>${m.name}</th>`).join('')}<th>Logged By</th><th style="text-align:right;">Actions</th>`;
         }
 
-        function deleteGrowthRecord(index) {
-            if (confirm('Delete measurement entry?')) {
-                state.growthData.splice(index, 1);
-                saveState();
-            }
+        var tbody = document.getElementById('growthTableBody');
+        if (!tbody) return;
+        tbody.innerHTML = '';
+        var selectedCultivar = document.getElementById('growthCultivarFilter') ? document.getElementById('growthCultivarFilter').value : 'all';
+
+        state.growthData.forEach((item, index) => {
+            if (selectedCultivar !== 'all' && item.tree !== selectedCultivar) return;
+            var authorName = (item.loggedBy === 'Joe') ? 'Rob' : (item.loggedBy || 'Rob');
+            var valCols = state.metricsRegistry.map(m => `<td>${item[m.key] !== undefined && item[m.key] !== null ? item[m.key] : '—'}</td>`).join('');
+            var tr = document.createElement('tr');
+            tr.innerHTML = `<td>${item.date}</td><td><strong>${item.tree}</strong></td>${valCols}<td><span class="user-tag">${authorName}</span></td><td style="text-align:right;">
+                <div class="table-actions-cell">
+                    <button class="btn-action" style="background-color: #2b6cb0;" onclick="editGrowthRecord(${index})">Edit</button>
+                    <button class="btn-action" style="background-color: #9b2c2c;" onclick="deleteGrowthRecord(${index})">Delete</button>
+                </div>
+            </td>`;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function switchTab(e, tabId) {
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        if (e && e.currentTarget) e.currentTarget.classList.add('active');
+
+        if (tabId === 'map') {
+            setTimeout(() => {
+                if (!mapInstance) initOrchardMap();
+                mapInstance.invalidateSize();
+                renderMapMarkers();
+            }, 100);
         }
+    }
 
-        function resetGrowthForm() {
-            document.getElementById('editGrowthIndex').value = -1;
-            document.getElementById('entryDate').value = getTodayISO();
-            state.metricsRegistry.forEach(m => {
-                var el = document.getElementById('entry_' + m.key);
-                if (el) el.value = '';
-            });
-            document.getElementById('saveGrowthBtn').innerText = 'Log Measurement';
-            document.getElementById('cancelGrowthBtn').style.display = 'none';
-        }
+    function exportOrchardToCSV() {
+        var csv = [];
+        document.querySelectorAll("#orchardTable tr").forEach(row => {
+            var cols = Array.from(row.querySelectorAll("td, th")).slice(0, -1).map(c => `"${c.innerText.replace(/"/g, '""')}"`);
+            csv.push(cols.join(","));
+        });
+        var blob = new Blob([csv.join("\n")], { type: 'text/csv' });
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'orchard_metrics_2026.csv';
+        a.click();
+    }
 
-        function renderGrowthTable() {
-            var headerRow = document.getElementById('growthTableHeaderRow');
-            if (headerRow) {
-                headerRow.innerHTML = `<th>Date</th><th>Tree</th>${state.metricsRegistry.map(m => `<th>${m.name}</th>`).join('')}<th>Logged By</th><th style="text-align:right;">Actions</th>`;
-            }
-
-            var tbody = document.getElementById('growthTableBody');
-            if (!tbody) return;
-            tbody.innerHTML = '';
-            var selectedCultivar = document.getElementById('growthCultivarFilter') ? document.getElementById('growthCultivarFilter').value : 'all';
-
-            state.growthData.forEach((item, index) => {
-                if (selectedCultivar !== 'all' && item.tree !== selectedCultivar) return;
-                var authorName = (item.loggedBy === 'Joe') ? 'Rob' : (item.loggedBy || 'Rob');
-                var valCols = state.metricsRegistry.map(m => `<td>${item[m.key] !== undefined && item[m.key] !== null ? item[m.key] : '—'}</td>`).join('');
-                var tr = document.createElement('tr');
-                tr.innerHTML = `<td>${item.date}</td><td><strong>${item.tree}</strong></td>${valCols}<td><span class="user-tag">${authorName}</span></td><td style="text-align:right;">
-                    <div class="table-actions-cell">
-                        <button class="btn-action" style="background-color: #2b6cb0;" onclick="editGrowthRecord(${index})">Edit</button>
-                        <button class="btn-action" style="background-color: #9b2c2c;" onclick="deleteGrowthRecord(${index})">Delete</button>
-                    </div>
-                </td>`;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function switchTab(e, tabId) {
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-            if (e && e.currentTarget) e.currentTarget.classList.add('active');
-
-            if (tabId === 'map') {
-                setTimeout(() => {
-                    if (!mapInstance) initOrchardMap();
-                    mapInstance.invalidateSize();
-                    renderMapMarkers();
-                }, 100);
-            }
-        }
-
-        function exportOrchardToCSV() {
-            var csv = [];
-            document.querySelectorAll("#orchardTable tr").forEach(row => {
-                var cols = Array.from(row.querySelectorAll("td, th")).slice(0, -1).map(c => `"${c.innerText.replace(/"/g, '""')}"`);
-                csv.push(cols.join(","));
-            });
-            var blob = new Blob([csv.join("\n")], { type: 'text/csv' });
-            var a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = 'orchard_metrics_2026.csv';
-            a.click();
-        }
-
-        window.onload = function() {
-            fetchRepoData();
-        };
-    </script>
+    window.onload = function() {
+        fetchRepoData();
+    };
+</script>
 </body>
 </html>

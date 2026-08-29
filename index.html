@@ -479,16 +479,6 @@
             </div>
         </div>
 
-        <div class="filter-section">
-            <span class="filter-label">Filter Tree Age Category:</span>
-            <select id="ageFilter" class="filter-select" onchange="applyAgeFilter()">
-                <option value="all">All Trees (14 Total)</option>
-                <option value="bearing">Mature / Bearing (4+ yrs)</option>
-                <option value="established">Established (1-2 yrs)</option>
-                <option value="new">Newly Planted (0 yrs / Whips)</option>
-            </select>
-        </div>
-
         <div class="tabs">
             <button class="tab-btn" onclick="switchTab(event, 'inventory')">Inventory &amp; Phenology</button>
             <button class="tab-btn active" onclick="switchTab(event, 'growth')">Metrics</button>
@@ -1411,7 +1401,6 @@
                 tbody.appendChild(tr);
             });
 
-            applyAgeFilter();
             renderMetricTreeOptions();
             renderHarvestTreeOptions();
             renderLogCultivarControls();
@@ -1588,7 +1577,6 @@
             if (summaryDiv) {
                 summaryDiv.innerHTML = `<strong>Current Inventory Baseline:</strong> ~${freedomRem} apples remaining on Freedom with ${activeBaggedTotal} verified bags across non-Freedom cultivars (~${freedomRem + activeBaggedTotal} total active apples).`;
             }
-            applyAgeFilter();
         }
 
         var timelineWeeks = [
@@ -1684,7 +1672,6 @@
                 `;
                 gantryContainer.appendChild(col);
             });
-            applyAgeFilter();
         }
 
         function renderMetricTreeOptions() {
@@ -1728,12 +1715,14 @@
             state.harvestLogsData.forEach((log, index) => {
                 if (selectedCultivar !== 'all' && log.cultivar !== selectedCultivar) return;
 
+                var authorName = (log.loggedBy === 'Joe') ? 'Rob' : (log.loggedBy || 'Rob');
+
                 var tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td>${log.date}</td>
                     <td><strong>${log.cultivar}</strong></td>
                     <td>${log.quantity}</td>
-                    <td><span class="user-tag">${log.loggedBy || 'Rob'}</span></td>
+                    <td><span class="user-tag">${authorName}</span></td>
                     <td style="text-align: right;">
                         <button class="btn-action" style="padding: 4px 10px; font-size: 8.5pt; background-color: #2b6cb0;" onclick="editHarvestLog(${index})">Edit</button>
                         <button class="btn-action" style="padding: 4px 10px; font-size: 8.5pt; background-color: #9b2c2c;" onclick="deleteHarvestLog(${index})">Delete</button>
@@ -1794,6 +1783,8 @@
                 var tags = log.tags || ["All Cultivars"];
                 if (selectedCultivar !== 'all' && !tags.includes("All Cultivars") && !tags.includes(selectedCultivar)) return;
 
+                var authorName = (log.loggedBy === 'Joe') ? 'Rob' : (log.loggedBy || 'Rob');
+
                 var card = document.createElement('div');
                 card.className = 'card';
                 card.setAttribute('data-age', log.age || 'all');
@@ -1802,7 +1793,7 @@
                 card.innerHTML = `
                     <div class="card-title">${log.date} - ${log.title || 'Field Observation'}</div>
                     <div class="card-meta">
-                        <span class="user-tag">${log.loggedBy || 'Rob'}</span> • <span class="badge badge-bearing">${log.type}</span> • Tags: ${tagBadgesHTML}
+                        <span class="user-tag">${authorName}</span> • <span class="badge badge-bearing">${log.type}</span> • Tags: ${tagBadgesHTML}
                     </div>
                     <div class="card-body">${log.body}</div>
                     <div style="margin-top: 10px; display: flex; gap: 8px; justify-content: flex-end;">
@@ -1812,7 +1803,6 @@
                 `;
                 container.appendChild(card);
             });
-            applyAgeFilter();
         }
 
         function saveLogEntry() {
@@ -2134,21 +2124,14 @@
             state.growthData.forEach((item, index) => {
                 if (selectedCultivar !== 'all' && item.tree !== selectedCultivar) return;
 
+                var authorName = (item.loggedBy === 'Joe') ? 'Rob' : (item.loggedBy || 'Rob');
                 var valCols = state.metricsRegistry.map(m => `<td>${item[m.key] !== undefined && item[m.key] !== null ? item[m.key] : '—'}</td>`).join('');
                 var tr = document.createElement('tr');
-                tr.innerHTML = `<td>${item.date}</td><td><strong>${item.tree}</strong></td>${valCols}<td><span class="user-tag">${item.loggedBy || 'Rob'}</span></td><td style="text-align:right;">
+                tr.innerHTML = `<td>${item.date}</td><td><strong>${item.tree}</strong></td>${valCols}<td><span class="user-tag">${authorName}</span></td><td style="text-align:right;">
                     <button class="btn-action" style="padding: 4px 10px; font-size: 8.5pt; background-color: #2b6cb0;" onclick="editGrowthRecord(${index})">Edit</button>
                     <button class="btn-action" style="padding: 4px 10px; font-size: 8.5pt; background-color: #9b2c2c;" onclick="deleteGrowthRecord(${index})">Delete</button>
                 </td>`;
                 tbody.appendChild(tr);
-            });
-        }
-
-        function applyAgeFilter() {
-            var val = document.getElementById('ageFilter').value;
-            document.querySelectorAll('[data-age]').forEach(el => {
-                var age = el.getAttribute('data-age');
-                el.style.display = (val === 'all' || age === 'all' || age === val) ? '' : 'none';
             });
         }
 

@@ -335,7 +335,7 @@
         }
         .control-group { display: flex; flex-direction: column; gap: 4px; }
         .control-group label { font-size: 8.5pt; font-weight: 600; color: #4a5568; display: flex; justify-content: space-between; align-items: center; }
-        .control-group input, .control-group select { padding: 6px 8px; font-size: 9pt; border: 1px solid #cbd5e1; border-radius: 4px; }
+        .control-group input, .control-group select, .control-group textarea { padding: 6px 8px; font-size: 9pt; border: 1px solid #cbd5e1; border-radius: 4px; }
         
         .btn-autoscale {
             background: #4a5568;
@@ -874,40 +874,64 @@
         <div id="schedules" class="tab-content">
             <h2>Upcoming Schedules &amp; Management Targets</h2>
             <p style="font-size: 10pt; color: #4a5568; margin-bottom: 20px;">
-                Strategic biological, chemical, and nutritional workflows grouped dynamically by tree age classification.
+                Strategic biological, chemical, and nutritional workflows grouped dynamically by phase and target window.
             </p>
 
-            <div class="card">
-                <div class="card-title" style="color: #475569; border-bottom: 2px solid #e2e8f0; padding-bottom: 4px;">
-                    CLASS: NEWLY PLANTED (0 YRS / WHIPS)
+            <!-- ADD / EDIT SCHEDULE ENTRY FORM -->
+            <h3>Add / Edit Treatment Schedule Item</h3>
+            <div class="controls-grid" id="scheduleFormGrid" style="background: #eef2f7; border: 1px dashed #2b6cb0;">
+                <input type="hidden" id="editScheduleIndex" value="-1">
+                <div class="control-group">
+                    <label for="schedPhase">Phase Category *</label>
+                    <select id="schedPhase">
+                        <option value="Phase 1: Dormant &amp; Delayed-Dormant Window (March 15 – April 15)">Phase 1: Dormant &amp; Delayed-Dormant (Mar 15 - Apr 15)</option>
+                        <option value="Phase 2: Pre-Bloom &amp; Bloom Phase (April 20 – May 15)">Phase 2: Pre-Bloom &amp; Bloom Phase (Apr 20 - May 15)</option>
+                        <option value="Phase 3: Petal Fall &amp; Curculio Inundation (May 16 – June 10)">Phase 3: Petal Fall &amp; Curculio Inundation (May 16 - Jun 10)</option>
+                        <option value="Phase 4: Bagging Pass &amp; Biological Soil Armor (June 11 – July 10)">Phase 4: Bagging Pass &amp; Soil Armor (Jun 11 - Jul 10)</option>
+                        <option value="Phase 5: Mid-to-Late Summer Protection &amp; Trapping (July 11 – August 31)">Phase 5: Mid-to-Late Summer Protection (Jul 11 - Aug 31)</option>
+                        <option value="Phase 6: Post-Harvest &amp; Autumn Sanitation (October 15 – November 15)">Phase 6: Post-Harvest &amp; Autumn Sanitation (Oct 15 - Nov 15)</option>
+                    </select>
                 </div>
-                <div class="card-meta">
-                    <span class="badge badge-new">0-Yr Architecture</span> • Cultivars: Black Oxford, SnowSweet, NY 414-1, Williams' Pride (Whip)
+                <div class="control-group">
+                    <label for="schedType">Treatment Type / Badge *</label>
+                    <select id="schedType">
+                        <option value="Pest Defense">Pest Defense</option>
+                        <option value="Soil Armor">Soil Armor</option>
+                        <option value="Nutrition">Nutrition</option>
+                        <option value="Irrigation">Irrigation</option>
+                        <option value="Sanitation">Sanitation</option>
+                    </select>
                 </div>
-                <div class="card-body">
-                    <table style="width: 100%; margin-top: 8px;">
-                        <thead>
-                            <tr>
-                                <th style="width: 25%;">Target Window</th>
-                                <th style="width: 25%;">Type</th>
-                                <th style="width: 50%;">Operational Instructions &amp; Strategy</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>June 29 (Completed)</strong></td>
-                                <td><span class="badge badge-soil">Soil Armor</span></td>
-                                <td><strong>Nematode Base Drench:</strong> Completed initial 8 million multi-block deployment out to drip line to eliminate root pests and beetles. Ground weed whacked for clear soil interface.</td>
-                            </tr>
-                            <tr>
-                                <td><strong>July 5 (Completed)</strong></td>
-                                <td><span class="badge badge-pest">Pest Defense</span></td>
-                                <td><strong>Secondary Residual Strike:</strong> Finalized the remaining 5 million nematode application down onto active drip lines right before the major soaking rain front to lock in full subsurface colonization.</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                
+                <div class="control-group control-group-span-2">
+                    <label>Target Date Window Range</label>
+                    <div class="date-range-picker-container">
+                        <span class="date-range-sublabel">Start:</span>
+                        <input type="date" id="schedDateStart">
+                        <span style="font-size: 9pt; color: #94a3b8; font-weight: bold;">→</span>
+                        <span class="date-range-sublabel">End:</span>
+                        <input type="date" id="schedDateEnd">
+                    </div>
+                </div>
+
+                <div class="control-group control-group-span-2">
+                    <label>Cultivar Tags (Select one, multiple, or All)</label>
+                    <div class="checkbox-grid" id="schedCultivarCheckboxes"></div>
+                </div>
+
+                <div class="control-group" style="grid-column: 1 / -1;">
+                    <label for="schedInstructions">Operational Instructions &amp; Strategy *</label>
+                    <textarea id="schedInstructions" rows="3" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px; font-family: inherit; font-size: 9.5pt;" placeholder="Enter treatment instructions and operational strategy..."></textarea>
+                </div>
+
+                <div class="control-group" style="justify-content: flex-end; flex-direction: row; align-items: flex-end; gap: 8px; grid-column: 1 / -1;">
+                    <button class="btn-action" id="saveScheduleBtn" onclick="saveScheduleRecord()" style="background-color: #2b6cb0;">Add Treatment Schedule Item</button>
+                    <button class="btn-action" id="cancelScheduleBtn" onclick="resetScheduleForm()" style="background-color: rgb(100, 116, 139); display: none;">Cancel Edit</button>
                 </div>
             </div>
+
+            <!-- RENDERED SCHEDULE CARDS CONTAINER -->
+            <div id="schedulesContainer" style="margin-top: 24px;"></div>
         </div>
     </div>
 
@@ -948,24 +972,74 @@
         // BACKEND SYNC CONFIGURATION
         const WORKER_URL = "https://orchard-dashboard-sync.joseph-roscioli.workers.dev";
 
-        // MASTER INVENTORY BASELINE SEED DATA INCLUDING GPS LAT/LON
+        // DEFAULT ORCHARD INVENTORY SEED DATA
         var defaultInventorySeed = [
-            { cultivar: "Freedom", lat: 42.5952388, lon: -71.33682947, ageCat: "bearing", yearPlanted: "2021", ageAtPlanting: "2 yrs", rootstock: "Dwarf", load: "125-175", bags: "200", color: "#1b4332", directives: "Primary bearing block." },
-            { cultivar: "Novamac", lat: 42.595252, lon: -71.336926, ageCat: "bearing", yearPlanted: "2021", ageAtPlanting: "2 yrs", rootstock: "M.9", load: "50", bags: "60", color: "#2d6a4f", directives: "Scab resistant." },
-            { cultivar: "Enterprise", lat: 42.595275, lon: -71.336888, ageCat: "bearing", yearPlanted: "2021", ageAtPlanting: "2 yrs", rootstock: "G.11", load: "40", bags: "50", color: "#40916c", directives: "Late harvest." },
-            { cultivar: "NY-35 (Bonkers)", lat: 42.595225, lon: -71.336958, ageCat: "bearing", yearPlanted: "2021", ageAtPlanting: "2 yrs", rootstock: "B.9", load: "30", bags: "35", color: "#52b788", directives: "Heavy bloomer." },
-            { cultivar: "Galarina (X-4982)", lat: 42.595186, lon: -71.336913, ageCat: "bearing", yearPlanted: "2021", ageAtPlanting: "2 yrs", rootstock: "M.9", load: "25", bags: "30", color: "#74c69d", directives: "Mildew resistant." },
-            { cultivar: "Sansa", lat: 42.59529665, lon: -71.33678538, ageCat: "established", yearPlanted: "2022", ageAtPlanting: "Whip", rootstock: "G.41", load: "15", bags: "20", color: "#e9c46a", directives: "Early season." },
-            { cultivar: "Seckel Pear", lat: 42.5958565, lon: -71.33648319, ageCat: "established", yearPlanted: "2022", ageAtPlanting: "2 yrs", rootstock: "Standard", load: "10", bags: "0", color: "#84cc16", directives: "Monitor fire blight." },
-            { cultivar: "Swamp Crabapple", lat: 42.59544311, lon: -71.33714602, ageCat: "established", yearPlanted: "2022", ageAtPlanting: "Whip", rootstock: "Antonovka", load: "0", bags: "0", color: "#94a3b8", directives: "Pollinizer block." },
-            { cultivar: "PrarieFire Crabapple", lat: 42.59573324, lon: -71.33675295, ageCat: "established", yearPlanted: "2022", ageAtPlanting: "Whip", rootstock: "Standard", load: "0", bags: "0", color: "#f43f5e", directives: "Pollinizer block." },
-            { cultivar: "Williams' Pride (older)", lat: 42.59526605, lon: -71.33678103, ageCat: "established", yearPlanted: "2022", ageAtPlanting: "Whip", rootstock: "G.11", load: "20", bags: "25", color: "#f97316", directives: "Early red apple." },
-            { cultivar: "Liberty", lat: 42.5952136, lon: -71.33686709, ageCat: "established", yearPlanted: "2022", ageAtPlanting: "Whip", rootstock: "M.7", load: "15", bags: "20", color: "#e11d48", directives: "High resistance." },
-            { cultivar: "Sundance", lat: 42.595238, lon: -71.33706296, ageCat: "established", yearPlanted: "2022", ageAtPlanting: "Whip", rootstock: "G.202", load: "10", bags: "15", color: "#eab308", directives: "Yellow tart." },
-            { cultivar: "Black Oxford", lat: 42.59523607, lon: -71.33711072, ageCat: "new", yearPlanted: "2024", ageAtPlanting: "Whip", rootstock: "Antonovka", load: "0", bags: "0", color: "#475569", directives: "Heritage keeper." },
-            { cultivar: "Williams' Pride (younger)", lat: 42.59526808, lon: -71.33715135, ageCat: "new", yearPlanted: "2024", ageAtPlanting: "Whip", rootstock: "G.11", load: "0", bags: "0", color: "#fb923c", directives: "Vegetative stage." },
-            { cultivar: "SnowSweet", lat: 42.59520707, lon: -71.33717015, ageCat: "new", yearPlanted: "2024", ageAtPlanting: "Whip", rootstock: "B.9", load: "0", bags: "0", color: "#38bdf8", directives: "Crisp white flesh." },
-            { cultivar: "NY 414-1", lat: 42.59518486, lon: -71.33713327, ageCat: "new", yearPlanted: "2024", ageAtPlanting: "Whip", rootstock: "G.935", load: "0", bags: "0", color: "#a855f7", directives: "Experimental." }
+            { cultivar: "Freedom", lat: 42.5952388, lon: -71.33682947, ageCat: "bearing", yearPlanted: "2019", ageAtPlanting: "1 yr", rootstock: "Dwarf G.11", load: "125-175", bags: "200", color: "#1b4332", directives: "Primary bearing block." },
+            { cultivar: "NY-35", lat: 42.595319, lon: -71.336875, ageCat: "bearing", yearPlanted: "2022", ageAtPlanting: "2 yrs", rootstock: "Semi-Std G.935", load: "37", bags: "37", color: "#6b21a8", directives: "Structural warning." },
+            { cultivar: "Enterprise", lat: 42.595299, lon: -71.336907, ageCat: "bearing", yearPlanted: "2021", ageAtPlanting: "2 yrs", rootstock: "Semi-Std M.111", load: "10", bags: "10", color: "#9b2c2c", directives: "Keep nitrogen low." },
+            { cultivar: "Novamac", lat: 42.595264, lon: -71.336946, ageCat: "bearing", yearPlanted: "2021", ageAtPlanting: "1 yr", rootstock: "Semi-Std M.7", load: "17", bags: "17", color: "#2b6cb0", directives: "Bagging audited." },
+            { cultivar: "Galarina", lat: 42.595296, lon: -71.33695, ageCat: "bearing", yearPlanted: "2022", ageAtPlanting: "2 yrs", rootstock: "Semi-Std G.890", load: "20", bags: "20", color: "#06dbcd", directives: "Shallow water tables." },
+            { cultivar: "Sansa", lat: 42.595298, lon: -71.336773, ageCat: "established", yearPlanted: "2024", ageAtPlanting: "1 yr", rootstock: "Semi-Std G.969", load: "0", bags: "0", color: "#059669", directives: "Framework pruning priority." },
+            { cultivar: "Seckel (Pear)", lat: 42.59585878, lon: -71.33648269, ageCat: "established", yearPlanted: "2024", ageAtPlanting: "1 yr", rootstock: "Semi-Std OHxF 87", load: "0", bags: "0", color: "#65a30d", directives: "Fire-blight resistant." },
+            { cultivar: "Williams' Pride (Older)", lat: 42.595269, lon: -71.3368, ageCat: "established", yearPlanted: "2025", ageAtPlanting: "1 yr", rootstock: "G.969", load: "0", bags: "0", color: "#0284c7", directives: "Push root and vegetative frameworks." },
+            { cultivar: "Williams' Pride (Whip)", lat: 42.595283, lon: -71.337098, ageCat: "new", yearPlanted: "2026", ageAtPlanting: "0 yr", rootstock: "B.118", load: "0", bags: "0", color: "#0ea5e9", directives: "Keep drip zone clear." },
+            { cultivar: "Liberty", lat: 42.595245, lon: -71.336833, ageCat: "established", yearPlanted: "2025", ageAtPlanting: "1 yr", rootstock: "Semi-Std G.890", load: "0", bags: "0", color: "#16a34a", directives: "High tolerance for wet roots." },
+            { cultivar: "Sundance", lat: 42.595249, lon: -71.337035, ageCat: "established", yearPlanted: "2025", ageAtPlanting: "1 yr", rootstock: "Semi-Std B.118", load: "0", bags: "0", color: "#ca8a04", directives: "Extreme vigor rootstock." },
+            { cultivar: "Black Oxford", lat: 42.595261, lon: -71.337073, ageCat: "new", yearPlanted: "2026", ageAtPlanting: "0 yr", rootstock: "Semi-Std B.118", load: "0", bags: "0", color: "#334155", directives: "Verify white trunk paint." },
+            { cultivar: "SnowSweet", lat: 42.59520842, lon: -71.33716877, ageCat: "new", yearPlanted: "2026", ageAtPlanting: "0 yr", rootstock: "Semi-Std B.118", load: "0", bags: "0", color: "#db2777", directives: "Ensure wire trunk mesh is tight." },
+            { cultivar: "NY 414-1", lat: 42.59518773, lon: -71.33713298, ageCat: "new", yearPlanted: "2026", ageAtPlanting: "0 yr", rootstock: "Semi-Std G.969", load: "0", bags: "0", color: "#475569", directives: "Monitor shallow roots." }
+        ];
+
+        // DEFAULT TREATMENT SCHEDULE SEED DATA
+        var defaultScheduleSeed = [
+            {
+                phase: "Phase 1: Dormant & Delayed-Dormant Window (March 15 – April 15)",
+                type: "Pest Defense",
+                startDate: "2026-03-15",
+                endDate: "2026-03-30",
+                tags: ["All Cultivars"],
+                instructions: "Dormant Oil (2% dilution): Apply to all tree canopies on a sunny day with temperatures above 45°F to smother overwintering mite/scale eggs."
+            },
+            {
+                phase: "Phase 1: Dormant & Delayed-Dormant Window (March 15 – April 15)",
+                type: "Nutrition",
+                startDate: "2026-04-01",
+                endDate: "2026-04-15",
+                tags: ["All Cultivars"],
+                instructions: "Tree-Tone & Coop Poop: Apply 1/2 dose of Tree-Tone paired with 2/3 dose of Coop Poop across all drip lines to supply early organic nutrition."
+            },
+            {
+                phase: "Phase 2: Pre-Bloom & Bloom Phase (April 20 – May 15)",
+                type: "Pest Defense",
+                startDate: "2026-04-20",
+                endDate: "2026-04-30",
+                tags: ["All Cultivars"],
+                instructions: "Ferti-lome Triple Action: Apply to canopy foliage before blossom buds open for early contact knockdown and fungal spore suppression."
+            },
+            {
+                phase: "Phase 3: Petal Fall & Curculio Inundation (May 16 – June 10)",
+                type: "Pest Defense",
+                startDate: "2026-05-16",
+                endDate: "2026-05-22",
+                tags: ["Freedom", "NY-35", "Enterprise", "Novamac", "Galarina"],
+                instructions: "Surround WP & Bt: Apply high-density kaolin clay (2.5 cups/gal) tank-mixed with Bt immediately at petal fall to deter Plum Curculio and caterpillars."
+            },
+            {
+                phase: "Phase 4: Bagging Pass & Biological Soil Armor (June 11 – July 10)",
+                type: "Soil Armor",
+                startDate: "2026-06-25",
+                endDate: "2026-06-30",
+                tags: ["All Cultivars"],
+                instructions: "Beneficial Nematodes: Apply ~8 million Steinernema carpocapsae during evening twilight out to drip lines after a sub-surface pre-soak."
+            },
+            {
+                phase: "Phase 5: Mid-to-Late Summer Protection & Trapping (July 11 – August 31)",
+                type: "Pest Defense",
+                startDate: "2026-08-01",
+                endDate: "2026-08-31",
+                tags: ["All Cultivars"],
+                instructions: "Perimeter Hornet Trapping: Hang ACV + sugar + soap traps 15-20ft off canopy line to intercept yellowjackets, hornets, and fruit flies."
+            }
         ];
 
         // MASTER DATA STATE
@@ -973,6 +1047,7 @@
             lastUpdated: "Loading...",
             lastUpdatedBy: "System",
             inventoryData: defaultInventorySeed,
+            scheduleData: defaultScheduleSeed,
             metricsRegistry: [],
             activeGraphKeys: [],
             growthData: [],
@@ -997,7 +1072,7 @@
 
         function setDefaultDates() {
             var todayStr = getTodayISO();
-            var dateInputs = ['entryDate', 'harvestDate', 'invBloomStart', 'invBloomEnd', 'invRipeningStart', 'invRipeningEnd'];
+            var dateInputs = ['entryDate', 'harvestDate', 'invBloomStart', 'invBloomEnd', 'invRipeningStart', 'invRipeningEnd', 'schedDateStart', 'schedDateEnd'];
             dateInputs.forEach(id => {
                 var el = document.getElementById(id);
                 if (el && !el.value) el.value = todayStr;
@@ -1039,6 +1114,7 @@
                             lastUpdated: imported.lastUpdated || getTodayISO(),
                             lastUpdatedBy: imported.lastUpdatedBy || currentUserAuthor || "Rob",
                             inventoryData: imported.inventoryData || defaultInventorySeed,
+                            scheduleData: imported.scheduleData || defaultScheduleSeed,
                             metricsRegistry: imported.metricsRegistry || [],
                             activeGraphKeys: imported.activeGraphKeys || [],
                             growthData: imported.growthData || [],
@@ -1089,17 +1165,11 @@
             if (currentUserAuthor) {
                 if (displayEl) displayEl.innerText = `${currentUserAuthor} logged in`;
                 if (tagEl) tagEl.innerText = `(Authenticated via Worker PIN • Last sync: ${state.lastUpdatedBy || currentUserAuthor})`;
-                if (toggleBtn) {
-                    toggleBtn.innerText = "🔓 Logout";
-                    toggleBtn.style.backgroundColor = "#c53030";
-                }
+                if (toggleBtn) { toggleBtn.innerText = "🔓 Logout"; toggleBtn.style.backgroundColor = "#c53030"; }
             } else {
                 if (displayEl) displayEl.innerText = "Not Logged In";
                 if (tagEl) tagEl.innerText = `(Click "🔒 Login" to authenticate PIN)`;
-                if (toggleBtn) {
-                    toggleBtn.innerText = "🔒 Login";
-                    toggleBtn.style.backgroundColor = "#d69e2e";
-                }
+                if (toggleBtn) { toggleBtn.innerText = "🔒 Login"; toggleBtn.style.backgroundColor = "#d69e2e"; }
             }
         }
 
@@ -1138,6 +1208,7 @@
                     lastUpdated: data.lastUpdated || getTodayISO(),
                     lastUpdatedBy: data.lastUpdatedBy || "Rob",
                     inventoryData: (data.inventoryData && data.inventoryData.length > 0) ? data.inventoryData : defaultInventorySeed,
+                    scheduleData: (data.scheduleData && data.scheduleData.length > 0) ? data.scheduleData : defaultScheduleSeed,
                     metricsRegistry: data.metricsRegistry || [],
                     activeGraphKeys: data.activeGraphKeys || [],
                     growthData: data.growthData || [],
@@ -1166,6 +1237,7 @@
         function loadLocalState() {
             var stored = localStorage.getItem('orchard_state_full');
             if (stored) state = JSON.parse(stored);
+            if (!state.scheduleData) state.scheduleData = defaultScheduleSeed;
             renderAll();
         }
 
@@ -1218,6 +1290,7 @@
             renderAbundances();
             renderHarvestTimeline();
             renderMapMarkers();
+            renderScheduleTabUI();
         }
 
         function renderAllCultivarFilterOptions() {
@@ -1226,6 +1299,8 @@
                 var el = document.getElementById(id);
                 if (el) { var curr = el.value; el.innerHTML = options; el.value = curr || 'all'; }
             });
+            renderScheduleCultivarCheckboxes();
+            renderLogCultivarControls();
         }
 
         function formatDateRange(startDateStr, endDateStr, defaultText) {
@@ -1410,17 +1485,179 @@
             document.getElementById('cancelInventoryBtn').style.display = 'none';
         }
 
+        // TREATMENT SCHEDULE TAB LOGIC
+        function renderScheduleCultivarCheckboxes() {
+            var grid = document.getElementById('schedCultivarCheckboxes');
+            if (!grid) return;
+            grid.innerHTML = `<label class="checkbox-item" style="font-weight: bold; width: 100%; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px; margin-bottom: 4px;">
+                <input type="checkbox" id="sched_tag_all" onchange="toggleAllSchedCultivars(this.checked)"> All Cultivars
+            </label>` + state.inventoryData.map(i => `<label class="checkbox-item"><input type="checkbox" class="sched-cultivar-cb" value="${i.cultivar}"> <span>${i.cultivar}</span></label>`).join('');
+        }
+
+        function toggleAllSchedCultivars(checked) {
+            document.querySelectorAll('.sched-cultivar-cb').forEach(cb => { cb.checked = checked; });
+        }
+
+        function getSelectedSchedTags() {
+            var allCb = document.getElementById('sched_tag_all');
+            if (allCb && allCb.checked) return ["All Cultivars"];
+            var selected = Array.from(document.querySelectorAll('.sched-cultivar-cb:checked')).map(cb => cb.value);
+            return selected.length > 0 ? selected : ["All Cultivars"];
+        }
+
+        function renderScheduleTabUI() {
+            var container = document.getElementById('schedulesContainer');
+            if (!container) return;
+            container.innerHTML = '';
+
+            if (!state.scheduleData) state.scheduleData = defaultScheduleSeed;
+
+            // Group schedule items by Phase
+            var phaseGroups = {};
+            state.scheduleData.forEach((item, index) => {
+                var p = item.phase || "General Management";
+                if (!phaseGroups[p]) phaseGroups[p] = [];
+                phaseGroups[p].push({ item, index });
+            });
+
+            for (var phaseName in phaseGroups) {
+                var itemsArray = phaseGroups[phaseName];
+                var card = document.createElement('div');
+                card.className = 'card';
+
+                var rowsHTML = itemsArray.map(obj => {
+                    var s = obj.item;
+                    var idx = obj.index;
+                    var dateDisplay = formatDateRange(s.startDate, s.endDate, s.targetWindow || '—');
+                    var badgeClass = 'badge badge-pest';
+                    if (s.type === 'Soil Armor') badgeClass = 'badge badge-soil';
+                    else if (s.type === 'Nutrition') badgeClass = 'badge badge-nutrition';
+                    else if (s.type === 'Irrigation') badgeClass = 'badge badge-irrigation';
+                    else if (s.type === 'Sanitation') badgeClass = 'badge badge-bearing';
+
+                    var tagsHTML = (s.tags || ["All Cultivars"]).map(t => `<span class="badge badge-tag" style="margin-right:2px;">${t}</span>`).join('');
+
+                    return `
+                        <tr>
+                            <td><strong>${dateDisplay}</strong><br><div style="margin-top:4px;">${tagsHTML}</div></td>
+                            <td><span class="${badgeClass}">${s.type}</span></td>
+                            <td>${s.instructions}</td>
+                            <td style="text-align: right; white-space: nowrap;">
+                                <button class="btn-action" style="padding: 4px 8px; font-size: 8pt; background-color: #2b6cb0;" onclick="editScheduleRecord(${idx})">Edit</button>
+                                <button class="btn-action" style="padding: 4px 8px; font-size: 8pt; background-color: #9b2c2c;" onclick="deleteScheduleRecord(${idx})">Delete</button>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+
+                card.innerHTML = `
+                    <div class="card-title" style="color: #1b4332; border-bottom: 2px solid #d8f3dc; padding-bottom: 4px;">
+                        ${phaseName.toUpperCase()}
+                    </div>
+                    <div class="card-body">
+                        <table style="width: 100%; margin-top: 8px;">
+                            <thead>
+                                <tr>
+                                    <th style="width: 25%;">Target Window &amp; Cultivars</th>
+                                    <th style="width: 20%;">Type</th>
+                                    <th style="width: 43%;">Operational Instructions &amp; Strategy</th>
+                                    <th style="width: 12%; text-align: right;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${rowsHTML}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+                container.appendChild(card);
+            }
+        }
+
+        function saveScheduleRecord() {
+            var phase = document.getElementById('schedPhase').value;
+            var type = document.getElementById('schedType').value;
+            var startDate = document.getElementById('schedDateStart').value;
+            var endDate = document.getElementById('schedDateEnd').value;
+            var instructions = document.getElementById('schedInstructions').value.trim();
+            var tags = getSelectedSchedTags();
+
+            if (!instructions) {
+                alert("Please enter operational instructions for this treatment.");
+                return;
+            }
+
+            var record = { phase, type, startDate, endDate, tags, instructions };
+
+            var editIndex = parseInt(document.getElementById('editScheduleIndex').value);
+            if (editIndex >= 0 && editIndex < state.scheduleData.length) {
+                state.scheduleData[editIndex] = record;
+            } else {
+                state.scheduleData.push(record);
+            }
+
+            resetScheduleForm();
+            saveState();
+        }
+
+        function editScheduleRecord(index) {
+            var item = state.scheduleData[index];
+            if (!item) return;
+
+            document.getElementById('editScheduleIndex').value = index;
+            document.getElementById('schedPhase').value = item.phase;
+            document.getElementById('schedType').value = item.type;
+            document.getElementById('schedDateStart').value = item.startDate || getTodayISO();
+            document.getElementById('schedDateEnd').value = item.endDate || getTodayISO();
+            document.getElementById('schedInstructions').value = item.instructions || '';
+
+            // Check checkboxes
+            var allCb = document.getElementById('sched_tag_all');
+            if (item.tags && item.tags.includes("All Cultivars")) {
+                if (allCb) allCb.checked = true;
+                toggleAllSchedCultivars(true);
+            } else {
+                if (allCb) allCb.checked = false;
+                toggleAllSchedCultivars(false);
+                document.querySelectorAll('.sched-cultivar-cb').forEach(cb => {
+                    if (item.tags && item.tags.includes(cb.value)) cb.checked = true;
+                });
+            }
+
+            document.getElementById('saveScheduleBtn').innerText = 'Update Treatment Schedule Item';
+            document.getElementById('cancelScheduleBtn').style.display = 'inline-block';
+            document.getElementById('scheduleFormGrid').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function deleteScheduleRecord(index) {
+            if (confirm("Delete this treatment schedule item?")) {
+                state.scheduleData.splice(index, 1);
+                saveState();
+            }
+        }
+
+        function resetScheduleForm() {
+            var todayStr = getTodayISO();
+            document.getElementById('editScheduleIndex').value = -1;
+            document.getElementById('schedDateStart').value = todayStr;
+            document.getElementById('schedDateEnd').value = todayStr;
+            document.getElementById('schedInstructions').value = '';
+            var allCb = document.getElementById('sched_tag_all');
+            if (allCb) allCb.checked = false;
+            toggleAllSchedCultivars(false);
+            document.getElementById('saveScheduleBtn').innerText = 'Add Treatment Schedule Item';
+            document.getElementById('cancelScheduleBtn').style.display = 'none';
+        }
+
         // INITIALIZE AND RENDER INTERACTIVE GOOGLE SATELLITE MAP
         function initOrchardMap() {
             if (mapInstance) return;
             var mapEl = document.getElementById('mapContainer');
             if (!mapEl) return;
 
-            // Default center around Chelmsford Orchard GPS bounds
             var defaultLat = 42.59524, defaultLon = -71.33690;
             mapInstance = L.map('mapContainer').setView([defaultLat, defaultLon], 19);
 
-            // High-Resolution Google Satellite & Hybrid Tiles
             L.tileLayer('https://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
                 maxZoom: 22,
                 subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
@@ -1448,7 +1685,6 @@
 
                 bounds.push([lat, lon]);
 
-                // Create custom circle marker matching cultivar color
                 var circleMarker = L.circleMarker([lat, lon], {
                     radius: 9,
                     fillColor: item.color || '#38bdf8',
@@ -1458,7 +1694,6 @@
                     fillOpacity: 0.9
                 });
 
-                // Add permanent label
                 circleMarker.bindTooltip(item.cultivar, {
                     permanent: true,
                     direction: 'top',
@@ -1466,7 +1701,6 @@
                     offset: [0, -10]
                 });
 
-                // Popup card detail
                 var popupContent = `
                     <div style="font-family: sans-serif; padding: 4px;">
                         <h4 style="margin: 0 0 4px 0; color: #1b4332;">${item.cultivar}</h4>
@@ -2102,7 +2336,6 @@
             document.getElementById(tabId).classList.add('active');
             if (e && e.currentTarget) e.currentTarget.classList.add('active');
 
-            // Force Leaflet map resize recalculation on tab switch
             if (tabId === 'map') {
                 setTimeout(() => {
                     if (!mapInstance) initOrchardMap();

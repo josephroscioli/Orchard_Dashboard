@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-08-29 10:00",
+  "lastUpdated": "2026-08-29 10:21",
   "lastUpdatedBy": "Rob",
   "inventoryData": [
     {
@@ -225,7 +225,7 @@
       "ripeningEnd": "2026-10-31",
       "bloom": "May 15 - May 25",
       "ripening": "Oct 18 - Oct 31",
-      "load": "0",
+      "load": "3",
       "bags": "0",
       "color": "#334155",
       "directives": "2026 addition. Verify white trunk paint coverage is high enough to block southwest sun scald."
@@ -267,6 +267,25 @@
       "bags": "0",
       "color": "#475569",
       "directives": "2026 addition. Monitor shallow roots closely if sandy loam topsoil dries."
+    },
+    {
+      "cultivar": "test",
+      "ageCat": "bearing",
+      "yearPlanted": "—",
+      "ageAtPlanting": "—",
+      "rootstock": "—",
+      "lat": 42.59519,
+      "lon": -71.33723,
+      "bloomStart": "2026-08-29",
+      "bloomEnd": "2026-08-29",
+      "ripeningStart": "2026-08-29",
+      "ripeningEnd": "2026-08-29",
+      "bloom": "Aug 29 - Aug 29",
+      "ripening": "Aug 29 - Aug 29",
+      "load": "0",
+      "bags": "0",
+      "color": "#1b4332",
+      "directives": "test"
     }
   ],
   "scheduleData": [
@@ -485,6 +504,16 @@
         "Williams' Pride (Whip)"
       ],
       "instructions": "Tree Trunk Painting & Hardware Guard Check: Verify white latex/water trunk paint coverage on young whips to block southwest winter sun scald. Ensure wire hardware mesh guards are tight to the ground line to exclude voles."
+    },
+    {
+      "phase": "Phase 4: Bagging Pass & Biological Soil Armor (June 11 – July 10)",
+      "type": "Pest Defense",
+      "startDate": "2026-08-29",
+      "endDate": "2026-08-29",
+      "tags": [
+        "Williams' Pride (Older)"
+      ],
+      "instructions": "test"
     }
   ],
   "metricsRegistry": [
@@ -507,6 +536,13 @@
       "isInputVisible": true,
       "defaultYMin": "30",
       "defaultYMax": "200"
+    },
+    {
+      "key": "metric_bebe",
+      "name": "bebe",
+      "unit": "bah",
+      "isCustom": true,
+      "isGraphed": true
     }
   ],
   "activeGraphKeys": [],
@@ -692,10 +728,34 @@
       "dia": null,
       "height": 68,
       "loggedBy": "Joe"
+    },
+    {
+      "date": "2026-08-29",
+      "tree": "Freedom",
+      "loggedBy": "Rob",
+      "metric_bebe": 7
     }
   ],
-  "harvestLogsData": [],
+  "harvestLogsData": [
+    {
+      "date": "2026-08-29",
+      "cultivar": "Galarina",
+      "quantity": 6,
+      "loggedBy": "Rob"
+    }
+  ],
   "logsData": [
+    {
+      "date": "2026-08-29",
+      "title": "Field Observation",
+      "type": "Growth & Orchard Status",
+      "tags": [
+        "All Cultivars"
+      ],
+      "age": "all",
+      "body": "hfdlkjshaf",
+      "loggedBy": "Rob"
+    },
     {
       "date": "2026-08-28",
       "title": "Red spots",

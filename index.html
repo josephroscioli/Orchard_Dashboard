@@ -450,15 +450,40 @@
             border-radius: 4px;
             font-weight: 600;
         }
+
+        /* Map Component Styling */
+        #mapContainer {
+            width: 100%;
+            height: 580px;
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            z-index: 1;
+        }
+        .tree-map-label {
+            background: rgba(15, 23, 42, 0.85);
+            color: #ffffff;
+            border: 1px solid #38bdf8;
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-weight: bold;
+            font-size: 8pt;
+            white-space: nowrap;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+        }
     </style>
+    <!-- Chart.js Dependencies -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+
+    <!-- Leaflet GIS Map Dependencies -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
 
     <header>
         <h1>Roscioli Orchard Dashboard</h1>
-<!--        <p>14-Tree Management Framework</p> -->
         <span class="sync-status" id="last-updated-display">Last Synced: Loading...</span>
         <div class="header-actions">
             <button class="header-btn header-btn-login" id="login-toggle-btn" onclick="handleAuthToggle()">🔒 Login</button>
@@ -482,6 +507,7 @@
         <div class="tabs">
             <button class="tab-btn" onclick="switchTab(event, 'inventory')">Inventory &amp; Phenology</button>
             <button class="tab-btn active" onclick="switchTab(event, 'growth')">Metrics</button>
+            <button class="tab-btn" onclick="switchTab(event, 'map')">Tree Map (Satellite)</button>
             <button class="tab-btn" onclick="switchTab(event, 'harvest')">Harvest</button>
             <button class="tab-btn" onclick="switchTab(event, 'harvest_timeline')">Harvest Timeline</button>
             <button class="tab-btn" onclick="switchTab(event, 'logs')">Logs &amp; Observations</button>
@@ -491,7 +517,7 @@
 
         <div id="inventory" class="tab-content">
             <div class="section-header-container">
-                <h2>Master Tree Inventory (14 Whips &amp; Trees)</h2>
+                <h2>Master Tree Inventory</h2>
                 <button class="btn-action btn-csv" onclick="exportOrchardToCSV()">Export Orchard Metrics (CSV)</button>
             </div>
 
@@ -521,6 +547,15 @@
                 <div class="control-group">
                     <label for="invRootstock">Rootstock</label>
                     <input type="text" id="invRootstock" placeholder="e.g. Dwarf G.11">
+                </div>
+
+                <div class="control-group">
+                    <label for="invLat">Latitude (Lat)</label>
+                    <input type="number" id="invLat" step="any" placeholder="e.g. 42.5952388">
+                </div>
+                <div class="control-group">
+                    <label for="invLon">Longitude (Lon)</label>
+                    <input type="number" id="invLon" step="any" placeholder="e.g. -71.33682947">
                 </div>
                 
                 <div class="control-group control-group-span-2">
@@ -573,16 +608,17 @@
                         <tr>
                             <th style="width: 8%;">Cultivar</th>
                             <th style="width: 5%;">Planted</th>
-                            <th style="width: 6%;">Age at Plant</th>
+                            <th style="width: 5%;">Age at Plant</th>
                             <th style="width: 5%;">Height</th>
                             <th style="width: 5%;">Fruit Dia.</th>
-                            <th style="width: 8%;">Rootstock</th>
-                            <th style="width: 8%;">Est. Bloom</th>
-                            <th style="width: 8%;">Est. Ripening</th>
+                            <th style="width: 7%;">Rootstock</th>
+                            <th style="width: 11%;">GPS Coordinates</th>
+                            <th style="width: 7%;">Est. Bloom</th>
+                            <th style="width: 7%;">Est. Ripening</th>
                             <th style="width: 5%;">Est. Load</th>
                             <th style="width: 4%;">Act. Load</th>
                             <th style="width: 4%;">Bags</th>
-                            <th style="width: 27%;">Tactical Directives &amp; Action Items</th>
+                            <th style="width: 20%;">Tactical Directives &amp; Action Items</th>
                             <th style="width: 7%; text-align: right;">Actions</th>
                         </tr>
                     </thead>
@@ -652,6 +688,19 @@
                     <tbody id="growthTableBody"></tbody>
                 </table>
             </div>
+        </div>
+
+        <!-- TREE MAP TAB CONTENT -->
+        <div id="map" class="tab-content">
+            <h2>High-Resolution Orchard Satellite Map</h2>
+            <p style="font-size: 10pt; color: #4a5568; margin-bottom: 16px;">
+                Interactive GPS mapping layer displaying individual tree cultivar positions over Google high-resolution satellite imagery. Click any marker for cultivar metrics.
+            </p>
+            <div class="filter-section" style="margin-bottom: 16px;">
+                <span class="filter-label">Filter Map Markers:</span>
+                <select id="mapCultivarFilter" class="filter-select" onchange="renderMapMarkers()"></select>
+            </div>
+            <div id="mapContainer"></div>
         </div>
 
         <div id="harvest" class="tab-content">
@@ -738,7 +787,6 @@
         </div>
 
         <div id="logs" class="tab-content">
-           
             <div class="filter-section" style="margin-bottom: 20px;">
                 <span class="filter-label">Filter Logs by Cultivar Tag:</span>
                 <select id="logCultivarFilter" class="filter-select" onchange="renderLogs()"></select>
@@ -796,9 +844,9 @@
         </div>
 
         <div id="abundances" class="tab-content">
-            <h2>Verified 2026 Crop Abundance Spectrum</h2>
+            <h2>Verified Crop Abundance Spectrum</h2>
             <p style="font-size: 10pt; color: #4a5568; margin-bottom: 20px;">
-                Visualizing actual yield loads for all 14 cultivars (including non-bearing). Edit values directly in the table below to update the orchard master list and harvest timeline predictions automatically.
+                Visualizing actual yield loads for all cultivars (including non-bearing). Edit values directly in the table below to update the orchard master list and harvest timeline predictions automatically.
             </p>
             
             <div id="abundanceChart" class="chart-container"></div>
@@ -829,7 +877,7 @@
                 Strategic biological, chemical, and nutritional workflows grouped dynamically by tree age classification.
             </p>
 
-            <div class="card" data-age="new">
+            <div class="card">
                 <div class="card-title" style="color: #475569; border-bottom: 2px solid #e2e8f0; padding-bottom: 4px;">
                     CLASS: NEWLY PLANTED (0 YRS / WHIPS)
                 </div>
@@ -856,95 +904,6 @@
                                 <td><span class="badge badge-pest">Pest Defense</span></td>
                                 <td><strong>Secondary Residual Strike:</strong> Finalized the remaining 5 million nematode application down onto active drip lines right before the major soaking rain front to lock in full subsurface colonization.</td>
                             </tr>
-                            <tr>
-                                <td><strong>Early July</strong></td>
-                                <td><span class="badge badge-nutrition">Nutrition</span></td>
-                                <td><strong>Secondary Tree-Tone Booster:</strong> Apply secondary ring dose around root zones to maximize initial-season root system establishment in sandy loam. Do not apply past mid-July.</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div class="card" data-age="established">
-                <div class="card-title" style="color: #084298; border-bottom: 2px solid #cfe2ff; padding-bottom: 4px;">
-                    CLASS: ESTABLISHED (1 - 2 YRS)
-                </div>
-                <div class="card-meta">
-                    <span class="badge badge-established">Vegetative Focus</span> • Cultivars: Sansa, Seckel, Williams' Pride (Older), Liberty, Sundance
-                </div>
-                <div class="card-body">
-                    <table style="width: 100%; margin-top: 8px;">
-                        <thead>
-                            <tr>
-                                <th style="width: 25%;">Target Window</th>
-                                <th style="width: 25%;">Type</th>
-                                <th style="width: 50%;">Operational Instructions &amp; Strategy</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>June 29 (Completed)</strong></td>
-                                <td><span class="badge badge-soil">Soil Armor</span></td>
-                                <td><strong>Nematode Drench:</strong> Root zones protected out past expanding drip lines to eliminate wild curculio exploratory drops and beetle grubs.</td>
-                            </tr>
-                            <tr>
-                                <td><strong>July 5 (Completed)</strong></td>
-                                <td><span class="badge badge-pest">Pest Defense</span></td>
-                                <td><strong>Secondary Follow-up:</strong> Inoculation completely flushed in with natural rain across established root grids to sustain season-long ground defense.</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Immediate</strong></td>
-                                <td><span class="badge badge-nutrition">Nutrition Cutoff</span></td>
-                                <td><strong>Nitrogen Cessation:</strong> Strict halt on all nitrogenous inputs (especially Seckel) to induce tissue hardening and permanently eliminate late-season fire blight structural vulnerabilities.</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div class="card" data-age="bearing">
-                <div class="card-title" style="color: #1b4332; border-bottom: 2px solid #d8f3dc; padding-bottom: 4px;">
-                    CLASS: MATURE / BEARING (4+ YRS)
-                </div>
-                <div class="card-meta">
-                    <span class="badge badge-bearing">Crop Production</span> • Cultivars: Freedom, NY-35 (Bonkers), Enterprise, Novamac, Galarina
-                </div>
-                <div class="card-body">
-                    <table style="width: 100%; margin-top: 8px;">
-                        <thead>
-                            <tr>
-                                <th style="width: 25%;">Target Window</th>
-                                <th style="width: 25%;">Type</th>
-                                <th style="width: 50%;">Operational Instructions &amp; Strategy</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>June 29 (Completed)</strong></td>
-                                <td><span class="badge badge-soil">Soil Armor</span></td>
-                                <td><strong>Primary Nematode Inundation:</strong> Heavy drench deployed with extreme emphasis under the high-pressure Freedom block to intercept exiting Plum Curculio larvae.</td>
-                            </tr>
-                            <tr>
-                                <td><strong>July 5 (Completed)</strong></td>
-                                <td><span class="badge badge-pest">Pest Defense</span></td>
-                                <td><strong>Secondary Soil Blanket:</strong> Applied the remaining 5 million cold-stored nematode allocation directly over bearing crowns to exploit the rain profile and target late-dropping larvae.</td>
-                            </tr>
-                            <tr>
-                                <td><strong>August (Active)</strong></td>
-                                <td><span class="badge badge-pest">Pest Defense</span></td>
-                                <td><strong>Perimeter Hornet Trapping:</strong> Refilled ACV + sugar + dish soap perimeter traps 15-20ft off canopy line. Trap catches include wasps/hornets, flies, and beetles. Maintain lure levels into ripening peak.</td>
-                            </tr>
-                            <tr>
-                                <td><strong>August (Active)</strong></td>
-                                <td><span class="badge badge-pest">Avian &amp; Irrigation</span></td>
-                                <td><strong>Deep Soaking &amp; Protection:</strong> Executed 15-gal deep soak per tree. Maintain Mylar reflective ribbons against birds and dust exposed upper fruit with Surround WP to mitigate sunburn and secondary bitter rot.</td>
-                            </tr>
-                            <tr>
-                                <td><strong>As Needed / Sunset</strong></td>
-                                <td><span class="badge badge-pest">Pest Defense</span></td>
-                                <td><strong>Spinosad Upper-Canopy Sniper Sprays:</strong> Reserve exclusively for direct upper-canopy insect pressure sightings (such as adult potato leafhoppers). Avoid sweeping blanket schedules.</td>
-                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -957,8 +916,7 @@
         <div style="background: white; padding: 24px; border-radius: 8px; width: 90%; max-width: 600px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
             <h2 style="margin-top: 0; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; color: #1b4332;">⚙️ Dashboard Utilities &amp; Archiving</h2>
             
-            <!-- 1. Archive Current Season -->
-            <h3 style="margin-top: 16px;">1. Archive Current Season</h3>
+            <h3>1. Archive Current Season</h3>
             <p style="font-size: 9.5pt; color: #4a5568; margin-top: -4px;">Save active data to a named JSON file (e.g. 2026 becomes <code>2026_orchard_data.json</code> downloaded locally).</p>
             <div style="display: flex; gap: 8px; margin-bottom: 16px;">
                 <input type="text" id="archiveSeasonTag" placeholder="e.g. 2026" style="flex: 1; padding: 6px 10px; border: 1px solid #cbd5e1; border-radius: 4px;">
@@ -966,7 +924,6 @@
             </div>
             <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 16px 0;">
 
-            <!-- 2. Load Historical Dataset -->
             <h3>2. Load Historical Dataset</h3>
             <p style="font-size: 9.5pt; color: #4a5568; margin-top: -4px;">Load a past season's data file into the dashboard to review historical records.</p>
             <div style="display: flex; gap: 8px; margin-bottom: 16px; align-items: center;">
@@ -975,7 +932,6 @@
             </div>
             <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 16px 0;">
 
-            <!-- 3. Reset / Clear Active Data -->
             <h3 style="color: #c53030;">3. Reset / Clear Active Data</h3>
             <p style="font-size: 9.5pt; color: #4a5568; margin-top: -4px;">Clear active metric observations, harvest logs, and field notes while resetting cultivar loads/bags to 0.</p>
             <div style="margin-bottom: 20px;">
@@ -992,11 +948,31 @@
         // BACKEND SYNC CONFIGURATION
         const WORKER_URL = "https://orchard-dashboard-sync.joseph-roscioli.workers.dev";
 
+        // MASTER INVENTORY BASELINE SEED DATA INCLUDING GPS LAT/LON
+        var defaultInventorySeed = [
+            { cultivar: "Freedom", lat: 42.5952388, lon: -71.33682947, ageCat: "bearing", yearPlanted: "2021", ageAtPlanting: "2 yrs", rootstock: "Dwarf", load: "125-175", bags: "200", color: "#1b4332", directives: "Primary bearing block." },
+            { cultivar: "Novamac", lat: 42.595252, lon: -71.336926, ageCat: "bearing", yearPlanted: "2021", ageAtPlanting: "2 yrs", rootstock: "M.9", load: "50", bags: "60", color: "#2d6a4f", directives: "Scab resistant." },
+            { cultivar: "Enterprise", lat: 42.595275, lon: -71.336888, ageCat: "bearing", yearPlanted: "2021", ageAtPlanting: "2 yrs", rootstock: "G.11", load: "40", bags: "50", color: "#40916c", directives: "Late harvest." },
+            { cultivar: "NY-35 (Bonkers)", lat: 42.595225, lon: -71.336958, ageCat: "bearing", yearPlanted: "2021", ageAtPlanting: "2 yrs", rootstock: "B.9", load: "30", bags: "35", color: "#52b788", directives: "Heavy bloomer." },
+            { cultivar: "Galarina (X-4982)", lat: 42.595186, lon: -71.336913, ageCat: "bearing", yearPlanted: "2021", ageAtPlanting: "2 yrs", rootstock: "M.9", load: "25", bags: "30", color: "#74c69d", directives: "Mildew resistant." },
+            { cultivar: "Sansa", lat: 42.59529665, lon: -71.33678538, ageCat: "established", yearPlanted: "2022", ageAtPlanting: "Whip", rootstock: "G.41", load: "15", bags: "20", color: "#e9c46a", directives: "Early season." },
+            { cultivar: "Seckel Pear", lat: 42.5958565, lon: -71.33648319, ageCat: "established", yearPlanted: "2022", ageAtPlanting: "2 yrs", rootstock: "Standard", load: "10", bags: "0", color: "#84cc16", directives: "Monitor fire blight." },
+            { cultivar: "Swamp Crabapple", lat: 42.59544311, lon: -71.33714602, ageCat: "established", yearPlanted: "2022", ageAtPlanting: "Whip", rootstock: "Antonovka", load: "0", bags: "0", color: "#94a3b8", directives: "Pollinizer block." },
+            { cultivar: "PrarieFire Crabapple", lat: 42.59573324, lon: -71.33675295, ageCat: "established", yearPlanted: "2022", ageAtPlanting: "Whip", rootstock: "Standard", load: "0", bags: "0", color: "#f43f5e", directives: "Pollinizer block." },
+            { cultivar: "Williams' Pride (older)", lat: 42.59526605, lon: -71.33678103, ageCat: "established", yearPlanted: "2022", ageAtPlanting: "Whip", rootstock: "G.11", load: "20", bags: "25", color: "#f97316", directives: "Early red apple." },
+            { cultivar: "Liberty", lat: 42.5952136, lon: -71.33686709, ageCat: "established", yearPlanted: "2022", ageAtPlanting: "Whip", rootstock: "M.7", load: "15", bags: "20", color: "#e11d48", directives: "High resistance." },
+            { cultivar: "Sundance", lat: 42.595238, lon: -71.33706296, ageCat: "established", yearPlanted: "2022", ageAtPlanting: "Whip", rootstock: "G.202", load: "10", bags: "15", color: "#eab308", directives: "Yellow tart." },
+            { cultivar: "Black Oxford", lat: 42.59523607, lon: -71.33711072, ageCat: "new", yearPlanted: "2024", ageAtPlanting: "Whip", rootstock: "Antonovka", load: "0", bags: "0", color: "#475569", directives: "Heritage keeper." },
+            { cultivar: "Williams' Pride (younger)", lat: 42.59526808, lon: -71.33715135, ageCat: "new", yearPlanted: "2024", ageAtPlanting: "Whip", rootstock: "G.11", load: "0", bags: "0", color: "#fb923c", directives: "Vegetative stage." },
+            { cultivar: "SnowSweet", lat: 42.59520707, lon: -71.33717015, ageCat: "new", yearPlanted: "2024", ageAtPlanting: "Whip", rootstock: "B.9", load: "0", bags: "0", color: "#38bdf8", directives: "Crisp white flesh." },
+            { cultivar: "NY 414-1", lat: 42.59518486, lon: -71.33713327, ageCat: "new", yearPlanted: "2024", ageAtPlanting: "Whip", rootstock: "G.935", load: "0", bags: "0", color: "#a855f7", directives: "Experimental." }
+        ];
+
         // MASTER DATA STATE
         var state = {
             lastUpdated: "Loading...",
             lastUpdatedBy: "System",
-            inventoryData: [],
+            inventoryData: defaultInventorySeed,
             metricsRegistry: [],
             activeGraphKeys: [],
             growthData: [],
@@ -1004,6 +980,8 @@
             logsData: []
         };
 
+        var mapInstance = null;
+        var mapMarkersLayerGroup = null;
         var graphScaleConfig = {};
         var currentUserAuthor = localStorage.getItem('orchard_active_author') || '';
         var currentUserPin = localStorage.getItem('orchard_user_pin') || '';
@@ -1060,7 +1038,7 @@
                         state = {
                             lastUpdated: imported.lastUpdated || getTodayISO(),
                             lastUpdatedBy: imported.lastUpdatedBy || currentUserAuthor || "Rob",
-                            inventoryData: imported.inventoryData || [],
+                            inventoryData: imported.inventoryData || defaultInventorySeed,
                             metricsRegistry: imported.metricsRegistry || [],
                             activeGraphKeys: imported.activeGraphKeys || [],
                             growthData: imported.growthData || [],
@@ -1079,30 +1057,22 @@
         }
 
         function clearAllDashboardData() {
-            if (!confirm("⚠️ WARNING: You are about to clear all seasonal data (Growth Measurements, Harvest Logs, and Observations). Master Inventory tree details will be preserved, but Est. Load and Bags will be reset to 0. Proceed?")) {
-                return;
-            }
-            var verification = prompt("🔒 DOUBLE VERIFICATION REQUIRED:\nType 'DELETE ALL DATA' below to confirm seasonal reset:");
+            if (!confirm("⚠️ WARNING: You are about to clear all seasonal data. Proceed?")) return;
+            var verification = prompt("🔒 DOUBLE VERIFICATION REQUIRED:\nType 'DELETE ALL DATA' below to confirm:");
             if (verification === "DELETE ALL DATA") {
-                state.inventoryData.forEach(item => {
-                    item.load = "0";
-                    item.bags = "0";
-                });
+                state.inventoryData.forEach(item => { item.load = "0"; item.bags = "0"; });
                 state.growthData = [];
                 state.harvestLogsData = [];
                 state.logsData = [];
                 saveState();
                 toggleUtilitiesModal(false);
-                alert("Active season records cleared. Master cultivar inventory preserved!");
-            } else {
-                alert("Clear operation cancelled. Verification text did not match.");
+                alert("Active season records cleared!");
             }
         }
 
         function handleAuthToggle() {
             if (currentUserAuthor || currentUserPin) {
-                currentUserAuthor = '';
-                currentUserPin = '';
+                currentUserAuthor = ''; currentUserPin = '';
                 localStorage.removeItem('orchard_active_author');
                 localStorage.removeItem('orchard_user_pin');
                 updateAuthorDisplayUI();
@@ -1118,21 +1088,17 @@
 
             if (currentUserAuthor) {
                 if (displayEl) displayEl.innerText = `${currentUserAuthor} logged in`;
-                if (tagEl) tagEl.innerText = `(Authenticated via Worker PIN • Last sync by: ${state.lastUpdatedBy || currentUserAuthor})`;
+                if (tagEl) tagEl.innerText = `(Authenticated via Worker PIN • Last sync: ${state.lastUpdatedBy || currentUserAuthor})`;
                 if (toggleBtn) {
                     toggleBtn.innerText = "🔓 Logout";
                     toggleBtn.style.backgroundColor = "#c53030";
-                    toggleBtn.style.borderColor = "#feb2b2";
-                    toggleBtn.style.color = "white";
                 }
             } else {
                 if (displayEl) displayEl.innerText = "Not Logged In";
-                if (tagEl) tagEl.innerText = `(Click "🔒 Login" to authenticate PIN • Last sync by: ${state.lastUpdatedBy || 'System'})`;
+                if (tagEl) tagEl.innerText = `(Click "🔒 Login" to authenticate PIN)`;
                 if (toggleBtn) {
                     toggleBtn.innerText = "🔒 Login";
                     toggleBtn.style.backgroundColor = "#d69e2e";
-                    toggleBtn.style.borderColor = "#f6e05e";
-                    toggleBtn.style.color = "#1a202c";
                 }
             }
         }
@@ -1140,24 +1106,14 @@
         async function promptPinLogin() {
             var inputPin = prompt("Enter Operator Security PIN:");
             if (!inputPin) return;
-
-            inputPin = inputPin.trim();
-
             try {
                 var res = await fetch(WORKER_URL, {
                     method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-Orchard-Auth": inputPin
-                    },
+                    headers: { "Content-Type": "application/json", "X-Orchard-Auth": inputPin.trim() },
                     body: JSON.stringify({ action: "verify_pin" })
                 });
-
                 var resData = await res.json().catch(() => ({}));
-                if (!res.ok || resData.error) {
-                    throw new Error(resData.error || "Authentication failed. Check PIN.");
-                }
-
+                if (!res.ok || resData.error) throw new Error(resData.error || "Authentication failed.");
                 if (resData.author) {
                     currentUserAuthor = resData.author;
                     currentUserPin = inputPin;
@@ -1166,56 +1122,37 @@
                     state.lastUpdatedBy = currentUserAuthor;
                     saveState();
                 }
-            } catch (err) {
-                alert("Login Failed: " + err.message);
-            }
+            } catch (err) { alert("Login Failed: " + err.message); }
         }
 
-        function getActiveAuthorName() {
-            return currentUserAuthor || 'Rob';
-        }
+        function getActiveAuthorName() { return currentUserAuthor || 'Rob'; }
 
         async function fetchRepoData(isManualTrigger = false) {
             var loadBtn = document.getElementById('load-file-btn');
-            if (loadBtn && isManualTrigger) {
-                loadBtn.innerText = "⏳ Loading...";
-                loadBtn.disabled = true;
-            }
-
+            if (loadBtn && isManualTrigger) { loadBtn.innerText = "⏳ Loading..."; loadBtn.disabled = true; }
             try {
                 var res = await fetch('./data.json?v=' + new Date().getTime());
-                if (!res.ok) throw new Error("Failed fetching data.json (HTTP " + res.status + ")");
+                if (!res.ok) throw new Error("Failed fetching data.json");
                 var data = await res.json();
-                
                 state = {
-                    lastUpdated: data.lastUpdated || new Date().toISOString().replace('T', ' ').slice(0, 16),
+                    lastUpdated: data.lastUpdated || getTodayISO(),
                     lastUpdatedBy: data.lastUpdatedBy || "Rob",
-                    inventoryData: data.inventoryData || [],
+                    inventoryData: (data.inventoryData && data.inventoryData.length > 0) ? data.inventoryData : defaultInventorySeed,
                     metricsRegistry: data.metricsRegistry || [],
                     activeGraphKeys: data.activeGraphKeys || [],
                     growthData: data.growthData || [],
                     harvestLogsData: data.harvestLogsData || [],
                     logsData: data.logsData || []
                 };
-
                 saveLocalState();
                 renderAll();
-
-                if (loadBtn && isManualTrigger) {
-                    loadBtn.innerText = "✅ Loaded!";
-                }
+                if (loadBtn && isManualTrigger) loadBtn.innerText = "✅ Loaded!";
             } catch (err) {
-                console.warn("Cloud read failed, fallback to local storage:", err);
+                console.warn("Cloud read failed, using default state/local storage:", err);
                 loadLocalState();
-                if (loadBtn && isManualTrigger) {
-                    loadBtn.innerText = "❌ Load Failed";
-                }
             } finally {
                 if (loadBtn && isManualTrigger) {
-                    setTimeout(() => {
-                        loadBtn.innerText = "📥 Load Latest";
-                        loadBtn.disabled = false;
-                    }, 2500);
+                    setTimeout(() => { loadBtn.innerText = "📥 Load Latest"; loadBtn.disabled = false; }, 2500);
                 }
             }
         }
@@ -1239,50 +1176,34 @@
 
         async function saveDashboardFile() {
             var btn = document.getElementById('save-file-btn');
-
-            if (!currentUserPin) {
-                await promptPinLogin();
-                if (!currentUserPin) return;
-            }
-
+            if (!currentUserPin) { await promptPinLogin(); if (!currentUserPin) return; }
             if (!btn || btn.disabled) return;
 
             try {
                 var now = new Date();
                 state.lastUpdated = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-
-                btn.innerText = "⏳ Syncing...";
-                btn.disabled = true;
+                btn.innerText = "⏳ Syncing..."; btn.disabled = true;
 
                 var res = await fetch(WORKER_URL, {
                     method: "POST",
-                    headers: { 
-                        "Content-Type": "application/json",
-                        "X-Orchard-Auth": String(currentUserPin).trim()
-                    },
+                    headers: { "Content-Type": "application/json", "X-Orchard-Auth": String(currentUserPin).trim() },
                     body: JSON.stringify({ data: state })
                 });
 
                 var resData = await res.json().catch(() => ({}));
                 if (!res.ok || resData.error) throw new Error(resData.error || `HTTP ${res.status}`);
-
                 if (resData.author) {
                     currentUserAuthor = resData.author;
                     state.lastUpdatedBy = resData.author;
                     localStorage.setItem('orchard_active_author', currentUserAuthor);
                 }
-
                 saveState();
                 btn.innerText = `✅ Committed (${state.lastUpdatedBy})!`;
             } catch (err) {
-                console.error("Cloudflare Worker Sync Error:", err);
                 alert("Sync push failed: " + err.message);
                 btn.innerText = "❌ Sync Failed";
             } finally {
-                setTimeout(() => {
-                    btn.innerText = "💾 Save & Sync";
-                    btn.disabled = false;
-                }, 3000);
+                setTimeout(() => { btn.innerText = "💾 Save & Sync"; btn.disabled = false; }, 3000);
             }
         }
 
@@ -1296,31 +1217,15 @@
             renderHarvestLogs();
             renderAbundances();
             renderHarvestTimeline();
+            renderMapMarkers();
         }
 
         function renderAllCultivarFilterOptions() {
             var options = '<option value="all">All Cultivars</option>' + state.inventoryData.map(i => `<option value="${i.cultivar}">${i.cultivar}</option>`).join('');
-            
-            var logFilter = document.getElementById('logCultivarFilter');
-            if (logFilter) {
-                var curr = logFilter.value;
-                logFilter.innerHTML = options;
-                logFilter.value = curr || 'all';
-            }
-
-            var harvestFilter = document.getElementById('harvestCultivarFilter');
-            if (harvestFilter) {
-                var currH = harvestFilter.value;
-                harvestFilter.innerHTML = options;
-                harvestFilter.value = currH || 'all';
-            }
-
-            var growthFilter = document.getElementById('growthCultivarFilter');
-            if (growthFilter) {
-                var currG = growthFilter.value;
-                growthFilter.innerHTML = options;
-                growthFilter.value = currG || 'all';
-            }
+            ['logCultivarFilter', 'harvestCultivarFilter', 'growthCultivarFilter', 'mapCultivarFilter'].forEach(id => {
+                var el = document.getElementById(id);
+                if (el) { var curr = el.value; el.innerHTML = options; el.value = curr || 'all'; }
+            });
         }
 
         function formatDateRange(startDateStr, endDateStr, defaultText) {
@@ -1377,9 +1282,9 @@
                 var bloomDisplay = formatDateRange(item.bloomStart, item.bloomEnd, item.bloom);
                 var ripeningDisplay = formatDateRange(item.ripeningStart, item.ripeningEnd, item.ripening);
                 var actLoad = calculateActualLoad(item.cultivar);
+                var gpsDisplay = (item.lat && item.lon) ? `${parseFloat(item.lat).toFixed(5)}, ${parseFloat(item.lon).toFixed(5)}` : '—';
 
                 var tr = document.createElement('tr');
-                tr.setAttribute('data-age', item.ageCat || 'all');
                 tr.innerHTML = `
                     <td><strong>${item.cultivar}</strong></td>
                     <td>${item.yearPlanted || '—'}</td>
@@ -1387,6 +1292,7 @@
                     <td>${latestHeight}</td>
                     <td>${latestDia}</td>
                     <td>${item.rootstock}</td>
+                    <td><span style="font-family: monospace; font-size: 8pt; color: #0284c7;">${gpsDisplay}</span></td>
                     <td>${bloomDisplay}</td>
                     <td>${ripeningDisplay}</td>
                     <td>${item.load}</td>
@@ -1416,6 +1322,8 @@
                 yearPlanted: document.getElementById('invYearPlanted').value.trim() || '—',
                 ageAtPlanting: document.getElementById('invAgeAtPlanting').value.trim() || '—',
                 rootstock: document.getElementById('invRootstock').value.trim() || '—',
+                lat: document.getElementById('invLat').value ? parseFloat(document.getElementById('invLat').value) : null,
+                lon: document.getElementById('invLon').value ? parseFloat(document.getElementById('invLon').value) : null,
                 bloomStart: document.getElementById('invBloomStart').value,
                 bloomEnd: document.getElementById('invBloomEnd').value,
                 ripeningStart: document.getElementById('invRipeningStart').value,
@@ -1454,6 +1362,8 @@
             document.getElementById('invYearPlanted').value = item.yearPlanted || '';
             document.getElementById('invAgeAtPlanting').value = item.ageAtPlanting || '';
             document.getElementById('invRootstock').value = item.rootstock || '';
+            document.getElementById('invLat').value = item.lat || '';
+            document.getElementById('invLon').value = item.lon || '';
             document.getElementById('invBloomStart').value = item.bloomStart || getTodayISO();
             document.getElementById('invBloomEnd').value = item.bloomEnd || getTodayISO();
             document.getElementById('invRipeningStart').value = item.ripeningStart || getTodayISO();
@@ -1470,18 +1380,12 @@
         function deleteInventoryRecord(index) {
             var item = state.inventoryData[index];
             if (!item) return;
-
-            if (!confirm(`Are you sure you want to delete "${item.cultivar}" from the Master Inventory?`)) {
-                return;
-            }
-
-            var confirmName = prompt(`⚠️ SECURITY CONFIRMATION:\nDeleting this variety will remove it from all master lists.\nType '${item.cultivar}' below to confirm deletion:`);
+            if (!confirm(`Are you sure you want to delete "${item.cultivar}" from the Master Inventory?`)) return;
+            var confirmName = prompt(`⚠️ SECURITY CONFIRMATION:\nType '${item.cultivar}' below to confirm deletion:`);
             if (confirmName === item.cultivar) {
                 state.inventoryData.splice(index, 1);
                 saveState();
-            } else {
-                alert("Deletion cancelled. Cultivar name did not match.");
-            }
+            } else { alert("Deletion cancelled."); }
         }
 
         function resetInventoryForm() {
@@ -1492,6 +1396,8 @@
             document.getElementById('invYearPlanted').value = '';
             document.getElementById('invAgeAtPlanting').value = '';
             document.getElementById('invRootstock').value = '';
+            document.getElementById('invLat').value = '';
+            document.getElementById('invLon').value = '';
             document.getElementById('invBloomStart').value = todayStr;
             document.getElementById('invBloomEnd').value = todayStr;
             document.getElementById('invRipeningStart').value = todayStr;
@@ -1502,6 +1408,83 @@
             document.getElementById('invDirectives').value = '';
             document.getElementById('saveInventoryBtn').innerText = 'Save Cultivar to Master Inventory';
             document.getElementById('cancelInventoryBtn').style.display = 'none';
+        }
+
+        // INITIALIZE AND RENDER INTERACTIVE GOOGLE SATELLITE MAP
+        function initOrchardMap() {
+            if (mapInstance) return;
+            var mapEl = document.getElementById('mapContainer');
+            if (!mapEl) return;
+
+            // Default center around Chelmsford Orchard GPS bounds
+            var defaultLat = 42.59524, defaultLon = -71.33690;
+            mapInstance = L.map('mapContainer').setView([defaultLat, defaultLon], 19);
+
+            // High-Resolution Google Satellite & Hybrid Tiles
+            L.tileLayer('https://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
+                maxZoom: 22,
+                subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+                attribution: '&copy; Google Maps Imagery'
+            }).addTo(mapInstance);
+
+            mapMarkersLayerGroup = L.layerGroup().addTo(mapInstance);
+        }
+
+        function renderMapMarkers() {
+            if (!mapInstance) initOrchardMap();
+            if (!mapMarkersLayerGroup) return;
+
+            mapMarkersLayerGroup.clearLayers();
+            var filterVal = document.getElementById('mapCultivarFilter') ? document.getElementById('mapCultivarFilter').value : 'all';
+            var bounds = [];
+
+            state.inventoryData.forEach(item => {
+                if (!item.lat || !item.lon) return;
+                if (filterVal !== 'all' && item.cultivar !== filterVal) return;
+
+                var lat = parseFloat(item.lat);
+                var lon = parseFloat(item.lon);
+                if (isNaN(lat) || isNaN(lon)) return;
+
+                bounds.push([lat, lon]);
+
+                // Create custom circle marker matching cultivar color
+                var circleMarker = L.circleMarker([lat, lon], {
+                    radius: 9,
+                    fillColor: item.color || '#38bdf8',
+                    color: '#ffffff',
+                    weight: 2,
+                    opacity: 1,
+                    fillOpacity: 0.9
+                });
+
+                // Add permanent label
+                circleMarker.bindTooltip(item.cultivar, {
+                    permanent: true,
+                    direction: 'top',
+                    className: 'tree-map-label',
+                    offset: [0, -10]
+                });
+
+                // Popup card detail
+                var popupContent = `
+                    <div style="font-family: sans-serif; padding: 4px;">
+                        <h4 style="margin: 0 0 4px 0; color: #1b4332;">${item.cultivar}</h4>
+                        <div style="font-size: 8.5pt; color: #475569;">
+                            <strong>Age Class:</strong> ${item.ageCat || 'N/A'}<br>
+                            <strong>Rootstock:</strong> ${item.rootstock || 'N/A'}<br>
+                            <strong>Est. Load:</strong> ${item.load || '0'} apples<br>
+                            <strong>GPS:</strong> ${lat.toFixed(6)}, ${lon.toFixed(6)}
+                        </div>
+                    </div>
+                `;
+                circleMarker.bindPopup(popupContent);
+                mapMarkersLayerGroup.addLayer(circleMarker);
+            });
+
+            if (bounds.length > 0 && mapInstance) {
+                mapInstance.fitBounds(bounds, { padding: [50, 50], maxZoom: 20 });
+            }
         }
 
         function updateAbundanceValue(index, val) {
@@ -1524,9 +1507,7 @@
             var summaryDiv = document.getElementById('abundanceBaselineSummary');
             if (!chartContainer || !tableBody) return;
 
-            chartContainer.innerHTML = '';
-            tableBody.innerHTML = '';
-
+            chartContainer.innerHTML = ''; tableBody.innerHTML = '';
             var maxVal = 0;
             state.inventoryData.forEach(item => {
                 var val = parseLoadNumeric(item.load);
@@ -1540,7 +1521,6 @@
                 var pct = Math.min(100, Math.round((val / maxVal) * 100));
                 var rowDiv = document.createElement('div');
                 rowDiv.className = 'chart-row';
-                rowDiv.setAttribute('data-age', item.ageCat || 'all');
                 rowDiv.innerHTML = `
                     <div class="chart-label">${item.cultivar}</div>
                     <div class="chart-bar-wrapper">
@@ -1559,7 +1539,6 @@
 
                 var ripeningDisplay = formatDateRange(item.ripeningStart, item.ripeningEnd, item.ripening);
                 var tr = document.createElement('tr');
-                tr.setAttribute('data-age', item.ageCat || 'all');
                 tr.innerHTML = `
                     <td><strong>${item.cultivar}</strong></td>
                     <td><span class="badge badge-${item.ageCat}">${item.ageCat}</span></td>
@@ -1621,9 +1600,7 @@
             var gantryContainer = document.getElementById('invertedVolumeGantry');
             if (!container || !gantryContainer) return;
 
-            container.innerHTML = '';
-            gantryContainer.innerHTML = '';
-
+            container.innerHTML = ''; gantryContainer.innerHTML = '';
             var weeklyTotals = [0, 0, 0, 0, 0, 0, 0];
             state.inventoryData.forEach(item => {
                 var loadNum = parseLoadNumeric(item.load);
@@ -1633,7 +1610,6 @@
 
                 var row = document.createElement('div');
                 row.className = 'timeline-row-item';
-                row.setAttribute('data-age', item.ageCat || 'all');
 
                 var barClass = 'timeline-span-bar';
                 if (isPear) barClass += ' pear';
@@ -1714,9 +1690,7 @@
 
             state.harvestLogsData.forEach((log, index) => {
                 if (selectedCultivar !== 'all' && log.cultivar !== selectedCultivar) return;
-
                 var authorName = (log.loggedBy === 'Joe') ? 'Rob' : (log.loggedBy || 'Rob');
-
                 var tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td>${log.date}</td>
@@ -1782,12 +1756,10 @@
             state.logsData.forEach((log, index) => {
                 var tags = log.tags || ["All Cultivars"];
                 if (selectedCultivar !== 'all' && !tags.includes("All Cultivars") && !tags.includes(selectedCultivar)) return;
-
                 var authorName = (log.loggedBy === 'Joe') ? 'Rob' : (log.loggedBy || 'Rob');
 
                 var card = document.createElement('div');
                 card.className = 'card';
-                card.setAttribute('data-age', log.age || 'all');
                 var tagBadgesHTML = tags.map(t => `<span class="badge badge-tag">${t}</span>`).join(' ');
 
                 card.innerHTML = `
@@ -1913,23 +1885,19 @@
             var wrapper = document.getElementById(wrapperId);
             var handle = document.getElementById(wrapperId + '_handle');
             if (!wrapper || !handle) return;
-
             var startY, startH;
-
             var onPointerMove = function(e) {
                 var clientY = e.touches ? e.touches[0].clientY : e.clientY;
                 var newH = Math.max(200, startH + (clientY - startY));
                 wrapper.style.height = newH + 'px';
                 if (chartInstances[key]) chartInstances[key].resize();
             };
-
             var onPointerUp = function() {
                 window.removeEventListener('mousemove', onPointerMove);
                 window.removeEventListener('mouseup', onPointerUp);
                 window.removeEventListener('touchmove', onPointerMove);
                 window.removeEventListener('touchend', onPointerUp);
             };
-
             var onPointerDown = function(e) {
                 startY = e.touches ? e.touches[0].clientY : e.clientY;
                 startH = wrapper.offsetHeight;
@@ -1938,7 +1906,6 @@
                 window.addEventListener('touchmove', onPointerMove, { passive: false });
                 window.addEventListener('touchend', onPointerUp);
             };
-
             handle.addEventListener('mousedown', onPointerDown);
             handle.addEventListener('touchstart', onPointerDown, { passive: false });
         }
@@ -1950,9 +1917,7 @@
         }
 
         function autoScaleGraphAxis(key, field) {
-            if (graphScaleConfig[key]) {
-                graphScaleConfig[key][field] = null;
-            }
+            if (graphScaleConfig[key]) graphScaleConfig[key][field] = null;
             var el = document.getElementById(`${key}_${field}`);
             if (el) el.value = '';
             renderGrowthCharts();
@@ -2049,10 +2014,7 @@
                         options: {
                             responsive: true,
                             maintainAspectRatio: false,
-                            scales: {
-                                x: xScaleOpts,
-                                y: yScaleOpts
-                            }
+                            scales: { x: xScaleOpts, y: yScaleOpts }
                         }
                     });
                 }
@@ -2123,7 +2085,6 @@
 
             state.growthData.forEach((item, index) => {
                 if (selectedCultivar !== 'all' && item.tree !== selectedCultivar) return;
-
                 var authorName = (item.loggedBy === 'Joe') ? 'Rob' : (item.loggedBy || 'Rob');
                 var valCols = state.metricsRegistry.map(m => `<td>${item[m.key] !== undefined && item[m.key] !== null ? item[m.key] : '—'}</td>`).join('');
                 var tr = document.createElement('tr');
@@ -2140,6 +2101,15 @@
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
             if (e && e.currentTarget) e.currentTarget.classList.add('active');
+
+            // Force Leaflet map resize recalculation on tab switch
+            if (tabId === 'map') {
+                setTimeout(() => {
+                    if (!mapInstance) initOrchardMap();
+                    mapInstance.invalidateSize();
+                    renderMapMarkers();
+                }, 100);
+            }
         }
 
         function exportOrchardToCSV() {

@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "2026-08-29 10:42",
-  "lastUpdatedBy": "Wyatt",
+  "lastUpdated": "2026-08-29 14:54",
+  "lastUpdatedBy": "Rob",
   "inventoryData": [
     {
       "cultivar": "Freedom",
@@ -694,8 +694,26 @@
       "loggedBy": "Joe"
     }
   ],
-  "harvestLogsData": [],
+  "harvestLogsData": [
+    {
+      "date": "2026-08-29",
+      "cultivar": "Novamac",
+      "quantity": 1,
+      "loggedBy": "Rob"
+    }
+  ],
   "logsData": [
+    {
+      "date": "2026-08-29",
+      "title": "Field Observation",
+      "type": "Mature / Bearing",
+      "tags": [
+        "Novamac"
+      ],
+      "age": "bearing",
+      "body": "First novamac apple!  Dropped a bit early when I touched it. Slightly tarted than I expect but still tasty.",
+      "loggedBy": "Rob"
+    },
     {
       "date": "2026-08-28",
       "title": "Red spots",

@@ -1534,22 +1534,23 @@
         renderAll();
     }
 
-    function cleanupUnusedMetrics() {
-        if (!state.metricsRegistry) return;
+function cleanupUnusedMetrics() {
+    if (!state.metricsRegistry) return;
 
-        var usedKeys = new Set();
-        state.growthData.forEach(row => {
-            Object.keys(row).forEach(k => {
-                if (row[k] !== null && row[k] !== undefined && row[k] !== '') {
-                    usedKeys.add(k);
-                }
-            });
+    var usedKeys = new Set();
+    state.growthData.forEach(row => {
+        Object.keys(row).forEach(k => {
+            if (row[k] !== null && row[k] !== undefined && row[k] !== '') {
+                usedKeys.add(k);
+            }
         });
+    });
 
-        state.metricsRegistry = state.metricsRegistry.filter(m => usedKeys.has(m.key) || m.inCreation);
-        var activeKeysSet = new Set(state.metricsRegistry.map(m => m.key));
-        state.activeGraphKeys = state.activeGraphKeys.filter(k => activeKeysSet.has(k));
-    }
+    // Only retain metrics that have active data points
+    state.metricsRegistry = state.metricsRegistry.filter(m => usedKeys.has(m.key));
+    var activeKeysSet = new Set(state.metricsRegistry.map(m => m.key));
+    state.activeGraphKeys = state.activeGraphKeys.filter(k => activeKeysSet.has(k));
+}
 
     async function saveDashboardFile() {
         // Run pre-push version check first
@@ -2635,14 +2636,31 @@
         document.getElementById('cancelGrowthBtn').style.display = 'inline-block';
     }
 
-    async function deleteGrowthRecord(index) {
-        if (!(await verifyRemoteVersion())) return;
-        if (confirm('Delete measurement entry?')) {
-            state.growthData.splice(index, 1);
-            saveState();
-        }
-    }
+async function deleteGrowthRecord(index) {
+    if (!(await verifyRemoteVersion())) return;
+    if (confirm('Delete measurement entry?')) {
+        // 1. Remove the row from growthData
+        state.growthData.splice(index, 1);
+        
+        // 2. Identify keys that no longer exist anywhere in growthData
+        var remainingKeys = new Set();
+        state.growthData.forEach(row => {
+            Object.keys(row).forEach(k => {
+                if (row[k] !== null && row[k] !== undefined && row[k] !== '') {
+                    remainingKeys.add(k);
+                }
+            });
+        });
 
+        // 3. Purge orphaned custom metrics from registry & active graphs
+        state.metricsRegistry = state.metricsRegistry.filter(m => !m.isCustom || remainingKeys.has(m.key));
+        var validKeys = new Set(state.metricsRegistry.map(m => m.key));
+        state.activeGraphKeys = state.activeGraphKeys.filter(k => validKeys.has(k));
+
+        // 4. Save and re-render
+        saveState();
+    }
+}
     function resetGrowthForm() {
         document.getElementById('editGrowthIndex').value = -1;
         document.getElementById('entryDate').value = getTodayISO();

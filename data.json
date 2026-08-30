@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-08-30 16:49",
+  "lastUpdated": "2026-08-30 16:52",
   "lastUpdatedBy": "Rob",
   "inventoryData": [
     {
@@ -739,6 +739,17 @@
     }
   ],
   "logsData": [
+    {
+      "date": "2026-08-30",
+      "title": "Field Observation",
+      "type": "Growth & Orchard Status",
+      "tags": [
+        "All Cultivars"
+      ],
+      "age": "all",
+      "body": "test",
+      "loggedBy": "Rob"
+    },
     {
       "date": "2026-08-29",
       "title": "Field Observation",

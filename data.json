@@ -507,13 +507,6 @@
       "isInputVisible": true,
       "defaultYMin": "30",
       "defaultYMax": "200"
-    },
-    {
-      "key": "metric_ghj",
-      "name": "ghj",
-      "unit": "ghj",
-      "isCustom": true,
-      "isGraphed": true
     }
   ],
   "activeGraphKeys": [],
@@ -729,12 +722,6 @@
       "tree": "Freedom",
       "loggedBy": "Rob",
       "dia": 3.202
-    },
-    {
-      "date": "2026-08-30",
-      "tree": "Freedom",
-      "loggedBy": "Rob",
-      "metric_ghj": 12
     }
   ],
   "harvestLogsData": [

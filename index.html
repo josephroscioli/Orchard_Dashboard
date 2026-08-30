@@ -1215,31 +1215,29 @@
         if (modal) modal.style.display = show ? 'flex' : 'none';
     }
 
-    // PRE-ACTION VERSION CHECKING WITH INTERACTIVE PROMPT
+    // PRE-ACTION VERSION CHECK WITHOUT AUTO-OVERWRITING STATE
     async function verifyRemoteVersion() {
         try {
             var res = await fetch('./data.json?v=' + new Date().getTime());
-            if (!res.ok) return true; // Server/network issue -> allow local write
+            if (!res.ok) return true; // Network error -> proceed locally
             
             var remoteData = await res.json();
             
             if (remoteData.lastUpdated && state.lastUpdated && remoteData.lastUpdated > state.lastUpdated && state.lastUpdated !== "Loading...") {
-                var shouldLoad = confirm(
+                var proceed = confirm(
                     `⚠️ NEWER REMOTE VERSION DETECTED!\n\n` +
                     `Another operator (${remoteData.lastUpdatedBy || 'System'}) synced new data on ${remoteData.lastUpdated}.\n\n` +
                     `Your active copy is older than the repo version.\n\n` +
-                    `Click OK to load the latest data from the repo now, or Cancel to abort your recent change.`
+                    `• Click OK to proceed with your local changes.\n` +
+                    `• Click Cancel to abort (you can click "📥 Load Latest" manually to pull remote changes).`
                 );
                 
-                if (shouldLoad) {
-                    await fetchRepoData(true);
-                }
-                return false; // Stop the pending local action/push
+                return proceed; // True = user accepts proceeding locally; False = abort
             }
         } catch (err) {
             console.warn("Pre-check version fetch failed, allowing action:", err);
         }
-        return true; // Repo is older or equal -> proceed as normal
+        return true; // Repo is older or equal -> proceed normally
     }
 
     function archiveCurrentSeason() {
@@ -1534,26 +1532,25 @@
         renderAll();
     }
 
-function cleanupUnusedMetrics() {
-    if (!state.metricsRegistry) return;
+    function cleanupUnusedMetrics() {
+        if (!state.metricsRegistry) return;
 
-    var usedKeys = new Set();
-    state.growthData.forEach(row => {
-        Object.keys(row).forEach(k => {
-            if (row[k] !== null && row[k] !== undefined && row[k] !== '') {
-                usedKeys.add(k);
-            }
+        var activeMetricKeys = new Set();
+        state.growthData.forEach(row => {
+            Object.keys(row).forEach(k => {
+                if (row[k] !== null && row[k] !== undefined && row[k] !== '') {
+                    activeMetricKeys.add(k);
+                }
+            });
         });
-    });
 
-    // Only retain metrics that have active data points
-    state.metricsRegistry = state.metricsRegistry.filter(m => usedKeys.has(m.key));
-    var activeKeysSet = new Set(state.metricsRegistry.map(m => m.key));
-    state.activeGraphKeys = state.activeGraphKeys.filter(k => activeKeysSet.has(k));
-}
+        // Retain metric if it has active measurements OR is in creation status
+        state.metricsRegistry = state.metricsRegistry.filter(m => activeMetricKeys.has(m.key) || m.inCreation);
+        var activeKeysSet = new Set(state.metricsRegistry.map(m => m.key));
+        state.activeGraphKeys = state.activeGraphKeys.filter(k => activeKeysSet.has(k));
+    }
 
     async function saveDashboardFile() {
-        // Run pre-push version check first
         if (!(await verifyRemoteVersion())) return;
 
         var btn = document.getElementById('save-file-btn');
@@ -1947,6 +1944,7 @@ function cleanupUnusedMetrics() {
     async function deleteScheduleRecord(index) {
         if (!(await verifyRemoteVersion())) return;
         if (confirm("Delete this treatment schedule item?")) {
+            resetScheduleForm();
             state.scheduleData.splice(index, 1);
             saveState();
         }
@@ -2291,6 +2289,7 @@ function cleanupUnusedMetrics() {
     async function deleteHarvestLog(index) {
         if (!(await verifyRemoteVersion())) return;
         if (confirm('Delete harvest log entry?')) {
+            resetHarvestForm();
             state.harvestLogsData.splice(index, 1);
             saveState();
         }
@@ -2377,6 +2376,7 @@ function cleanupUnusedMetrics() {
     async function deleteLogRecord(index) {
         if (!(await verifyRemoteVersion())) return;
         if (confirm('Delete log entry?')) {
+            resetLogForm();
             state.logsData.splice(index, 1);
             saveState();
         }
@@ -2636,31 +2636,15 @@ function cleanupUnusedMetrics() {
         document.getElementById('cancelGrowthBtn').style.display = 'inline-block';
     }
 
-async function deleteGrowthRecord(index) {
-    if (!(await verifyRemoteVersion())) return;
-    if (confirm('Delete measurement entry?')) {
-        // 1. Remove the row from growthData
-        state.growthData.splice(index, 1);
-        
-        // 2. Identify keys that no longer exist anywhere in growthData
-        var remainingKeys = new Set();
-        state.growthData.forEach(row => {
-            Object.keys(row).forEach(k => {
-                if (row[k] !== null && row[k] !== undefined && row[k] !== '') {
-                    remainingKeys.add(k);
-                }
-            });
-        });
-
-        // 3. Purge orphaned custom metrics from registry & active graphs
-        state.metricsRegistry = state.metricsRegistry.filter(m => !m.isCustom || remainingKeys.has(m.key));
-        var validKeys = new Set(state.metricsRegistry.map(m => m.key));
-        state.activeGraphKeys = state.activeGraphKeys.filter(k => validKeys.has(k));
-
-        // 4. Save and re-render
-        saveState();
+    async function deleteGrowthRecord(index) {
+        if (!(await verifyRemoteVersion())) return;
+        if (confirm('Delete measurement entry?')) {
+            resetGrowthForm();
+            state.growthData.splice(index, 1);
+            saveState();
+        }
     }
-}
+
     function resetGrowthForm() {
         document.getElementById('editGrowthIndex').value = -1;
         document.getElementById('entryDate').value = getTodayISO();
@@ -2725,11 +2709,6 @@ async function deleteGrowthRecord(index) {
         a.download = 'orchard_metrics_2026.csv';
         a.click();
     }
-
-    // AUTO-CHECK FOR UPDATES WHEN FOCUSING BROWSER TAB
-    window.addEventListener('focus', function() {
-        fetchRepoData();
-    });
 
     window.onload = function() {
         fetchRepoData();

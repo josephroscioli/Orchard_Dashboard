@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-08-30 18:41",
+  "lastUpdated": "2026-08-30 18:43",
   "lastUpdatedBy": "Rob",
   "inventoryData": [
     {
@@ -735,12 +735,6 @@
       "tree": "Freedom",
       "loggedBy": "Rob",
       "metric_ghj": 12
-    },
-    {
-      "date": "2026-08-30",
-      "tree": "Freedom",
-      "loggedBy": "Rob",
-      "dia": 1
     }
   ],
   "harvestLogsData": [

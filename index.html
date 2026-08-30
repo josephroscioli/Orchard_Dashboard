@@ -982,7 +982,7 @@
         </div>
     </div>
 
-    <<script>
+    <script>
     // BACKEND SYNC CONFIGURATION
     const WORKER_URL = "https://orchard-dashboard-sync.joseph-roscioli.workers.dev";
 
@@ -1215,6 +1215,33 @@
         if (modal) modal.style.display = show ? 'flex' : 'none';
     }
 
+    // PRE-ACTION VERSION CHECKING WITH INTERACTIVE PROMPT
+    async function verifyRemoteVersion() {
+        try {
+            var res = await fetch('./data.json?v=' + new Date().getTime());
+            if (!res.ok) return true; // Server/network issue -> allow local write
+            
+            var remoteData = await res.json();
+            
+            if (remoteData.lastUpdated && state.lastUpdated && remoteData.lastUpdated > state.lastUpdated && state.lastUpdated !== "Loading...") {
+                var shouldLoad = confirm(
+                    `⚠️ NEWER REMOTE VERSION DETECTED!\n\n` +
+                    `Another operator (${remoteData.lastUpdatedBy || 'System'}) synced new data on ${remoteData.lastUpdated}.\n\n` +
+                    `Your active copy is older than the repo version.\n\n` +
+                    `Click OK to load the latest data from the repo now, or Cancel to abort your recent change.`
+                );
+                
+                if (shouldLoad) {
+                    await fetchRepoData(true);
+                }
+                return false; // Stop the pending local action/push
+            }
+        } catch (err) {
+            console.warn("Pre-check version fetch failed, allowing action:", err);
+        }
+        return true; // Repo is older or equal -> proceed as normal
+    }
+
     function archiveCurrentSeason() {
         var tag = document.getElementById('archiveSeasonTag').value.trim() || '2026';
         var fileName = `${tag}_orchard_data.json`;
@@ -1227,7 +1254,6 @@
         downloadAnchor.remove();
     }
 
-    // EXPORT ALL DASHBOARD DATA TO MULTI-TAB EXCEL (.XLSX) FILE WITH PROPER COLUMN WIDTHS & TABLE HEADERS
     function exportDashboardToXLSX() {
         if (typeof XLSX === 'undefined') {
             alert("Excel export library failed to load. Please check internet connection.");
@@ -1238,7 +1264,6 @@
         var seasonTag = document.getElementById('archiveSeasonTag') ? document.getElementById('archiveSeasonTag').value.trim() : '';
         var fileName = seasonTag ? `orchard_dashboard_${seasonTag}.xlsx` : `orchard_dashboard_${getTodayISO()}.xlsx`;
 
-        // HELPER FUNCTION: Calculate autofit column widths and add header auto-filters
         function formatWorksheet(ws, rowsData) {
             if (!rowsData || rowsData.length === 0) return;
 
@@ -1351,11 +1376,11 @@
         formatWorksheet(wsAbundance, abundanceRows);
         XLSX.utils.book_append_sheet(wb, wsAbundance, "Crop Abundances");
 
-        // WRITE FILE DOWNLOAD
         XLSX.writeFile(wb, fileName);
     }
 
-    function loadArchivedJsonFile() {
+    async function loadArchivedJsonFile() {
+        if (!(await verifyRemoteVersion())) return;
         var fileInput = document.getElementById('importJsonFileInput');
         if (!fileInput.files || fileInput.files.length === 0) {
             alert("Please select a JSON file to import.");
@@ -1381,7 +1406,7 @@
                     cleanupUnusedMetrics();
                     saveState();
                     toggleUtilitiesModal(false);
-                    alert("Archived dataset loaded successfully!");
+                    alert("Archived dataset loaded successfully! (Click 'Save & Sync' to push changes).");
                 }
             } catch (err) {
                 alert("Error parsing JSON file: " + err.message);
@@ -1390,7 +1415,8 @@
         reader.readAsText(file);
     }
 
-    function clearAllDashboardData() {
+    async function clearAllDashboardData() {
+        if (!(await verifyRemoteVersion())) return;
         if (!confirm("⚠️ WARNING: You are about to clear all seasonal data. Proceed?")) return;
         var verification = prompt("🔒 DOUBLE VERIFICATION REQUIRED:\nType 'DELETE ALL DATA' below to confirm:");
         if (verification === "DELETE ALL DATA") {
@@ -1401,7 +1427,7 @@
             cleanupUnusedMetrics();
             saveState();
             toggleUtilitiesModal(false);
-            alert("Active season records cleared!");
+            alert("Active season records cleared! (Click 'Save & Sync' to push changes).");
         }
     }
 
@@ -1508,7 +1534,6 @@
         renderAll();
     }
 
-    // AUTOMATIC GARBAGE COLLECTION FOR METRICS WITH ZERO ACTIVE DATA ENTRIES
     function cleanupUnusedMetrics() {
         if (!state.metricsRegistry) return;
 
@@ -1521,13 +1546,15 @@
             });
         });
 
-        // Retain metric if it has entries in growthData OR was just created (inCreation flag)
         state.metricsRegistry = state.metricsRegistry.filter(m => usedKeys.has(m.key) || m.inCreation);
         var activeKeysSet = new Set(state.metricsRegistry.map(m => m.key));
         state.activeGraphKeys = state.activeGraphKeys.filter(k => activeKeysSet.has(k));
     }
 
     async function saveDashboardFile() {
+        // Run pre-push version check first
+        if (!(await verifyRemoteVersion())) return;
+
         var btn = document.getElementById('save-file-btn');
         if (!currentUserPin) { await promptPinLogin(); if (!currentUserPin) return; }
         if (!btn || btn.disabled) return;
@@ -1670,7 +1697,8 @@
         renderLogCultivarControls();
     }
 
-    function saveInventoryRecord() {
+    async function saveInventoryRecord() {
+        if (!(await verifyRemoteVersion())) return;
         var cultivar = document.getElementById('invCultivar').value.trim();
         if (!cultivar) { alert('Please enter a cultivar name.'); return; }
 
@@ -1735,7 +1763,8 @@
         document.getElementById('inventoryFormGrid').scrollIntoView({ behavior: 'smooth' });
     }
 
-    function deleteInventoryRecord(index) {
+    async function deleteInventoryRecord(index) {
+        if (!(await verifyRemoteVersion())) return;
         var item = state.inventoryData[index];
         if (!item) return;
         if (!confirm(`Are you sure you want to delete "${item.cultivar}" from the Master Inventory?`)) return;
@@ -1768,7 +1797,6 @@
         document.getElementById('cancelInventoryBtn').style.display = 'none';
     }
 
-    // TREATMENT SCHEDULE TAB LOGIC
     function renderScheduleCultivarCheckboxes() {
         var grid = document.getElementById('schedCultivarCheckboxes');
         if (!grid) return;
@@ -1860,7 +1888,8 @@
         }
     }
 
-    function saveScheduleRecord() {
+    async function saveScheduleRecord() {
+        if (!(await verifyRemoteVersion())) return;
         var phase = document.getElementById('schedPhase').value;
         var type = document.getElementById('schedType').value;
         var startDate = document.getElementById('schedDateStart').value;
@@ -1914,7 +1943,8 @@
         document.getElementById('scheduleFormGrid').scrollIntoView({ behavior: 'smooth' });
     }
 
-    function deleteScheduleRecord(index) {
+    async function deleteScheduleRecord(index) {
+        if (!(await verifyRemoteVersion())) return;
         if (confirm("Delete this treatment schedule item?")) {
             state.scheduleData.splice(index, 1);
             saveState();
@@ -1934,7 +1964,6 @@
         document.getElementById('cancelScheduleBtn').style.display = 'none';
     }
 
-    // INITIALIZE AND RENDER INTERACTIVE GOOGLE SATELLITE MAP
     function initOrchardMap() {
         if (mapInstance) return;
         var mapEl = document.getElementById('mapContainer');
@@ -2006,14 +2035,16 @@
         }
     }
 
-    function updateAbundanceValue(index, val) {
+    async function updateAbundanceValue(index, val) {
+        if (!(await verifyRemoteVersion())) return;
         if (index >= 0 && index < state.inventoryData.length) {
             state.inventoryData[index].load = val;
             saveState();
         }
     }
 
-    function updateBagsValue(index, val) {
+    async function updateBagsValue(index, val) {
+        if (!(await verifyRemoteVersion())) return;
         if (index >= 0 && index < state.inventoryData.length) {
             state.inventoryData[index].bags = val;
             saveState();
@@ -2229,7 +2260,8 @@
         });
     }
 
-    function saveHarvestLog() {
+    async function saveHarvestLog() {
+        if (!(await verifyRemoteVersion())) return;
         var dateVal = document.getElementById('harvestDate').value;
         var cultivarVal = document.getElementById('harvestCultivar').value;
         var quantityVal = parseInt(document.getElementById('harvestQuantity').value);
@@ -2255,7 +2287,8 @@
         document.getElementById('cancelHarvestBtn').style.display = 'inline-block';
     }
 
-    function deleteHarvestLog(index) {
+    async function deleteHarvestLog(index) {
+        if (!(await verifyRemoteVersion())) return;
         if (confirm('Delete harvest log entry?')) {
             state.harvestLogsData.splice(index, 1);
             saveState();
@@ -2300,7 +2333,8 @@
         });
     }
 
-    function saveLogEntry() {
+    async function saveLogEntry() {
+        if (!(await verifyRemoteVersion())) return;
         var dateVal = document.getElementById('newLogDate').value.trim();
         var titleVal = document.getElementById('newLogTitle').value.trim() || 'Field Observation';
         var bodyVal = document.getElementById('newLogBody').value.trim();
@@ -2339,7 +2373,8 @@
         document.getElementById('cancelLogBtn').style.display = 'inline-block';
     }
 
-    function deleteLogRecord(index) {
+    async function deleteLogRecord(index) {
+        if (!(await verifyRemoteVersion())) return;
         if (confirm('Delete log entry?')) {
             state.logsData.splice(index, 1);
             saveState();
@@ -2355,8 +2390,8 @@
         document.getElementById('cancelLogBtn').style.display = 'none';
     }
 
-    // CREATE NEW METRIC WITH IMMEDIATE AVAILABILITY FLAG
-    function addNewMetricFromBuilder() {
+    async function addNewMetricFromBuilder() {
+        if (!(await verifyRemoteVersion())) return;
         var nameInput = document.getElementById('newMetricName');
         var unitInput = document.getElementById('newMetricUnit');
         var name = nameInput.value.trim();
@@ -2365,7 +2400,6 @@
 
         var key = 'metric_' + name.toLowerCase().replace(/[^a-z0-9]/g, '_');
         
-        // Prevent duplicates
         if (!state.metricsRegistry.some(m => m.key === key)) {
             state.metricsRegistry.push({
                 key: key,
@@ -2373,7 +2407,7 @@
                 unit: unit || 'units',
                 isCustom: true,
                 isGraphed: true,
-                inCreation: true // Flag to keep active before first log entry is saved
+                inCreation: true
             });
             if (!state.activeGraphKeys.includes(key)) {
                 state.activeGraphKeys.push(key);
@@ -2564,7 +2598,8 @@
         });
     }
 
-    function addMeasurementRecord() {
+    async function addMeasurementRecord() {
+        if (!(await verifyRemoteVersion())) return;
         var dateVal = document.getElementById('entryDate').value;
         var treeVal = document.getElementById('entryTree').value;
         if (!dateVal || !treeVal) return;
@@ -2574,7 +2609,7 @@
             var el = document.getElementById('entry_' + m.key);
             if (el && el.value !== '') {
                 rec[m.key] = parseFloat(el.value);
-                delete m.inCreation; // Metric is now officially used in growthData
+                delete m.inCreation;
             }
         });
 
@@ -2600,7 +2635,8 @@
         document.getElementById('cancelGrowthBtn').style.display = 'inline-block';
     }
 
-    function deleteGrowthRecord(index) {
+    async function deleteGrowthRecord(index) {
+        if (!(await verifyRemoteVersion())) return;
         if (confirm('Delete measurement entry?')) {
             state.growthData.splice(index, 1);
             saveState();
@@ -2671,6 +2707,11 @@
         a.download = 'orchard_metrics_2026.csv';
         a.click();
     }
+
+    // AUTO-CHECK FOR UPDATES WHEN FOCUSING BROWSER TAB
+    window.addEventListener('focus', function() {
+        fetchRepoData();
+    });
 
     window.onload = function() {
         fetchRepoData();

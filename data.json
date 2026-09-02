@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-01 18:10",
+  "lastUpdated": "2026-09-01 22:09",
   "lastUpdatedBy": "Rob",
   "inventoryData": [
     {
@@ -739,6 +739,17 @@
     }
   ],
   "logsData": [
+    {
+      "date": "2026-09-01",
+      "title": "Field Observation",
+      "type": "Mature / Bearing",
+      "tags": [
+        "Novamac"
+      ],
+      "age": "all",
+      "body": "Another dropped apple on novamac. Ate it, was good, but seeds were still white/tan, not dark brown/black that indicates ripeness. So Sept 1 is too early for this, which should be early-mid Sept.",
+      "loggedBy": "Rob"
+    },
     {
       "date": "2026-08-29",
       "title": "Field Observation",

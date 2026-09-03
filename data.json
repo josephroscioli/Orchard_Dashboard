@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-03 09:04",
+  "lastUpdated": "2026-09-03 09:05",
   "lastUpdatedBy": "Rob",
   "inventoryData": [
     {
@@ -751,6 +751,28 @@
     }
   ],
   "logsData": [
+    {
+      "date": "2026-09-03",
+      "title": "Field Observation",
+      "type": "Mature / Bearing",
+      "tags": [
+        "Freedom"
+      ],
+      "age": "all",
+      "body": "Picked up a dropped freedom and cut open. Tastes not quite ripe, seeds were light brown.",
+      "loggedBy": "Rob"
+    },
+    {
+      "date": "2026-09-03",
+      "title": "Dropped fruit",
+      "type": "Growth & Orchard Status",
+      "tags": [
+        "Novamac"
+      ],
+      "age": "all",
+      "body": "Two bagged novamac are near ripe by taste (almost white by color). Seeds are mid-brown.",
+      "loggedBy": "Rob"
+    },
     {
       "date": "2026-09-01",
       "title": "Field Observation",

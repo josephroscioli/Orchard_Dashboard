@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-05 10:10",
+  "lastUpdated": "2026-09-05 10:44",
   "lastUpdatedBy": "Rob",
   "inventoryData": [
     {
@@ -775,6 +775,19 @@
     }
   ],
   "logsData": [
+    {
+      "date": "2026-09-05",
+      "title": "Field Observation",
+      "type": "Mature / Bearing",
+      "tags": [
+        "Freedom",
+        "NY-35",
+        "Novamac"
+      ],
+      "age": "all",
+      "body": "Picked 3 NY-35, 2 novamac, 2 freedom. Freedom isn't ready yet, seeds are mid brown, flavor is tart. NY-35 is dark brown, flavor is tart and good. Novamac seems good, coming off tree easily.",
+      "loggedBy": "Rob"
+    },
     {
       "date": "2026-09-03",
       "title": "Field Observation",

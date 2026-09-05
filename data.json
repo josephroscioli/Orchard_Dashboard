@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "2026-09-04 08:55",
-  "lastUpdatedBy": "Wyatt",
+  "lastUpdated": "2026-09-05 10:10",
+  "lastUpdatedBy": "Rob",
   "inventoryData": [
     {
       "cultivar": "Freedom",
@@ -725,6 +725,24 @@
     }
   ],
   "harvestLogsData": [
+    {
+      "date": "2026-09-05",
+      "cultivar": "Novamac",
+      "quantity": 2,
+      "loggedBy": "Rob"
+    },
+    {
+      "date": "2026-09-05",
+      "cultivar": "NY-35",
+      "quantity": 3,
+      "loggedBy": "Rob"
+    },
+    {
+      "date": "2026-09-05",
+      "cultivar": "Freedom",
+      "quantity": 2,
+      "loggedBy": "Rob"
+    },
     {
       "date": "2026-09-04",
       "cultivar": "Novamac",

@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-06 19:07",
+  "lastUpdated": "2026-09-06 19:10",
   "lastUpdatedBy": "Rob",
   "inventoryData": [
     {
@@ -545,6 +545,19 @@
         "insect"
       ],
       "note": "Caterpillars & Worms (Tomato hornworms, tent caterpillars, cabbage loopers, gypsy moths)",
+      "loggedBy": "Rob"
+    },
+    {
+      "name": "Fertilome triple action",
+      "type": "treatment",
+      "area": "foliar",
+      "tags": [
+        "foliar pest",
+        "fruit pest",
+        "fungal",
+        "insect"
+      ],
+      "note": "Clarified Hydrophobic Extract of Neem Oil (70% in the concentrate) and Pyrethrins (0.25% in the concentrate)",
       "loggedBy": "Rob"
     }
   ],

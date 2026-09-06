@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-06 17:29",
+  "lastUpdated": "2026-09-06 19:07",
   "lastUpdatedBy": "Rob",
   "inventoryData": [
     {
@@ -503,7 +503,7 @@
       "loggedBy": "Rob"
     },
     {
-      "name": "Btg",
+      "name": "Bta",
       "type": "treatment",
       "area": "soil",
       "tags": [
@@ -511,7 +511,7 @@
         "foliar pest",
         "beetle"
       ],
-      "note": "This works well for japanese beetle and other grub, but not asiatic garden beetle",
+      "note": "This works well for japanese beetle and other grub, including asiatics beetle. Beetles & Grubs (Japanese beetles, June beetles, weevils, borers)",
       "loggedBy": "Rob"
     },
     {
@@ -534,6 +534,17 @@
         "soil nutrient"
       ],
       "note": "This helps wet very dry soil",
+      "loggedBy": "Rob"
+    },
+    {
+      "name": "Btk",
+      "type": "treatment",
+      "area": "soil",
+      "tags": [
+        "soil pest",
+        "insect"
+      ],
+      "note": "Caterpillars & Worms (Tomato hornworms, tent caterpillars, cabbage loopers, gypsy moths)",
       "loggedBy": "Rob"
     }
   ],

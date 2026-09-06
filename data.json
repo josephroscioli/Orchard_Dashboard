@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-06 16:08",
+  "lastUpdated": "2026-09-06 17:26",
   "lastUpdatedBy": "Rob",
   "inventoryData": [
     {
@@ -486,6 +486,47 @@
       ],
       "instructions": "Tree Trunk Painting & Hardware Guard Check: Verify white latex/water trunk paint coverage on young whips to block southwest winter sun scald. Ensure wire hardware mesh guards are tight to the ground line to exclude voles."
     }
+  ],
+  "toolsData": [
+    {
+      "name": "Surround WP",
+      "type": "treatment",
+      "area": "fruit",
+      "tags": [
+        "foliar pest",
+        "fruit pest",
+        "beetle",
+        "plum curc",
+        "insect"
+      ],
+      "note": "Applying 2-3 cups/gal, spray leaves/fruitlets, right after blossom drop, repeating as needed based upon color.  Should see reasonably even coverage on fruitlet and leaves.  The leaves will be very white., and that's ok, it won't inhibit photosynthesis.",
+      "loggedBy": "Rob"
+    },
+    {
+      "name": "Btg",
+      "type": "treatment",
+      "area": "soil",
+      "tags": [
+        "soil pest",
+        "foliar pest",
+        "beetle"
+      ],
+      "note": "This works well for japanese beetle and other grub, but not asiatic garden beetle",
+      "loggedBy": "Rob"
+    }
+  ],
+  "toolTags": [
+    "soil texture",
+    "soil nutrient",
+    "soil pest",
+    "foliar pest",
+    "fruit pest",
+    "bacterial",
+    "fungal",
+    "beetle",
+    "plum curc",
+    "insect",
+    "leafhopper"
   ],
   "metricsRegistry": [
     {

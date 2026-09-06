@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-06 19:50",
+  "lastUpdated": "2026-09-06 19:57",
   "lastUpdatedBy": "Rob",
   "inventoryData": [
     {
@@ -685,6 +685,19 @@
         "trunk"
       ],
       "note": "Useful for handling weeds around trunk and providing long term carbon. Pine bark mulch preferred. Oak leaf mulch also good.",
+      "loggedBy": "Rob"
+    },
+    {
+      "name": "Beneficial nematodes",
+      "type": "treatment",
+      "area": "soil",
+      "tags": [
+        "soil pest",
+        "beetle",
+        "plum curc",
+        "insect"
+      ],
+      "note": "Steinernema feltiae (SF): Targets fungus gnat larvae, thrips pupae, and root-feeding flies in greenhouses or cool soils.\n\nSteinernema carpocapsae (SC): Targets surface-dwelling pests like fleas, cutworms, webworms, and crown borers.\n\nHeterorhabditis bacteriophora (HB): Targets deep-soil grubs like Japanese beetle larvae and root\n\nSteinernema riobrave (Sr): works for plum curc",
       "loggedBy": "Rob"
     }
   ],

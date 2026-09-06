@@ -131,7 +131,7 @@
         }
         .tab-btn {
             flex: 1;
-            min-width: 110px;
+            min-width: 100px;
             background: none;
             border: none;
             padding: 10px 8px;
@@ -199,6 +199,8 @@
         .badge-nutrition { background-color: #fef3c7; color: #92400e; }
         .badge-soil { background-color: #ffedd5; color: #c2410c; }
         .badge-tag { background-color: #e2e8f0; color: #334155; border: 1px solid #cbd5e1; font-weight: 600; text-transform: none; }
+        .badge-type { background-color: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; text-transform: uppercase; }
+        .badge-area { background-color: #fef3c7; color: #92400e; border: 1px solid #fde68a; text-transform: uppercase; }
         .user-tag { background-color: #e0e7ff; color: #3730a3; padding: 2px 6px; border-radius: 4px; font-size: 8pt; font-weight: bold; }
 
         .table-responsive { width: 100%; overflow-x: auto; margin-bottom: 16px; }
@@ -526,6 +528,7 @@
             <button class="tab-btn" onclick="switchTab(event, 'logs')">Logs &amp; Observations</button>
             <button class="tab-btn" onclick="switchTab(event, 'abundances')">Abundances</button>
             <button class="tab-btn" onclick="switchTab(event, 'schedules')">Treatment Schedules</button>
+            <button class="tab-btn" onclick="switchTab(event, 'tools')">Tools</button>
         </div>
 
         <div id="inventory" class="tab-content">
@@ -946,6 +949,80 @@
             <!-- RENDERED SCHEDULE CARDS CONTAINER -->
             <div id="schedulesContainer" style="margin-top: 24px;"></div>
         </div>
+
+        <!-- NEW TOOLS TAB CONTENT -->
+        <div id="tools" class="tab-content">
+            <h2>Orchard Tools &amp; Equipment Registry</h2>
+            <p style="font-size: 10pt; color: #4a5568; margin-bottom: 20px;">
+                Define and manage mechanical tools, application equipment, treatments, and associated functional tags.
+            </p>
+
+            <h3>Add / Edit Tool Entry</h3>
+            <div class="controls-grid" id="toolFormGrid" style="background: #eef2f7; border: 1px dashed #2b6cb0;">
+                <input type="hidden" id="editToolIndex" value="-1">
+                <div class="control-group">
+                    <label for="toolName">Tool / Treatment Name *</label>
+                    <input type="text" id="toolName" placeholder="e.g. Surround WP, Backpack Sprayer, Broadfork">
+                </div>
+                <div class="control-group">
+                    <label for="toolType">Type *</label>
+                    <select id="toolType">
+                        <option value="mechanical">Mechanical</option>
+                        <option value="treatment">Treatment</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label for="toolArea">Application Area *</label>
+                    <select id="toolArea">
+                        <option value="soil">Soil</option>
+                        <option value="foliar">Foliar</option>
+                        <option value="fruit">Fruit</option>
+                    </select>
+                </div>
+                <div class="control-group control-group-span-2" style="grid-column: 1 / -1;">
+                    <label>
+                        Functional Details &amp; Target Tags
+                        <button type="button" class="btn-action" style="background-color: #4a5568; padding: 2px 6px; font-size: 7.5pt;" onclick="promptAddCustomToolTag()">➕ Custom Tag</button>
+                    </label>
+                    <div class="checkbox-grid" id="toolTagsCheckboxes"></div>
+                </div>
+                <div class="control-group" style="justify-content: flex-end; flex-direction: row; align-items: flex-end; gap: 8px; grid-column: 1 / -1;">
+                    <button class="btn-action" id="saveToolBtn" onclick="saveToolRecord()" style="background-color: #2b6cb0;">Save Tool Entry</button>
+                    <button class="btn-action" id="cancelToolBtn" onclick="resetToolForm()" style="background-color: rgb(100, 116, 139); display: none;">Cancel Edit</button>
+                </div>
+            </div>
+
+            <h3>Registered Orchard Tools</h3>
+            <div class="filter-section" style="margin-bottom: 12px;">
+                <span class="filter-label">Filter Tools by Type:</span>
+                <select id="toolFilterType" class="filter-select" onchange="renderToolsTable()">
+                    <option value="all">All Types</option>
+                    <option value="mechanical">Mechanical</option>
+                    <option value="treatment">Treatment</option>
+                </select>
+                <span class="filter-label" style="margin-left: 12px;">Filter Area:</span>
+                <select id="toolFilterArea" class="filter-select" onchange="renderToolsTable()">
+                    <option value="all">All Areas</option>
+                    <option value="soil">Soil</option>
+                    <option value="foliar">Foliar</option>
+                    <option value="fruit">Fruit</option>
+                </select>
+            </div>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 25%;">Tool / Treatment Name</th>
+                            <th style="width: 15%;">Type</th>
+                            <th style="width: 15%;">Application Area</th>
+                            <th style="width: 33%;">Tags / Focus</th>
+                            <th style="width: 12%; text-align: right;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="toolsTableBody"></tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
     <!-- UTILITIES & ARCHIVING MODAL -->
@@ -971,7 +1048,7 @@
             <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 16px 0;">
 
             <h3 style="color: #c53030;">3. Reset / Clear Active Data</h3>
-            <p style="font-size: 9.5pt; color: #4a5568; margin-top: -4px;">Clear active metric observations, harvest logs, and field notes while resetting cultivar loads/bags to 0.</p>
+            <p style="font-size: 9.5pt; color: #4a5568; margin-top: -4px;">Clear active metric observations, harvest logs, field notes, and tool registries while resetting cultivar loads/bags to 0.</p>
             <div style="margin-bottom: 20px;">
                 <button class="btn-action" style="background-color: #c53030;" onclick="clearAllDashboardData()">🧹 Reset Active Season Data</button>
             </div>
@@ -1002,6 +1079,12 @@
         { cultivar: "Black Oxford", lat: 42.595261, lon: -71.337073, ageCat: "new", yearPlanted: "2026", ageAtPlanting: "0 yr", rootstock: "Semi-Std B.118", load: "0", bags: "0", color: "#334155", directives: "Verify white trunk paint." },
         { cultivar: "SnowSweet", lat: 42.59520842, lon: -71.33716877, ageCat: "new", yearPlanted: "2026", ageAtPlanting: "0 yr", rootstock: "Semi-Std B.118", load: "0", bags: "0", color: "#db2777", directives: "Ensure wire trunk mesh is tight." },
         { cultivar: "NY 414-1", lat: 42.59518773, lon: -71.33713298, ageCat: "new", yearPlanted: "2026", ageAtPlanting: "0 yr", rootstock: "Semi-Std G.969", load: "0", bags: "0", color: "#475569", directives: "Monitor shallow roots." }
+    ];
+
+    // DEFAULT TOOL TAG SEED LIST
+    var defaultToolTagsSeed = [
+        "soil texture", "soil nutrient", "soil pest", "foliar pest", "fruit pest",
+        "bacterial", "fungal", "beetle", "plum curc", "insect", "leafhopper"
     ];
 
     // COMPLETE ITEMIZED TREATMENT SCHEDULE SEED DATA
@@ -1177,6 +1260,8 @@
         lastUpdatedBy: "System",
         inventoryData: defaultInventorySeed,
         scheduleData: defaultScheduleSeed,
+        toolsData: [],
+        toolTags: [...defaultToolTagsSeed],
         metricsRegistry: [],
         activeGraphKeys: [],
         growthData: [],
@@ -1321,7 +1406,19 @@
         formatWorksheet(wsSched, schedRows);
         XLSX.utils.book_append_sheet(wb, wsSched, "Treatment Schedules");
 
-        // 3. GROWTH METRICS TAB
+        // 3. TOOLS & EQUIPMENT TAB
+        var toolRows = (state.toolsData || []).map(t => ({
+            "Tool / Treatment Name": t.name,
+            "Type": t.type,
+            "Application Area": t.area,
+            "Tags / Focus": (t.tags || []).join(", "),
+            "Logged By": t.loggedBy || 'Rob'
+        }));
+        var wsTools = XLSX.utils.json_to_sheet(toolRows);
+        formatWorksheet(wsTools, toolRows);
+        XLSX.utils.book_append_sheet(wb, wsTools, "Tools & Equipment");
+
+        // 4. GROWTH METRICS TAB
         var growthRows = state.growthData.map(g => {
             var rowObj = {
                 "Measurement Date": g.date,
@@ -1337,7 +1434,7 @@
         formatWorksheet(wsGrowth, growthRows);
         XLSX.utils.book_append_sheet(wb, wsGrowth, "Growth Metrics");
 
-        // 4. HARVEST LOGS TAB
+        // 5. HARVEST LOGS TAB
         var harvestRows = state.harvestLogsData.map(h => ({
             "Harvest Date": h.date,
             "Cultivar": h.cultivar,
@@ -1348,7 +1445,7 @@
         formatWorksheet(wsHarvest, harvestRows);
         XLSX.utils.book_append_sheet(wb, wsHarvest, "Harvest Logs");
 
-        // 5. FIELD LOGS & NOTES TAB
+        // 6. FIELD LOGS & NOTES TAB
         var logRows = state.logsData.map(l => ({
             "Log Date": l.date,
             "Title": l.title || '',
@@ -1362,7 +1459,7 @@
         formatWorksheet(wsLogs, logRows);
         XLSX.utils.book_append_sheet(wb, wsLogs, "Field Logs & Notes");
 
-        // 6. CROP ABUNDANCES TAB
+        // 7. CROP ABUNDANCES TAB
         var abundanceRows = state.inventoryData.map(item => ({
             "Cultivar": item.cultivar,
             "Age Class": item.ageCat,
@@ -1395,12 +1492,15 @@
                         lastUpdatedBy: imported.lastUpdatedBy || currentUserAuthor || "Rob",
                         inventoryData: imported.inventoryData || defaultInventorySeed,
                         scheduleData: imported.scheduleData || defaultScheduleSeed,
+                        toolsData: imported.toolsData || [],
+                        toolTags: imported.toolTags || [...defaultToolTagsSeed],
                         metricsRegistry: imported.metricsRegistry || [],
                         activeGraphKeys: imported.activeGraphKeys || [],
                         growthData: imported.growthData || [],
                         harvestLogsData: imported.harvestLogsData || [],
                         logsData: imported.logsData || []
                     };
+                    ensureToolDefaults();
                     cleanupUnusedMetrics();
                     saveState();
                     toggleUtilitiesModal(false);
@@ -1422,6 +1522,8 @@
             state.growthData = [];
             state.harvestLogsData = [];
             state.logsData = [];
+            state.toolsData = [];
+            state.toolTags = [...defaultToolTagsSeed];
             cleanupUnusedMetrics();
             saveState();
             toggleUtilitiesModal(false);
@@ -1480,6 +1582,17 @@
 
     function getActiveAuthorName() { return currentUserAuthor || 'Rob'; }
 
+    function ensureToolDefaults() {
+        if (!state.toolsData) state.toolsData = [];
+        if (!state.toolTags || state.toolTags.length === 0) {
+            state.toolTags = [...defaultToolTagsSeed];
+        } else {
+            defaultToolTagsSeed.forEach(tag => {
+                if (!state.toolTags.includes(tag)) state.toolTags.push(tag);
+            });
+        }
+    }
+
     async function fetchRepoData(isManualTrigger = false) {
         var loadBtn = document.getElementById('load-file-btn');
         if (loadBtn && isManualTrigger) { loadBtn.innerText = "⏳ Loading..."; loadBtn.disabled = true; }
@@ -1492,12 +1605,15 @@
                 lastUpdatedBy: data.lastUpdatedBy || "Rob",
                 inventoryData: (data.inventoryData && data.inventoryData.length > 0) ? data.inventoryData : defaultInventorySeed,
                 scheduleData: (data.scheduleData && data.scheduleData.length > 0) ? data.scheduleData : defaultScheduleSeed,
+                toolsData: data.toolsData || [],
+                toolTags: data.toolTags || [...defaultToolTagsSeed],
                 metricsRegistry: data.metricsRegistry || [],
                 activeGraphKeys: data.activeGraphKeys || [],
                 growthData: data.growthData || [],
                 harvestLogsData: data.harvestLogsData || [],
                 logsData: data.logsData || []
             };
+            ensureToolDefaults();
             cleanupUnusedMetrics();
             saveLocalState();
             renderAll();
@@ -1522,6 +1638,7 @@
         var stored = localStorage.getItem('orchard_state_full');
         if (stored) state = JSON.parse(stored);
         if (!state.scheduleData || state.scheduleData.length === 0) state.scheduleData = defaultScheduleSeed;
+        ensureToolDefaults();
         cleanupUnusedMetrics();
         renderAll();
     }
@@ -1597,6 +1714,7 @@
         renderHarvestTimeline();
         renderMapMarkers();
         renderScheduleTabUI();
+        renderToolsTabUI();
     }
 
     function renderAllCultivarFilterOptions() {
@@ -1961,6 +2079,140 @@
         toggleAllSchedCultivars(false);
         document.getElementById('saveScheduleBtn').innerText = 'Add Treatment Schedule Item';
         document.getElementById('cancelScheduleBtn').style.display = 'none';
+    }
+
+    // --- TOOLS TAB FUNCTIONS ---
+    function renderToolTagsCheckboxes() {
+        var grid = document.getElementById('toolTagsCheckboxes');
+        if (!grid) return;
+        ensureToolDefaults();
+
+        grid.innerHTML = state.toolTags.map(tag => `
+            <label class="checkbox-item">
+                <input type="checkbox" class="tool-tag-cb" value="${tag}"> <span>${tag}</span>
+            </label>
+        `).join('');
+    }
+
+    function promptAddCustomToolTag() {
+        var newTag = prompt("Enter new custom tool tag:");
+        if (newTag && newTag.trim()) {
+            var clean = newTag.trim().toLowerCase();
+            if (!state.toolTags.includes(clean)) {
+                state.toolTags.push(clean);
+                renderToolTagsCheckboxes();
+                var cb = document.querySelector(`.tool-tag-cb[value="${clean}"]`);
+                if (cb) cb.checked = true;
+            }
+        }
+    }
+
+    function renderToolsTabUI() {
+        renderToolTagsCheckboxes();
+        renderToolsTable();
+    }
+
+    function renderToolsTable() {
+        var tbody = document.getElementById('toolsTableBody');
+        if (!tbody) return;
+        tbody.innerHTML = '';
+
+        ensureToolDefaults();
+
+        var filterType = document.getElementById('toolFilterType') ? document.getElementById('toolFilterType').value : 'all';
+        var filterArea = document.getElementById('toolFilterArea') ? document.getElementById('toolFilterArea').value : 'all';
+
+        state.toolsData.forEach((tool, index) => {
+            if (filterType !== 'all' && tool.type !== filterType) return;
+            if (filterArea !== 'all' && tool.area !== filterArea) return;
+
+            var tagsBadges = (tool.tags || []).map(t => `<span class="badge badge-tag" style="margin-right:2px; margin-bottom:2px;">${t}</span>`).join('');
+            var authorName = tool.loggedBy || 'Rob';
+
+            var tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><strong>${tool.name}</strong><br><span class="user-tag" style="font-size:7.5pt;">${authorName}</span></td>
+                <td><span class="badge badge-type">${tool.type}</span></td>
+                <td><span class="badge badge-area">${tool.area}</span></td>
+                <td>${tagsBadges || '<span style="color:#a0aec0;">None</span>'}</td>
+                <td style="text-align: right;">
+                    <div class="table-actions-cell">
+                        <button class="btn-action" style="background-color: #2b6cb0;" onclick="editToolRecord(${index})">Edit</button>
+                        <button class="btn-action" style="background-color: #9b2c2c;" onclick="deleteToolRecord(${index})">Delete</button>
+                    </div>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    async function saveToolRecord() {
+        if (!(await verifyRemoteVersion())) return;
+        var name = document.getElementById('toolName').value.trim();
+        var type = document.getElementById('toolType').value;
+        var area = document.getElementById('toolArea').value;
+
+        if (!name) {
+            alert("Please enter a tool or treatment name.");
+            return;
+        }
+
+        var selectedTags = Array.from(document.querySelectorAll('.tool-tag-cb:checked')).map(cb => cb.value);
+
+        var record = {
+            name: name,
+            type: type,
+            area: area,
+            tags: selectedTags,
+            loggedBy: getActiveAuthorName()
+        };
+
+        var editIndex = parseInt(document.getElementById('editToolIndex').value);
+        if (editIndex >= 0 && editIndex < state.toolsData.length) {
+            state.toolsData[editIndex] = record;
+        } else {
+            state.toolsData.push(record);
+        }
+
+        resetToolForm();
+        saveState();
+    }
+
+    function editToolRecord(index) {
+        var tool = state.toolsData[index];
+        if (!tool) return;
+
+        document.getElementById('editToolIndex').value = index;
+        document.getElementById('toolName').value = tool.name;
+        document.getElementById('toolType').value = tool.type;
+        document.getElementById('toolArea').value = tool.area;
+
+        document.querySelectorAll('.tool-tag-cb').forEach(cb => {
+            cb.checked = (tool.tags || []).includes(cb.value);
+        });
+
+        document.getElementById('saveToolBtn').innerText = 'Update Tool Entry';
+        document.getElementById('cancelToolBtn').style.display = 'inline-block';
+        document.getElementById('toolFormGrid').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    async function deleteToolRecord(index) {
+        if (!(await verifyRemoteVersion())) return;
+        if (confirm("Delete this tool record?")) {
+            resetToolForm();
+            state.toolsData.splice(index, 1);
+            saveState();
+        }
+    }
+
+    function resetToolForm() {
+        document.getElementById('editToolIndex').value = -1;
+        document.getElementById('toolName').value = '';
+        document.getElementById('toolType').value = 'mechanical';
+        document.getElementById('toolArea').value = 'soil';
+        document.querySelectorAll('.tool-tag-cb').forEach(cb => { cb.checked = false; });
+        document.getElementById('saveToolBtn').innerText = 'Save Tool Entry';
+        document.getElementById('cancelToolBtn').style.display = 'none';
     }
 
     function initOrchardMap() {
@@ -2694,6 +2946,8 @@
                 mapInstance.invalidateSize();
                 renderMapMarkers();
             }, 100);
+        } else if (tabId === 'tools') {
+            renderToolsTabUI();
         }
     }
 

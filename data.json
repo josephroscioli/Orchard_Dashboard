@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-06 17:26",
+  "lastUpdated": "2026-09-06 17:29",
   "lastUpdatedBy": "Rob",
   "inventoryData": [
     {
@@ -512,6 +512,28 @@
         "beetle"
       ],
       "note": "This works well for japanese beetle and other grub, but not asiatic garden beetle",
+      "loggedBy": "Rob"
+    },
+    {
+      "name": "Backpack Sprayer",
+      "type": "mechanical",
+      "area": "foliar",
+      "tags": [
+        "foliar pest",
+        "fruit pest"
+      ],
+      "note": "4-gal, can handle Surround, hand pumped",
+      "loggedBy": "Rob"
+    },
+    {
+      "name": "Yucca",
+      "type": "treatment",
+      "area": "soil",
+      "tags": [
+        "soil texture",
+        "soil nutrient"
+      ],
+      "note": "This helps wet very dry soil",
       "loggedBy": "Rob"
     }
   ],

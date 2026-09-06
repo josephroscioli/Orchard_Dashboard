@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-06 19:18",
+  "lastUpdated": "2026-09-06 19:20",
   "lastUpdatedBy": "Rob",
   "inventoryData": [
     {
@@ -593,6 +593,16 @@
         "insect"
       ],
       "note": "highly effective, OMRI-listed organic insecticide made by fermenting a naturally occurring soil bacterium called Saccharopolyspora spinosa. Doesn't work on cucumber or Japanese beetles.",
+      "loggedBy": "Rob"
+    },
+    {
+      "name": "Alaska Fish Fertilizer",
+      "type": "treatment",
+      "area": "soil",
+      "tags": [
+        "soil nutrient"
+      ],
+      "note": "5-1-1 NPK ratio. Very good, but smelly.",
       "loggedBy": "Rob"
     }
   ],

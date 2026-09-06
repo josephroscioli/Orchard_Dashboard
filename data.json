@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-06 19:14",
+  "lastUpdated": "2026-09-06 19:15",
   "lastUpdatedBy": "Rob",
   "inventoryData": [
     {
@@ -570,6 +570,16 @@
         "insect"
       ],
       "note": "insects:%20Scale%20bugs,%20spider%20mite%20eggs,%20aphid%20eggs,%20mealybugs,%20and%20tent%20caterpillar%20eggs.Diseases%3A%20Anthracnose,%20peach%20leaf%20curl,%20black%20rot,%20and%20overwintering%20fungal%20spores.",
+      "loggedBy": "Rob"
+    },
+    {
+      "name": "Coop Poop",
+      "type": "treatment",
+      "area": "soil",
+      "tags": [
+        "soil nutrient"
+      ],
+      "note": "Great fertilizer, high calcium. NPK Ratio (2-4-3)",
       "loggedBy": "Rob"
     }
   ],

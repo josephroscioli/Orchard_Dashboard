@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-05 11:42",
+  "lastUpdated": "2026-09-06 16:08",
   "lastUpdatedBy": "Rob",
   "inventoryData": [
     {
@@ -725,6 +725,12 @@
     }
   ],
   "harvestLogsData": [
+    {
+      "date": "2026-09-06",
+      "cultivar": "NY-35",
+      "quantity": 1,
+      "loggedBy": "Rob"
+    },
     {
       "date": "2026-09-05",
       "cultivar": "Novamac",

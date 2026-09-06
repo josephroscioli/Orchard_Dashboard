@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-06 19:15",
+  "lastUpdated": "2026-09-06 19:18",
   "lastUpdatedBy": "Rob",
   "inventoryData": [
     {
@@ -580,6 +580,19 @@
         "soil nutrient"
       ],
       "note": "Great fertilizer, high calcium. NPK Ratio (2-4-3)",
+      "loggedBy": "Rob"
+    },
+    {
+      "name": "Spinosad",
+      "type": "treatment",
+      "area": "foliar",
+      "tags": [
+        "foliar pest",
+        "fruit pest",
+        "beetle",
+        "insect"
+      ],
+      "note": "highly effective, OMRI-listed organic insecticide made by fermenting a naturally occurring soil bacterium called Saccharopolyspora spinosa. Doesn't work on cucumber or Japanese beetles.",
       "loggedBy": "Rob"
     }
   ],

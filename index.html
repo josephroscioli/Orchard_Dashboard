@@ -1011,6 +1011,8 @@
                     <option value="foliar">Foliar</option>
                     <option value="fruit">Fruit</option>
                 </select>
+                <span class="filter-label" style="margin-left: 12px;">Filter Tag:</span>
+                <select id="toolFilterTag" class="filter-select" onchange="renderToolsTable()"></select>
             </div>
             <div class="table-responsive">
                 <table>
@@ -2100,6 +2102,19 @@
         `).join('');
     }
 
+    function renderToolFilterTagOptions() {
+        var select = document.getElementById('toolFilterTag');
+        if (!select) return;
+        ensureToolDefaults();
+
+        var currVal = select.value || 'all';
+        var optionsHTML = '<option value="all">All Tags</option>' + 
+            state.toolTags.map(tag => `<option value="${tag}">${tag}</option>`).join('');
+        
+        select.innerHTML = optionsHTML;
+        select.value = currVal;
+    }
+
     function promptAddCustomToolTag() {
         var newTag = prompt("Enter new custom tool tag:");
         if (newTag && newTag.trim()) {
@@ -2107,6 +2122,7 @@
             if (!state.toolTags.includes(clean)) {
                 state.toolTags.push(clean);
                 renderToolTagsCheckboxes();
+                renderToolFilterTagOptions();
                 var cb = document.querySelector(`.tool-tag-cb[value="${clean}"]`);
                 if (cb) cb.checked = true;
             }
@@ -2115,6 +2131,7 @@
 
     function renderToolsTabUI() {
         renderToolTagsCheckboxes();
+        renderToolFilterTagOptions();
         renderToolsTable();
     }
 
@@ -2127,10 +2144,12 @@
 
         var filterType = document.getElementById('toolFilterType') ? document.getElementById('toolFilterType').value : 'all';
         var filterArea = document.getElementById('toolFilterArea') ? document.getElementById('toolFilterArea').value : 'all';
+        var filterTag = document.getElementById('toolFilterTag') ? document.getElementById('toolFilterTag').value : 'all';
 
         state.toolsData.forEach((tool, index) => {
             if (filterType !== 'all' && tool.type !== filterType) return;
             if (filterArea !== 'all' && tool.area !== filterArea) return;
+            if (filterTag !== 'all' && !(tool.tags || []).includes(filterTag)) return;
 
             var tagsBadges = (tool.tags || []).map(t => `<span class="badge badge-tag" style="margin-right:2px; margin-bottom:2px;">${t}</span>`).join('');
             var authorName = tool.loggedBy || 'Rob';

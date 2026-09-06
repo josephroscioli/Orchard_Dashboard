@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-06 19:26",
+  "lastUpdated": "2026-09-06 19:31",
   "lastUpdatedBy": "Rob",
   "inventoryData": [
     {
@@ -640,6 +640,18 @@
       ],
       "note": "Serenade (Bacillus subtilis): Similar to how Bt is a beneficial bacteria that fights bugs, Bacillus subtilis is a beneficial. Targets fire blight.",
       "loggedBy": "Rob"
+    },
+    {
+      "name": "IV Organic 3-in-1 Plant Guard",
+      "type": "treatment",
+      "area": "foliar",
+      "tags": [
+        "foliar pest",
+        "fruit pest",
+        "trunk"
+      ],
+      "note": "Protects trees from sunburn and winter damage\npositive aspect\n\nProtects trees from sunburn and winter damage\n\nSeven natural oils repel insects without harsh chemicals",
+      "loggedBy": "Rob"
     }
   ],
   "toolTags": [
@@ -653,7 +665,8 @@
     "beetle",
     "plum curc",
     "insect",
-    "leafhopper"
+    "leafhopper",
+    "trunk"
   ],
   "metricsRegistry": [
     {

@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-06 19:34",
+  "lastUpdated": "2026-09-06 19:39",
   "lastUpdatedBy": "Rob",
   "inventoryData": [
     {
@@ -663,6 +663,29 @@
       ],
       "note": "Useful for soft-bodied insects, like aphids.",
       "loggedBy": "Rob"
+    },
+    {
+      "name": "Orchard ladder",
+      "type": "mechanical",
+      "area": "fruit",
+      "tags": [
+        "harvest"
+      ],
+      "note": "Tall, wide-based ladder to get high without falling on uneven terrain.",
+      "loggedBy": "Rob"
+    },
+    {
+      "name": "Mulch",
+      "type": "mechanical",
+      "area": "soil",
+      "tags": [
+        "soil texture",
+        "soil nutrient",
+        "soil pest",
+        "trunk"
+      ],
+      "note": "Useful for handling weeds around trunk and providing long term carbon. Pine bark mulch preferred. Oak leaf mulch also good.",
+      "loggedBy": "Rob"
     }
   ],
   "toolTags": [
@@ -677,7 +700,8 @@
     "plum curc",
     "insect",
     "leafhopper",
-    "trunk"
+    "trunk",
+    "harvest"
   ],
   "metricsRegistry": [
     {

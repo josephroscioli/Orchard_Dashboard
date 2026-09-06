@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-06 19:20",
+  "lastUpdated": "2026-09-06 19:24",
   "lastUpdatedBy": "Rob",
   "inventoryData": [
     {
@@ -603,6 +603,31 @@
         "soil nutrient"
       ],
       "note": "5-1-1 NPK ratio. Very good, but smelly.",
+      "loggedBy": "Rob"
+    },
+    {
+      "name": "Copper Sulfate",
+      "type": "treatment",
+      "area": "foliar",
+      "tags": [
+        "bacterial",
+        "fungal"
+      ],
+      "note": "highly versatile, naturally occurring inorganic compound. Organic. Worry about heavy metal contamination in soil.",
+      "loggedBy": "Rob"
+    },
+    {
+      "name": "Organza bags",
+      "type": "mechanical",
+      "area": "fruit",
+      "tags": [
+        "fruit pest",
+        "beetle",
+        "plum curc",
+        "insect",
+        "leafhopper"
+      ],
+      "note": "Put bags around the fruitlets when they are just dime-sized. Leave on throughout season.",
       "loggedBy": "Rob"
     }
   ],

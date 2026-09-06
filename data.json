@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-06 19:31",
+  "lastUpdated": "2026-09-06 19:34",
   "lastUpdatedBy": "Rob",
   "inventoryData": [
     {
@@ -650,7 +650,18 @@
         "fruit pest",
         "trunk"
       ],
-      "note": "Protects trees from sunburn and winter damage\npositive aspect\n\nProtects trees from sunburn and winter damage\n\nSeven natural oils repel insects without harsh chemicals",
+      "note": "Protects trees from sunburn and winter damage\n\nSeven natural oils repel insects without harsh chemicals\n\nhttps://a.co/d/04h9EXQa",
+      "loggedBy": "Rob"
+    },
+    {
+      "name": "Insecticidal soap",
+      "type": "treatment",
+      "area": "foliar",
+      "tags": [
+        "foliar pest",
+        "fruit pest"
+      ],
+      "note": "Useful for soft-bodied insects, like aphids.",
       "loggedBy": "Rob"
     }
   ],

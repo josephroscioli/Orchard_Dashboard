@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-06 20:06",
+  "lastUpdated": "2026-09-06 20:08",
   "lastUpdatedBy": "Rob",
   "inventoryData": [
     {
@@ -718,6 +718,17 @@
         "soil nutrient"
       ],
       "note": "Drops soil pH",
+      "loggedBy": "Rob"
+    },
+    {
+      "name": "Soap bag",
+      "type": "treatment",
+      "area": "foliar",
+      "tags": [
+        "fruit pest",
+        "harvest"
+      ],
+      "note": "Bag of irish spring soap. Ideally should have tallow.",
       "loggedBy": "Rob"
     }
   ],

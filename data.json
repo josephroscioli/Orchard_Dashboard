@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-06 19:57",
+  "lastUpdated": "2026-09-06 20:03",
   "lastUpdatedBy": "Rob",
   "inventoryData": [
     {
@@ -698,6 +698,16 @@
         "insect"
       ],
       "note": "Steinernema feltiae (SF): Targets fungus gnat larvae, thrips pupae, and root-feeding flies in greenhouses or cool soils.\n\nSteinernema carpocapsae (SC): Targets surface-dwelling pests like fleas, cutworms, webworms, and crown borers.\n\nHeterorhabditis bacteriophora (HB): Targets deep-soil grubs like Japanese beetle larvae and root\n\nSteinernema riobrave (Sr): works for plum curc",
+      "loggedBy": "Rob"
+    },
+    {
+      "name": "Langbeinite",
+      "type": "treatment",
+      "area": "soil",
+      "tags": [
+        "soil nutrient"
+      ],
+      "note": "NPK 0-0-22. Provides K, Mg, S. Useful for Mg and S deficiencies. Low Mg causes leaves to yellow. https://www.arbico-organics.com/product/langbeinite-down-to-earth-fertilizers/Organic-Fertilizer?srsltid=AfmBOoq5VNl6RHuQcAzK1WfucRk1koAPWObDQ2XzlSVU4ACUSSbdBySE",
       "loggedBy": "Rob"
     }
   ],

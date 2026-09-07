@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-06 20:10",
+  "lastUpdated": "2026-09-06 20:15",
   "lastUpdatedBy": "Rob",
   "inventoryData": [
     {
@@ -739,6 +739,16 @@
         "trunk"
       ],
       "note": "Useful to stop walking insects. Including ants, aphids, maybe plum curc.",
+      "loggedBy": "Rob"
+    },
+    {
+      "name": "Hornet trap",
+      "type": "mechanical",
+      "area": "foliar",
+      "tags": [
+        "insect"
+      ],
+      "note": "1 cup apple cider vinegar + 1 cup water + 1/2 cup sugar + a few drops of liquid dish soap.  Take water bottle, cut off th le top right where the neck starts to thin, then flip over so top is turned inward. Put solution in, so bugs can get in but not out.",
       "loggedBy": "Rob"
     }
   ],

@@ -17,7 +17,7 @@
         header {
             background-color: #1b4332;
             color: white;
-            padding: 16px 16px 16px 60px; /* Padding on left ensures title never overlaps with absolute menu icon */
+            padding: 16px 16px 16px 60px;
             text-align: center;
             border-bottom: 4px solid #40916c;
             display: flex;
@@ -32,7 +32,7 @@
             font-size: 20pt;
             font-weight: 700;
             letter-spacing: -0.5px;
-            padding-right: 90px; /* Right padding prevents title collision with absolute top-right login button */
+            padding-right: 90px;
             padding-left: 10px;
         }
         header p {
@@ -1383,6 +1383,7 @@
         scheduleData: defaultScheduleSeed,
         toolsData: [],
         toolTags: [...defaultToolTagsSeed],
+        activeCustomToolTags: [], // Temporary tags added during form creation
         metricsRegistry: [],
         activeGraphKeys: [],
         growthData: [],
@@ -1649,6 +1650,7 @@
                         scheduleData: imported.scheduleData || defaultScheduleSeed,
                         toolsData: imported.toolsData || [],
                         toolTags: imported.toolTags || [...defaultToolTagsSeed],
+                        activeCustomToolTags: [],
                         metricsRegistry: imported.metricsRegistry || [],
                         activeGraphKeys: imported.activeGraphKeys || [],
                         growthData: imported.growthData || [],
@@ -1679,6 +1681,7 @@
             state.logsData = [];
             state.toolsData = [];
             state.toolTags = [...defaultToolTagsSeed];
+            state.activeCustomToolTags = [];
             cleanupUnusedMetrics();
             saveState();
             toggleUtilitiesModal(false);
@@ -1739,23 +1742,20 @@
 
     function ensureToolDefaults() {
         if (!state.toolsData) state.toolsData = [];
-        
-        // Dynamic tag cleanup: rebuild list of active tags from all currently registered tools
-        var activeTagsInUse = new Set();
+        if (!state.activeCustomToolTags) state.activeCustomToolTags = [];
+
+        // Build a set of all tags currently in use across saved tools AND active custom tag creation
+        var activeTagsInUse = new Set(state.activeCustomToolTags);
         state.toolsData.forEach(tool => {
             if (tool.tags && Array.isArray(tool.tags)) {
                 tool.tags.forEach(t => activeTagsInUse.add(t));
             }
         });
 
-        // Always retain default seed tags AND any custom tag currently in use by at least one tool
-        state.toolTags = defaultToolTagsSeed.filter(seedTag => true); // Keep base seed tags
-        
-        activeTagsInUse.forEach(tag => {
-            if (!state.toolTags.includes(tag)) {
-                state.toolTags.push(tag);
-            }
-        });
+        // Retain seed tags plus any tag actively used or currently in creation
+        var combinedTags = new Set(defaultToolTagsSeed);
+        activeTagsInUse.forEach(tag => combinedTags.add(tag));
+        state.toolTags = Array.from(combinedTags);
     }
 
     async function fetchRepoData(isManualTrigger = false) {
@@ -1772,6 +1772,7 @@
                 scheduleData: (data.scheduleData && data.scheduleData.length > 0) ? data.scheduleData : defaultScheduleSeed,
                 toolsData: data.toolsData || [],
                 toolTags: data.toolTags || [...defaultToolTagsSeed],
+                activeCustomToolTags: [],
                 metricsRegistry: data.metricsRegistry || [],
                 activeGraphKeys: data.activeGraphKeys || [],
                 growthData: data.growthData || [],
@@ -2253,11 +2254,17 @@
         if (!grid) return;
         ensureToolDefaults();
 
-        grid.innerHTML = state.toolTags.map(tag => `
-            <label class="checkbox-item">
-                <input type="checkbox" class="tool-tag-cb" value="${tag}"> <span>${tag}</span>
-            </label>
-        `).join('');
+        // Capture current checkbox selections before re-rendering grid
+        var currentlyChecked = Array.from(document.querySelectorAll('.tool-tag-cb:checked')).map(cb => cb.value);
+
+        grid.innerHTML = state.toolTags.map(tag => {
+            var isChecked = currentlyChecked.includes(tag) || (state.activeCustomToolTags && state.activeCustomToolTags.includes(tag));
+            return `
+                <label class="checkbox-item">
+                    <input type="checkbox" class="tool-tag-cb" value="${tag}" ${isChecked ? 'checked' : ''}> <span>${tag}</span>
+                </label>
+            `;
+        }).join('');
     }
 
     function renderToolFilterTagOptions() {
@@ -2277,13 +2284,18 @@
         var newTag = prompt("Enter new custom tool tag:");
         if (newTag && newTag.trim()) {
             var clean = newTag.trim().toLowerCase();
+            if (!state.activeCustomToolTags) state.activeCustomToolTags = [];
+            
+            if (!state.activeCustomToolTags.includes(clean)) {
+                state.activeCustomToolTags.push(clean);
+            }
             if (!state.toolTags.includes(clean)) {
                 state.toolTags.push(clean);
-                renderToolTagsCheckboxes();
-                renderToolFilterTagOptions();
-                var cb = document.querySelector(`.tool-tag-cb[value="${clean}"]`);
-                if (cb) cb.checked = true;
             }
+
+            // Immediately re-render options and form grid so the user sees the new tag active
+            renderToolTagsCheckboxes();
+            renderToolFilterTagOptions();
         }
     }
 
@@ -2399,6 +2411,7 @@
         document.getElementById('toolType').value = 'mechanical';
         document.getElementById('toolArea').value = 'soil';
         document.getElementById('toolNote').value = '';
+        state.activeCustomToolTags = [];
         document.querySelectorAll('.tool-tag-cb').forEach(cb => { cb.checked = false; });
         document.getElementById('saveToolBtn').innerText = 'Save Tool Entry';
         document.getElementById('cancelToolBtn').style.display = 'none';
@@ -2659,7 +2672,7 @@
         if (grid) {
             grid.innerHTML = `<label class="checkbox-item" style="font-weight: bold; width: 100%; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px; margin-bottom: 4px;">
                 <input type="checkbox" id="tag_all_cultivars" onchange="toggleAllLogCultivars(this.checked)"> All Cultivars
-            </label>` + state.inventoryData.map(i => `<label class="checkbox-item"><input type="checkbox" class="log-cultivar-cb" value="${i.cultivar}"> <span>${i.cultivar}</span></label>`).join('');
+            </label>` + state.inventoryData.map(i => `<option value="${i.cultivar}">${i.cultivar}</option>`).join('');
         }
     }
 

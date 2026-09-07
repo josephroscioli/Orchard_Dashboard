@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-06 20:08",
+  "lastUpdated": "2026-09-06 20:10",
   "lastUpdatedBy": "Rob",
   "inventoryData": [
     {
@@ -729,6 +729,16 @@
         "harvest"
       ],
       "note": "Bag of irish spring soap. Ideally should have tallow.",
+      "loggedBy": "Rob"
+    },
+    {
+      "name": "Tanglefoot",
+      "type": "mechanical",
+      "area": "foliar",
+      "tags": [
+        "trunk"
+      ],
+      "note": "Useful to stop walking insects. Including ants, aphids, maybe plum curc.",
       "loggedBy": "Rob"
     }
   ],

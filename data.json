@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-06 20:20",
+  "lastUpdated": "2026-09-06 20:24",
   "lastUpdatedBy": "Rob",
   "inventoryData": [
     {
@@ -749,6 +749,27 @@
         "insect"
       ],
       "note": "1 cup apple cider vinegar + 1 cup water + 1/2 cup sugar + a few drops of liquid dish soap.  Take water bottle, cut off th le top right where the neck starts to thin, then flip over so top is turned inward. Put solution in, so bugs can get in but not out.",
+      "loggedBy": "Rob"
+    },
+    {
+      "name": "3-post fence",
+      "type": "mechanical",
+      "area": "soil",
+      "tags": [
+        "fruit pest",
+        "harvest"
+      ],
+      "note": "Great deterrent for deer. 3 posts with 2\"x4\" fencing around.",
+      "loggedBy": "Rob"
+    },
+    {
+      "name": "Support straps",
+      "type": "mechanical",
+      "area": "foliar",
+      "tags": [
+        "trunk"
+      ],
+      "note": "Tie-down straps that go from fence posts to trunk. Crucial for dwarf and semi-dwarf trees.",
       "loggedBy": "Rob"
     }
   ],

@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-06 21:46",
+  "lastUpdated": "2026-09-06 22:09",
   "lastUpdatedBy": "Rob",
   "inventoryData": [
     {
@@ -565,11 +565,11 @@
       "type": "treatment",
       "area": "foliar",
       "tags": [
-        "bacterial",
+        "insect",
         "fungal",
-        "insect"
+        "bacterial"
       ],
-      "note": "insects:%20Scale%20bugs,%20spider%20mite%20eggs,%20aphid%20eggs,%20mealybugs,%20and%20tent%20caterpillar%20eggs.Diseases%3A%20Anthracnose,%20peach%20leaf%20curl,%20black%20rot,%20and%20overwintering%20fungal%20spores.",
+      "note": "Insects: Scale bugs, spider mite eggs, aphid eggs, mealybugs, and tent caterpillar eggs. Diseases: Anthracnose, peach leaf curl, black rot, and overwintering fungal spores.",
       "loggedBy": "Rob"
     },
     {
@@ -773,17 +773,16 @@
     }
   ],
   "toolTags": [
-    "soil texture",
-    "soil nutrient",
-    "soil pest",
     "foliar pest",
     "fruit pest",
-    "bacterial",
-    "fungal",
     "beetle",
     "plum curc",
     "insect",
-    "leafhopper",
+    "soil pest",
+    "soil texture",
+    "soil nutrient",
+    "fungal",
+    "bacterial",
     "trunk",
     "harvest"
   ],

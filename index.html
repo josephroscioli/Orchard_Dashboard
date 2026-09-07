@@ -17,20 +17,23 @@
         header {
             background-color: #1b4332;
             color: white;
-            padding: 16px;
+            padding: 16px 16px 16px 60px; /* Padding on left ensures title never overlaps with absolute menu icon */
             text-align: center;
             border-bottom: 4px solid #40916c;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             position: relative;
+            min-height: 72px;
         }
         header h1 {
             margin: 0;
             font-size: 20pt;
             font-weight: 700;
             letter-spacing: -0.5px;
+            padding-right: 90px; /* Right padding prevents title collision with absolute top-right login button */
+            padding-left: 10px;
         }
         header p {
             margin: 0;
@@ -67,16 +70,15 @@
         }
         .header-btn-load:hover { background-color: #276749; }
         .header-btn-login {
+            position: absolute;
+            top: 16px;
+            right: 16px;
             background-color: #d69e2e;
             border-color: #f6e05e;
             color: #1a202c;
+            z-index: 10;
         }
         .header-btn-login:hover { background-color: #b7791f; color: white; }
-        .header-btn-utils {
-            background-color: #4a5568;
-            border-color: #a0aec0;
-        }
-        .header-btn-utils:hover { background-color: #2d3748; }
         
         .sync-status {
             font-size: 9pt;
@@ -94,7 +96,8 @@
             color: white;
             padding: 8px 12px;
             border-radius: 6px;
-            font-size: 14pt;
+            font-size: 11pt;
+            font-weight: 600;
             cursor: pointer;
             z-index: 1001;
             display: flex;
@@ -310,6 +313,14 @@
             padding: 6px 4px;
         }
 
+        .tool-note-cell {
+            font-size: 9pt;
+            line-height: 1.45;
+            color: #4a5568;
+            word-break: break-word;
+            white-space: pre-wrap;
+        }
+
         .table-actions-cell {
             display: flex;
             gap: 4px;
@@ -445,10 +456,18 @@
         .btn-autoscale:hover { background: #2d3748; }
 
         .control-group-span-2 { grid-column: span 2; }
+        
         @media (max-width: 600px) {
             .control-group-span-2 { grid-column: span 1; }
-            header h1 { font-size: 16pt; margin-top: 10px; }
-            .menu-icon-btn { top: 12px; left: 12px; padding: 6px 10px; font-size: 12pt; }
+            header { padding: 12px 12px 12px 12px; }
+            header h1 {
+                font-size: 14pt;
+                margin-top: 36px;
+                padding-left: 0;
+                padding-right: 0;
+            }
+            .menu-icon-btn { top: 10px; left: 10px; padding: 6px 10px; font-size: 9.5pt; }
+            .header-btn-login { top: 10px; right: 10px; padding: 6px 10px; font-size: 8.5pt; }
         }
 
         .checkbox-grid {
@@ -586,10 +605,9 @@
     <header>
         <button class="menu-icon-btn" onclick="toggleSideMenu(true)" title="Open Menu">☰ Menu</button>
         <h1>Roscioli Orchard Dashboard</h1>
+        <button class="header-btn header-btn-login" id="login-toggle-btn" onclick="handleAuthToggle()">🔒 Login</button>
         <span class="sync-status" id="last-updated-display">Last Synced: Loading...</span>
         <div class="header-actions">
-            <button class="header-btn header-btn-login" id="login-toggle-btn" onclick="handleAuthToggle()">🔒 Login</button>
-            <button class="header-btn header-btn-utils" onclick="toggleUtilitiesModal(true)">⚙️ Utilities</button>
             <button class="header-btn header-btn-load" id="load-file-btn" onclick="fetchRepoData(true)">📥 Load Latest</button>
             <button class="header-btn" id="save-file-btn" onclick="saveDashboardFile()">💾 Save &amp; Sync</button>
         </div>
@@ -1114,11 +1132,11 @@
                 <table>
                     <thead>
                         <tr>
-                            <th style="width: 20%;">Tool / Treatment Name</th>
-                            <th style="width: 12%;">Type</th>
-                            <th style="width: 12%;">Application Area</th>
-                            <th style="width: 24%;">Tags / Focus</th>
-                            <th style="width: 22%;">Notes / Details</th>
+                            <th style="width: 18%;">Tool / Treatment Name</th>
+                            <th style="width: 10%;">Type</th>
+                            <th style="width: 10%;">Application Area</th>
+                            <th style="width: 22%;">Tags / Focus</th>
+                            <th style="width: 30%;">Notes / Details</th>
                             <th style="width: 10%; text-align: right;">Actions</th>
                         </tr>
                     </thead>
@@ -2290,7 +2308,7 @@
                 <td><span class="badge badge-type">${tool.type}</span></td>
                 <td><span class="badge badge-area">${tool.area}</span></td>
                 <td>${tagsBadges || '<span style="color:#a0aec0;">None</span>'}</td>
-                <td style="white-space: pre-wrap;">${noteDisplay}</td>
+                <td class="tool-note-cell">${noteDisplay}</td>
                 <td style="text-align: right;">
                     <div class="table-actions-cell">
                         <button class="btn-action" style="background-color: #2b6cb0;" onclick="editToolRecord(${index})">Edit</button>

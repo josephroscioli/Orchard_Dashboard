@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-06 20:24",
+  "lastUpdated": "2026-09-06 21:46",
   "lastUpdatedBy": "Rob",
   "inventoryData": [
     {
@@ -624,8 +624,7 @@
         "fruit pest",
         "beetle",
         "plum curc",
-        "insect",
-        "leafhopper"
+        "insect"
       ],
       "note": "Put bags around the fruitlets when they are just dime-sized. Leave on throughout season.",
       "loggedBy": "Rob"
@@ -788,6 +787,7 @@
     "trunk",
     "harvest"
   ],
+  "activeCustomToolTags": [],
   "metricsRegistry": [
     {
       "key": "dia",

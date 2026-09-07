@@ -17,7 +17,7 @@
         header {
             background-color: #1b4332;
             color: white;
-            padding: 16px 16px 16px 60px;
+            padding: 16px;
             text-align: center;
             border-bottom: 4px solid #40916c;
             display: flex;
@@ -32,8 +32,7 @@
             font-size: 20pt;
             font-weight: 700;
             letter-spacing: -0.5px;
-            padding-right: 110px;
-            padding-left: 10px;
+            padding: 0 110px;
         }
         header p {
             margin: 0;
@@ -48,6 +47,7 @@
             flex-wrap: wrap;
             width: 100%;
             margin-top: 6px;
+            padding: 0 110px;
         }
         .header-btn {
             background-color: #2b6cb0;
@@ -97,6 +97,7 @@
             font-size: 9pt;
             color: #b7e4c7;
             font-weight: 500;
+            padding: 0 110px;
         }
 
         /* --- LEFT NAVIGATION MENU & HAMBURGER STYLES --- */
@@ -460,12 +461,14 @@
         
         @media (max-width: 600px) {
             .control-group-span-2 { grid-column: span 1; }
-            header { padding: 12px 12px 12px 12px; }
+            header { padding: 12px; }
             header h1 {
                 font-size: 14pt;
                 margin-top: 36px;
-                padding-left: 0;
-                padding-right: 0;
+                padding: 0;
+            }
+            .header-actions, .sync-status {
+                padding: 0;
             }
             .menu-icon-btn { top: 10px; left: 10px; padding: 6px 10px; font-size: 9.5pt; }
             .header-auth-container { top: 10px; right: 10px; }

@@ -32,7 +32,7 @@
             font-size: 20pt;
             font-weight: 700;
             letter-spacing: -0.5px;
-            padding-right: 90px;
+            padding-right: 110px;
             padding-left: 10px;
         }
         header p {
@@ -69,16 +69,29 @@
             border-color: #68d391;
         }
         .header-btn-load:hover { background-color: #276749; }
-        .header-btn-login {
+        .header-auth-container {
             position: absolute;
-            top: 16px;
+            top: 12px;
             right: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 4px;
+            z-index: 10;
+        }
+        .header-btn-login {
             background-color: #d69e2e;
             border-color: #f6e05e;
             color: #1a202c;
-            z-index: 10;
         }
         .header-btn-login:hover { background-color: #b7791f; color: white; }
+        .header-user-status {
+            font-size: 8.5pt;
+            font-weight: 600;
+            color: #fef08a;
+            white-space: nowrap;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+        }
         
         .sync-status {
             font-size: 9pt;
@@ -198,18 +211,6 @@
             max-width: 100%;
             margin: 0 auto;
             padding: 16px;
-        }
-        .user-tag-bar {
-            background: #e2e8f0;
-            padding: 8px 14px;
-            border-radius: 6px;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-size: 9.5pt;
-            flex-wrap: wrap;
-            gap: 6px;
         }
         .filter-section {
             background-color: white;
@@ -467,7 +468,8 @@
                 padding-right: 0;
             }
             .menu-icon-btn { top: 10px; left: 10px; padding: 6px 10px; font-size: 9.5pt; }
-            .header-btn-login { top: 10px; right: 10px; padding: 6px 10px; font-size: 8.5pt; }
+            .header-auth-container { top: 10px; right: 10px; }
+            .header-btn-login { padding: 6px 10px; font-size: 8.5pt; }
         }
 
         .checkbox-grid {
@@ -605,7 +607,10 @@
     <header>
         <button class="menu-icon-btn" onclick="toggleSideMenu(true)" title="Open Menu">☰ Menu</button>
         <h1>Roscioli Orchard Dashboard</h1>
-        <button class="header-btn header-btn-login" id="login-toggle-btn" onclick="handleAuthToggle()">🔒 Login</button>
+        <div class="header-auth-container">
+            <button class="header-btn header-btn-login" id="login-toggle-btn" onclick="handleAuthToggle()">🔒 Login</button>
+            <span class="header-user-status" id="active-user-header-status"></span>
+        </div>
         <span class="sync-status" id="last-updated-display">Last Synced: Loading...</span>
         <div class="header-actions">
             <button class="header-btn header-btn-load" id="load-file-btn" onclick="fetchRepoData(true)">📥 Load Latest</button>
@@ -621,8 +626,8 @@
             <button class="btn-close-x" onclick="toggleSideMenu(false)">✕</button>
         </div>
         <ul class="side-menu-list">
-            <li class="side-menu-item" onclick="selectMenuOption('inventory')">📋 Inventory</li>
-            <li class="side-menu-item active" onclick="selectMenuOption('growth')">📈 Metrics</li>
+            <li class="side-menu-item active" onclick="selectMenuOption('inventory')">📋 Inventory</li>
+            <li class="side-menu-item" onclick="selectMenuOption('growth')">📈 Metrics</li>
             <li class="side-menu-item" onclick="selectMenuOption('map')">🗺️ Map</li>
             <li class="side-menu-item" onclick="selectMenuOption('harvest')">🍎 Harvest</li>
             <li class="side-menu-item" onclick="selectMenuOption('harvest_timeline')">📅 Harvest Timeline</li>
@@ -635,17 +640,8 @@
     </div>
 
     <div class="container">
-        <div class="user-tag-bar">
-            <div>
-                <strong>Active Operator:</strong> 
-                <span id="active-user-display" style="color: #2b6cb0; font-weight: bold;">Not Logged In</span>
-            </div>
-            <div style="color: #64748b; font-size: 8.5pt;" id="author-display-tag">
-                (Click "🔒 Login" to authenticate PIN)
-            </div>
-        </div>
-
-        <div id="inventory" class="tab-content">
+        <!-- TAB 1: MASTER INVENTORY (DEFAULT HOME TAB) -->
+        <div id="inventory" class="tab-content active">
             <div class="section-header-container">
                 <h2>Master Tree Inventory</h2>
                 <button class="btn-action btn-csv" onclick="exportOrchardToCSV()">Export Orchard Metrics (CSV)</button>
@@ -757,7 +753,7 @@
             </div>
         </div>
 
-        <div id="growth" class="tab-content active">
+        <div id="growth" class="tab-content">
             <h2>Tree Metrics &amp; Time Series Tracking</h2>
             <p style="font-size: 10pt; color: #4a5568; margin-bottom: 16px;">
                 Interactive visualization and logging of tree growth parameters. Create new metrics, choose which graphs to display, and view observation fields for active logged metrics.
@@ -1202,12 +1198,6 @@
         { cultivar: "NY 414-1", lat: 42.59518773, lon: -71.33713298, ageCat: "new", yearPlanted: "2026", ageAtPlanting: "0 yr", rootstock: "Semi-Std G.969", load: "0", bags: "0", color: "#475569", directives: "Monitor shallow roots." }
     ];
 
-    // DEFAULT TOOL TAG SEED LIST
-    var defaultToolTagsSeed = [
-        "soil texture", "soil nutrient", "soil pest", "foliar pest", "fruit pest",
-        "bacterial", "fungal", "beetle", "plum curc", "insect", "leafhopper"
-    ];
-
     // COMPLETE ITEMIZED TREATMENT SCHEDULE SEED DATA
     var defaultScheduleSeed = [
         // PHASE 1
@@ -1382,8 +1372,8 @@
         inventoryData: defaultInventorySeed,
         scheduleData: defaultScheduleSeed,
         toolsData: [],
-        toolTags: [...defaultToolTagsSeed],
-        activeCustomToolTags: [], // Temporary tags added during form creation
+        toolTags: [],
+        activeCustomToolTags: [], // Temporary tags created during tool creation
         metricsRegistry: [],
         activeGraphKeys: [],
         growthData: [],
@@ -1649,7 +1639,7 @@
                         inventoryData: imported.inventoryData || defaultInventorySeed,
                         scheduleData: imported.scheduleData || defaultScheduleSeed,
                         toolsData: imported.toolsData || [],
-                        toolTags: imported.toolTags || [...defaultToolTagsSeed],
+                        toolTags: [],
                         activeCustomToolTags: [],
                         metricsRegistry: imported.metricsRegistry || [],
                         activeGraphKeys: imported.activeGraphKeys || [],
@@ -1680,7 +1670,7 @@
             state.harvestLogsData = [];
             state.logsData = [];
             state.toolsData = [];
-            state.toolTags = [...defaultToolTagsSeed];
+            state.toolTags = [];
             state.activeCustomToolTags = [];
             cleanupUnusedMetrics();
             saveState();
@@ -1701,17 +1691,14 @@
     }
 
     function updateAuthorDisplayUI() {
-        var displayEl = document.getElementById('active-user-display');
-        var tagEl = document.getElementById('author-display-tag');
+        var statusEl = document.getElementById('active-user-header-status');
         var toggleBtn = document.getElementById('login-toggle-btn');
 
         if (currentUserAuthor) {
-            if (displayEl) displayEl.innerText = `${currentUserAuthor} logged in`;
-            if (tagEl) tagEl.innerText = `(Authenticated via Worker PIN • Last sync: ${state.lastUpdatedBy || currentUserAuthor})`;
+            if (statusEl) statusEl.innerText = `${currentUserAuthor} logged in`;
             if (toggleBtn) { toggleBtn.innerText = "🔓 Logout"; toggleBtn.style.backgroundColor = "#c53030"; }
         } else {
-            if (displayEl) displayEl.innerText = "Not Logged In";
-            if (tagEl) tagEl.innerText = `(Click "🔒 Login" to authenticate PIN)`;
+            if (statusEl) statusEl.innerText = "";
             if (toggleBtn) { toggleBtn.innerText = "🔒 Login"; toggleBtn.style.backgroundColor = "#d69e2e"; }
         }
     }
@@ -1744,7 +1731,7 @@
         if (!state.toolsData) state.toolsData = [];
         if (!state.activeCustomToolTags) state.activeCustomToolTags = [];
 
-        // Build a set of all tags currently in use across saved tools AND active custom tag creation
+        // Dynamic Tag Extraction: Strictly rebuild toolTags exclusively from active tools + temporary active custom tags
         var activeTagsInUse = new Set(state.activeCustomToolTags);
         state.toolsData.forEach(tool => {
             if (tool.tags && Array.isArray(tool.tags)) {
@@ -1752,10 +1739,7 @@
             }
         });
 
-        // Retain seed tags plus any tag actively used or currently in creation
-        var combinedTags = new Set(defaultToolTagsSeed);
-        activeTagsInUse.forEach(tag => combinedTags.add(tag));
-        state.toolTags = Array.from(combinedTags);
+        state.toolTags = Array.from(activeTagsInUse);
     }
 
     async function fetchRepoData(isManualTrigger = false) {
@@ -1771,7 +1755,7 @@
                 inventoryData: (data.inventoryData && data.inventoryData.length > 0) ? data.inventoryData : defaultInventorySeed,
                 scheduleData: (data.scheduleData && data.scheduleData.length > 0) ? data.scheduleData : defaultScheduleSeed,
                 toolsData: data.toolsData || [],
-                toolTags: data.toolTags || [...defaultToolTagsSeed],
+                toolTags: [],
                 activeCustomToolTags: [],
                 metricsRegistry: data.metricsRegistry || [],
                 activeGraphKeys: data.activeGraphKeys || [],
@@ -2293,7 +2277,6 @@
                 state.toolTags.push(clean);
             }
 
-            // Immediately re-render options and form grid so the user sees the new tag active
             renderToolTagsCheckboxes();
             renderToolFilterTagOptions();
         }

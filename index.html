@@ -259,6 +259,41 @@
             border-bottom: 1px solid #e2e8f0;
             padding-bottom: 4px;
         }
+
+        /* Collapsible Section Styles */
+        details.collapsible-section {
+            margin: 20px 0 10px 0;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 8px;
+        }
+        details.collapsible-section > summary {
+            font-size: 12pt;
+            font-weight: bold;
+            color: #2c5282;
+            cursor: pointer;
+            outline: none;
+            list-style: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            user-select: none;
+        }
+        details.collapsible-section > summary::-webkit-details-marker {
+            display: none;
+        }
+        details.collapsible-section > summary::before {
+            content: "►";
+            font-size: 9pt;
+            transition: transform 0.2s ease;
+            display: inline-block;
+        }
+        details.collapsible-section[open] > summary::before {
+            transform: rotate(90deg);
+        }
+        details.collapsible-section > .collapsible-content {
+            margin-top: 10px;
+        }
+
         .card {
             background: #f8fafc;
             border: 1px solid #e2e8f0;
@@ -650,86 +685,90 @@
                 <button class="btn-action btn-csv" onclick="exportOrchardToCSV()">Export Orchard Metrics (CSV)</button>
             </div>
 
-            <h3>Add / Edit Master Cultivar</h3>
-            <div class="controls-grid" id="inventoryFormGrid" style="background: #eef2f7; border: 1px dashed #2b6cb0;">
-                <input type="hidden" id="editInventoryIndex" value="-1">
-                <div class="control-group">
-                    <label for="invCultivar">Cultivar Name *</label>
-                    <input type="text" id="invCultivar" placeholder="e.g. Honeycrisp">
-                </div>
-                <div class="control-group">
-                    <label for="invAgeCat">Age Class *</label>
-                    <select id="invAgeCat">
-                        <option value="bearing">Mature / Bearing (4+ yrs)</option>
-                        <option value="established">Established (1-2 yrs)</option>
-                        <option value="new">Newly Planted (0 yrs)</option>
-                    </select>
-                </div>
-                <div class="control-group">
-                    <label for="invYearPlanted">Year Planted</label>
-                    <input type="text" id="invYearPlanted" placeholder="e.g. 2021">
-                </div>
-                <div class="control-group">
-                    <label for="invAgeAtPlanting">Age at Planting</label>
-                    <input type="text" id="invAgeAtPlanting" placeholder="e.g. 2 yrs / Whip">
-                </div>
-                <div class="control-group">
-                    <label for="invRootstock">Rootstock</label>
-                    <input type="text" id="invRootstock" placeholder="e.g. Dwarf G.11">
-                </div>
+            <details class="collapsible-section" id="inventoryCollapse">
+                <summary>Add / Edit Master Cultivar</summary>
+                <div class="collapsible-content">
+                    <div class="controls-grid" id="inventoryFormGrid" style="background: #eef2f7; border: 1px dashed #2b6cb0;">
+                        <input type="hidden" id="editInventoryIndex" value="-1">
+                        <div class="control-group">
+                            <label for="invCultivar">Cultivar Name *</label>
+                            <input type="text" id="invCultivar" placeholder="e.g. Honeycrisp">
+                        </div>
+                        <div class="control-group">
+                            <label for="invAgeCat">Age Class *</label>
+                            <select id="invAgeCat">
+                                <option value="bearing">Mature / Bearing (4+ yrs)</option>
+                                <option value="established">Established (1-2 yrs)</option>
+                                <option value="new">Newly Planted (0 yrs)</option>
+                            </select>
+                        </div>
+                        <div class="control-group">
+                            <label for="invYearPlanted">Year Planted</label>
+                            <input type="text" id="invYearPlanted" placeholder="e.g. 2021">
+                        </div>
+                        <div class="control-group">
+                            <label for="invAgeAtPlanting">Age at Planting</label>
+                            <input type="text" id="invAgeAtPlanting" placeholder="e.g. 2 yrs / Whip">
+                        </div>
+                        <div class="control-group">
+                            <label for="invRootstock">Rootstock</label>
+                            <input type="text" id="invRootstock" placeholder="e.g. Dwarf G.11">
+                        </div>
 
-                <div class="control-group">
-                    <label for="invLat">Latitude (Lat)</label>
-                    <input type="number" id="invLat" step="any" placeholder="e.g. 42.5952388">
-                </div>
-                <div class="control-group">
-                    <label for="invLon">Longitude (Lon)</label>
-                    <input type="number" id="invLon" step="any" placeholder="e.g. -71.33682947">
-                </div>
-                
-                <div class="control-group control-group-span-2">
-                    <label>Est. Bloom Window Range</label>
-                    <div class="date-range-picker-container">
-                        <span class="date-range-sublabel">Start:</span>
-                        <input type="date" id="invBloomStart" title="Bloom Start Date">
-                        <span style="font-size: 9pt; color: #94a3b8; font-weight: bold;">→</span>
-                        <span class="date-range-sublabel">End:</span>
-                        <input type="date" id="invBloomEnd" title="Bloom End Date">
+                        <div class="control-group">
+                            <label for="invLat">Latitude (Lat)</label>
+                            <input type="number" id="invLat" step="any" placeholder="e.g. 42.5952388">
+                        </div>
+                        <div class="control-group">
+                            <label for="invLon">Longitude (Lon)</label>
+                            <input type="number" id="invLon" step="any" placeholder="e.g. -71.33682947">
+                        </div>
+                        
+                        <div class="control-group control-group-span-2">
+                            <label>Est. Bloom Window Range</label>
+                            <div class="date-range-picker-container">
+                                <span class="date-range-sublabel">Start:</span>
+                                <input type="date" id="invBloomStart" title="Bloom Start Date">
+                                <span style="font-size: 9pt; color: #94a3b8; font-weight: bold;">→</span>
+                                <span class="date-range-sublabel">End:</span>
+                                <input type="date" id="invBloomEnd" title="Bloom End Date">
+                            </div>
+                        </div>
+
+                        <div class="control-group control-group-span-2">
+                            <label>Est. Ripening Window Range</label>
+                            <div class="date-range-picker-container">
+                                <span class="date-range-sublabel">Start:</span>
+                                <input type="date" id="invRipeningStart" title="Ripening Start Date">
+                                <span style="font-size: 9pt; color: #94a3b8; font-weight: bold;">→</span>
+                                <span class="date-range-sublabel">End:</span>
+                                <input type="date" id="invRipeningEnd" title="Ripening End Date">
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label for="invLoad">Est. Load</label>
+                            <input type="text" id="invLoad" placeholder="e.g. 125-175">
+                        </div>
+                        <div class="control-group">
+                            <label for="invBags">Bags Hung</label>
+                            <input type="text" id="invBags" placeholder="e.g. 200">
+                        </div>
+                        <div class="control-group">
+                            <label for="invColor">Chart Line Color</label>
+                            <input type="color" id="invColor" value="#1b4332" style="height: 38px; padding: 2px;">
+                        </div>
+                        <div class="control-group" style="grid-column: 1 / -1;">
+                            <label for="invDirectives">Tactical Directives &amp; Action Items</label>
+                            <textarea id="invDirectives" rows="2" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px; font-family: inherit; font-size: 9.5pt;" placeholder="Enter tactical directives for this variety..."></textarea>
+                        </div>
+                        <div class="control-group" style="justify-content: flex-end; flex-direction: row; align-items: flex-end; gap: 8px; grid-column: 1 / -1;">
+                            <button class="btn-action" id="saveInventoryBtn" onclick="saveInventoryRecord()" style="background-color: #2b6cb0;">Save Cultivar to Master Inventory</button>
+                            <button class="btn-action" id="cancelInventoryBtn" onclick="resetInventoryForm()" style="background-color: rgb(100, 116, 139); display: none;">Cancel Edit</button>
+                        </div>
                     </div>
                 </div>
-
-                <div class="control-group control-group-span-2">
-                    <label>Est. Ripening Window Range</label>
-                    <div class="date-range-picker-container">
-                        <span class="date-range-sublabel">Start:</span>
-                        <input type="date" id="invRipeningStart" title="Ripening Start Date">
-                        <span style="font-size: 9pt; color: #94a3b8; font-weight: bold;">→</span>
-                        <span class="date-range-sublabel">End:</span>
-                        <input type="date" id="invRipeningEnd" title="Ripening End Date">
-                    </div>
-                </div>
-
-                <div class="control-group">
-                    <label for="invLoad">Est. Load</label>
-                    <input type="text" id="invLoad" placeholder="e.g. 125-175">
-                </div>
-                <div class="control-group">
-                    <label for="invBags">Bags Hung</label>
-                    <input type="text" id="invBags" placeholder="e.g. 200">
-                </div>
-                <div class="control-group">
-                    <label for="invColor">Chart Line Color</label>
-                    <input type="color" id="invColor" value="#1b4332" style="height: 38px; padding: 2px;">
-                </div>
-                <div class="control-group" style="grid-column: 1 / -1;">
-                    <label for="invDirectives">Tactical Directives &amp; Action Items</label>
-                    <textarea id="invDirectives" rows="2" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px; font-family: inherit; font-size: 9.5pt;" placeholder="Enter tactical directives for this variety..."></textarea>
-                </div>
-                <div class="control-group" style="justify-content: flex-end; flex-direction: row; align-items: flex-end; gap: 8px; grid-column: 1 / -1;">
-                    <button class="btn-action" id="saveInventoryBtn" onclick="saveInventoryRecord()" style="background-color: #2b6cb0;">Save Cultivar to Master Inventory</button>
-                    <button class="btn-action" id="cancelInventoryBtn" onclick="resetInventoryForm()" style="background-color: rgb(100, 116, 139); display: none;">Cancel Edit</button>
-                </div>
-            </div>
+            </details>
 
             <div class="table-responsive" style="margin-top: 16px;">
                 <table id="orchardTable">
@@ -762,27 +801,31 @@
                 Interactive visualization and logging of tree growth parameters. Create new metrics, choose which graphs to display, and view observation fields for active logged metrics.
             </p>
 
-            <h3>Metric Management &amp; Graph Builder</h3>
-            <div class="controls-grid" style="background: #eef2f7; border: 1px dashed #2b6cb0;">
-                <div class="control-group">
-                    <label for="newMetricName">Create New Metric</label>
-                    <input type="text" id="newMetricName" placeholder="e.g. Trunk Diameter">
-                </div>
-                <div class="control-group">
-                    <label for="newMetricUnit">Unit (e.g. in, cm, mm)</label>
-                    <input type="text" id="newMetricUnit" placeholder="e.g. inches">
-                </div>
-                <div class="control-group" style="justify-content: flex-end; align-items: flex-end;">
-                    <button class="btn-action" onclick="addNewMetricFromBuilder()" style="background-color: #2b6cb0;">Create Metric</button>
-                </div>
-                <div class="control-group" style="grid-column: 1 / -1; border-top: 1px dashed #cbd5e1; padding-top: 10px; margin-top: 4px;">
-                    <label for="existingMetricSelect">Graph an Existing Metric</label>
-                    <div style="display: flex; gap: 8px;">
-                        <select id="existingMetricSelect" style="flex: 1;"></select>
-                        <button class="btn-action" onclick="addGraphFromSelect()">Display Graph</button>
+            <details class="collapsible-section" id="growthCollapse">
+                <summary>Metric Management &amp; Graph Builder</summary>
+                <div class="collapsible-content">
+                    <div class="controls-grid" style="background: #eef2f7; border: 1px dashed #2b6cb0;">
+                        <div class="control-group">
+                            <label for="newMetricName">Create New Metric</label>
+                            <input type="text" id="newMetricName" placeholder="e.g. Trunk Diameter">
+                        </div>
+                        <div class="control-group">
+                            <label for="newMetricUnit">Unit (e.g. in, cm, mm)</label>
+                            <input type="text" id="newMetricUnit" placeholder="e.g. inches">
+                        </div>
+                        <div class="control-group" style="justify-content: flex-end; align-items: flex-end;">
+                            <button class="btn-action" onclick="addNewMetricFromBuilder()" style="background-color: #2b6cb0;">Create Metric</button>
+                        </div>
+                        <div class="control-group" style="grid-column: 1 / -1; border-top: 1px dashed #cbd5e1; padding-top: 10px; margin-top: 4px;">
+                            <label for="existingMetricSelect">Graph an Existing Metric</label>
+                            <div style="display: flex; gap: 8px;">
+                                <select id="existingMetricSelect" style="flex: 1;"></select>
+                                <button class="btn-action" onclick="addGraphFromSelect()">Display Graph</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </details>
 
             <h3>Add / Edit Metric Observation</h3>
             <div class="controls-grid" id="growthFormGrid">
@@ -1007,57 +1050,61 @@
             </p>
 
             <!-- ADD / EDIT SCHEDULE ENTRY FORM -->
-            <h3>Add / Edit Treatment Schedule Item</h3>
-            <div class="controls-grid" id="scheduleFormGrid" style="background: #eef2f7; border: 1px dashed #2b6cb0;">
-                <input type="hidden" id="editScheduleIndex" value="-1">
-                <div class="control-group">
-                    <label for="schedPhase">Phase Category *</label>
-                    <select id="schedPhase">
-                        <option value="Phase 1: Dormant &amp; Delayed-Dormant Window (March 15 – April 15)">Phase 1: Dormant &amp; Delayed-Dormant (Mar 15 - Apr 15)</option>
-                        <option value="Phase 2: Pre-Bloom &amp; Bloom Phase (April 20 – May 15)">Phase 2: Pre-Bloom &amp; Bloom Phase (Apr 20 - May 15)</option>
-                        <option value="Phase 3: Petal Fall &amp; Curculio Inundation (May 16 – June 10)">Phase 3: Petal Fall &amp; Curculio Inundation (May 16 - Jun 10)</option>
-                        <option value="Phase 4: Bagging Pass &amp; Biological Soil Armor (June 11 – July 10)">Phase 4: Bagging Pass &amp; Soil Armor (Jun 11 - Jul 10)</option>
-                        <option value="Phase 5: Mid-to-Late Summer Protection &amp; Trapping (July 11 – August 31)">Phase 5: Mid-to-Late Summer Protection (Jul 11 - Aug 31)</option>
-                        <option value="Phase 6: Post-Harvest &amp; Autumn Sanitation (October 15 – November 15)">Phase 6: Post-Harvest &amp; Autumn Sanitation (Oct 15 - Nov 15)</option>
-                    </select>
-                </div>
-                <div class="control-group">
-                    <label for="schedType">Treatment Type / Badge *</label>
-                    <select id="schedType">
-                        <option value="Pest Defense">Pest Defense</option>
-                        <option value="Soil Armor">Soil Armor</option>
-                        <option value="Nutrition">Nutrition</option>
-                        <option value="Irrigation">Irrigation</option>
-                        <option value="Sanitation">Sanitation</option>
-                    </select>
-                </div>
-                
-                <div class="control-group control-group-span-2">
-                    <label>Target Date Window Range</label>
-                    <div class="date-range-picker-container">
-                        <span class="date-range-sublabel">Start:</span>
-                        <input type="date" id="schedDateStart">
-                        <span style="font-size: 9pt; color: #94a3b8; font-weight: bold;">→</span>
-                        <span class="date-range-sublabel">End:</span>
-                        <input type="date" id="schedDateEnd">
+            <details class="collapsible-section" id="scheduleCollapse">
+                <summary>Add / Edit Treatment Schedule Item</summary>
+                <div class="collapsible-content">
+                    <div class="controls-grid" id="scheduleFormGrid" style="background: #eef2f7; border: 1px dashed #2b6cb0;">
+                        <input type="hidden" id="editScheduleIndex" value="-1">
+                        <div class="control-group">
+                            <label for="schedPhase">Phase Category *</label>
+                            <select id="schedPhase">
+                                <option value="Phase 1: Dormant &amp; Delayed-Dormant Window (March 15 – April 15)">Phase 1: Dormant &amp; Delayed-Dormant (Mar 15 - Apr 15)</option>
+                                <option value="Phase 2: Pre-Bloom &amp; Bloom Phase (April 20 – May 15)">Phase 2: Pre-Bloom &amp; Bloom Phase (Apr 20 - May 15)</option>
+                                <option value="Phase 3: Petal Fall &amp; Curculio Inundation (May 16 – June 10)">Phase 3: Petal Fall &amp; Curculio Inundation (May 16 - Jun 10)</option>
+                                <option value="Phase 4: Bagging Pass &amp; Biological Soil Armor (June 11 – July 10)">Phase 4: Bagging Pass &amp; Soil Armor (Jun 11 - Jul 10)</option>
+                                <option value="Phase 5: Mid-to-Late Summer Protection &amp; Trapping (July 11 – August 31)">Phase 5: Mid-to-Late Summer Protection (Jul 11 - Aug 31)</option>
+                                <option value="Phase 6: Post-Harvest &amp; Autumn Sanitation (October 15 – November 15)">Phase 6: Post-Harvest &amp; Autumn Sanitation (Oct 15 - Nov 15)</option>
+                            </select>
+                        </div>
+                        <div class="control-group">
+                            <label for="schedType">Treatment Type / Badge *</label>
+                            <select id="schedType">
+                                <option value="Pest Defense">Pest Defense</option>
+                                <option value="Soil Armor">Soil Armor</option>
+                                <option value="Nutrition">Nutrition</option>
+                                <option value="Irrigation">Irrigation</option>
+                                <option value="Sanitation">Sanitation</option>
+                            </select>
+                        </div>
+                        
+                        <div class="control-group control-group-span-2">
+                            <label>Target Date Window Range</label>
+                            <div class="date-range-picker-container">
+                                <span class="date-range-sublabel">Start:</span>
+                                <input type="date" id="schedDateStart">
+                                <span style="font-size: 9pt; color: #94a3b8; font-weight: bold;">→</span>
+                                <span class="date-range-sublabel">End:</span>
+                                <input type="date" id="schedDateEnd">
+                            </div>
+                        </div>
+
+                        <div class="control-group control-group-span-2">
+                            <label>Cultivar Tags (Select one, multiple, or All)</label>
+                            <div class="checkbox-grid" id="schedCultivarCheckboxes"></div>
+                        </div>
+
+                        <div class="control-group" style="grid-column: 1 / -1;">
+                            <label for="schedInstructions">Operational Instructions &amp; Strategy *</label>
+                            <textarea id="schedInstructions" rows="3" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px; font-family: inherit; font-size: 9.5pt;" placeholder="Enter treatment instructions and operational strategy..."></textarea>
+                        </div>
+
+                        <div class="control-group" style="justify-content: flex-end; flex-direction: row; align-items: flex-end; gap: 8px; grid-column: 1 / -1;">
+                            <button class="btn-action" id="saveScheduleBtn" onclick="saveScheduleRecord()" style="background-color: #2b6cb0;">Add Treatment Schedule Item</button>
+                            <button class="btn-action" id="cancelScheduleBtn" onclick="resetScheduleForm()" style="background-color: rgb(100, 116, 139); display: none;">Cancel Edit</button>
+                        </div>
                     </div>
                 </div>
-
-                <div class="control-group control-group-span-2">
-                    <label>Cultivar Tags (Select one, multiple, or All)</label>
-                    <div class="checkbox-grid" id="schedCultivarCheckboxes"></div>
-                </div>
-
-                <div class="control-group" style="grid-column: 1 / -1;">
-                    <label for="schedInstructions">Operational Instructions &amp; Strategy *</label>
-                    <textarea id="schedInstructions" rows="3" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px; font-family: inherit; font-size: 9.5pt;" placeholder="Enter treatment instructions and operational strategy..."></textarea>
-                </div>
-
-                <div class="control-group" style="justify-content: flex-end; flex-direction: row; align-items: flex-end; gap: 8px; grid-column: 1 / -1;">
-                    <button class="btn-action" id="saveScheduleBtn" onclick="saveScheduleRecord()" style="background-color: #2b6cb0;">Add Treatment Schedule Item</button>
-                    <button class="btn-action" id="cancelScheduleBtn" onclick="resetScheduleForm()" style="background-color: rgb(100, 116, 139); display: none;">Cancel Edit</button>
-                </div>
-            </div>
+            </details>
 
             <!-- RENDERED SCHEDULE CARDS CONTAINER -->
             <div id="schedulesContainer" style="margin-top: 24px;"></div>
@@ -1070,44 +1117,48 @@
                 Define and manage mechanical tools, application equipment, treatments, notes, and associated functional tags.
             </p>
 
-            <h3>Add / Edit Tool Entry</h3>
-            <div class="controls-grid" id="toolFormGrid" style="background: #eef2f7; border: 1px dashed #2b6cb0;">
-                <input type="hidden" id="editToolIndex" value="-1">
-                <div class="control-group">
-                    <label for="toolName">Tool / Treatment Name *</label>
-                    <input type="text" id="toolName" placeholder="e.g. Surround WP, Backpack Sprayer, Broadfork">
+            <details class="collapsible-section" id="toolsCollapse">
+                <summary>Add / Edit Tool Entry</summary>
+                <div class="collapsible-content">
+                    <div class="controls-grid" id="toolFormGrid" style="background: #eef2f7; border: 1px dashed #2b6cb0;">
+                        <input type="hidden" id="editToolIndex" value="-1">
+                        <div class="control-group">
+                            <label for="toolName">Tool / Treatment Name *</label>
+                            <input type="text" id="toolName" placeholder="e.g. Surround WP, Backpack Sprayer, Broadfork">
+                        </div>
+                        <div class="control-group">
+                            <label for="toolType">Type *</label>
+                            <select id="toolType">
+                                <option value="mechanical">Mechanical</option>
+                                <option value="treatment">Treatment</option>
+                            </select>
+                        </div>
+                        <div class="control-group">
+                            <label for="toolArea">Application Area *</label>
+                            <select id="toolArea">
+                                <option value="soil">Soil</option>
+                                <option value="foliar">Foliar</option>
+                                <option value="fruit">Fruit</option>
+                            </select>
+                        </div>
+                        <div class="control-group control-group-span-2" style="grid-column: 1 / -1;">
+                            <label>
+                                Functional Details &amp; Target Tags
+                                <button type="button" class="btn-action" style="background-color: #4a5568; padding: 2px 6px; font-size: 7.5pt;" onclick="promptAddCustomToolTag()">➕ Custom Tag</button>
+                            </label>
+                            <div class="checkbox-grid" id="toolTagsCheckboxes"></div>
+                        </div>
+                        <div class="control-group" style="grid-column: 1 / -1;">
+                            <label for="toolNote">Tool Notes &amp; Observations</label>
+                            <textarea id="toolNote" rows="2" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px; font-family: inherit; font-size: 9.5pt;" placeholder="Enter application notes, dilution rates, maintenance schedules, or observations..."></textarea>
+                        </div>
+                        <div class="control-group" style="justify-content: flex-end; flex-direction: row; align-items: flex-end; gap: 8px; grid-column: 1 / -1;">
+                            <button class="btn-action" id="saveToolBtn" onclick="saveToolRecord()" style="background-color: #2b6cb0;">Save Tool Entry</button>
+                            <button class="btn-action" id="cancelToolBtn" onclick="resetToolForm()" style="background-color: rgb(100, 116, 139); display: none;">Cancel Edit</button>
+                        </div>
+                    </div>
                 </div>
-                <div class="control-group">
-                    <label for="toolType">Type *</label>
-                    <select id="toolType">
-                        <option value="mechanical">Mechanical</option>
-                        <option value="treatment">Treatment</option>
-                    </select>
-                </div>
-                <div class="control-group">
-                    <label for="toolArea">Application Area *</label>
-                    <select id="toolArea">
-                        <option value="soil">Soil</option>
-                        <option value="foliar">Foliar</option>
-                        <option value="fruit">Fruit</option>
-                    </select>
-                </div>
-                <div class="control-group control-group-span-2" style="grid-column: 1 / -1;">
-                    <label>
-                        Functional Details &amp; Target Tags
-                        <button type="button" class="btn-action" style="background-color: #4a5568; padding: 2px 6px; font-size: 7.5pt;" onclick="promptAddCustomToolTag()">➕ Custom Tag</button>
-                    </label>
-                    <div class="checkbox-grid" id="toolTagsCheckboxes"></div>
-                </div>
-                <div class="control-group" style="grid-column: 1 / -1;">
-                    <label for="toolNote">Tool Notes &amp; Observations</label>
-                    <textarea id="toolNote" rows="2" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px; font-family: inherit; font-size: 9.5pt;" placeholder="Enter application notes, dilution rates, maintenance schedules, or observations..."></textarea>
-                </div>
-                <div class="control-group" style="justify-content: flex-end; flex-direction: row; align-items: flex-end; gap: 8px; grid-column: 1 / -1;">
-                    <button class="btn-action" id="saveToolBtn" onclick="saveToolRecord()" style="background-color: #2b6cb0;">Save Tool Entry</button>
-                    <button class="btn-action" id="cancelToolBtn" onclick="resetToolForm()" style="background-color: rgb(100, 116, 139); display: none;">Cancel Edit</button>
-                </div>
-            </div>
+            </details>
 
             <h3>Registered Orchard Tools</h3>
             <div class="filter-section" style="margin-bottom: 12px;">
@@ -2012,6 +2063,8 @@
     function editInventoryRecord(index) {
         var item = state.inventoryData[index];
         if (!item) return;
+        var collapseEl = document.getElementById('inventoryCollapse');
+        if (collapseEl) collapseEl.open = true;
         document.getElementById('editInventoryIndex').value = index;
         document.getElementById('invCultivar').value = item.cultivar;
         document.getElementById('invAgeCat').value = item.ageCat || 'bearing';
@@ -2188,6 +2241,9 @@
     function editScheduleRecord(index) {
         var item = state.scheduleData[index];
         if (!item) return;
+
+        var collapseEl = document.getElementById('scheduleCollapse');
+        if (collapseEl) collapseEl.open = true;
 
         document.getElementById('editScheduleIndex').value = index;
         document.getElementById('schedPhase').value = item.phase;
@@ -2366,6 +2422,9 @@
     function editToolRecord(index) {
         var tool = state.toolsData[index];
         if (!tool) return;
+
+        var collapseEl = document.getElementById('toolsCollapse');
+        if (collapseEl) collapseEl.open = true;
 
         document.getElementById('editToolIndex').value = index;
         document.getElementById('toolName').value = tool.name;
@@ -2658,7 +2717,7 @@
         if (grid) {
             grid.innerHTML = `<label class="checkbox-item" style="font-weight: bold; width: 100%; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px; margin-bottom: 4px;">
                 <input type="checkbox" id="tag_all_cultivars" onchange="toggleAllLogCultivars(this.checked)"> All Cultivars
-            </label>` + state.inventoryData.map(i => `<option value="${i.cultivar}">${i.cultivar}</option>`).join('');
+            </label>` + state.inventoryData.map(i => `<label class="checkbox-item"><input type="checkbox" class="log-cultivar-cb" value="${i.cultivar}"> <span>${i.cultivar}</span></label>`).join('');
         }
     }
 
@@ -2809,6 +2868,19 @@
         document.getElementById('newLogType').value = log.type;
         document.getElementById('newLogAge').value = log.age || 'all';
         document.getElementById('newLogBody').value = log.body;
+
+        var allCb = document.getElementById('tag_all_cultivars');
+        if (log.tags && log.tags.includes("All Cultivars")) {
+            if (allCb) allCb.checked = true;
+            toggleAllLogCultivars(true);
+        } else {
+            if (allCb) allCb.checked = false;
+            toggleAllLogCultivars(false);
+            document.querySelectorAll('.log-cultivar-cb').forEach(cb => {
+                if (log.tags && log.tags.includes(cb.value)) cb.checked = true;
+            });
+        }
+
         document.getElementById('saveLogBtn').innerText = 'Update Log Entry';
         document.getElementById('cancelLogBtn').style.display = 'inline-block';
     }
@@ -2827,6 +2899,9 @@
         document.getElementById('newLogDate').value = getTodayISO();
         document.getElementById('newLogTitle').value = '';
         document.getElementById('newLogBody').value = '';
+        var allCb = document.getElementById('tag_all_cultivars');
+        if (allCb) allCb.checked = false;
+        toggleAllLogCultivars(false);
         document.getElementById('saveLogBtn').innerText = 'Add Log Entry';
         document.getElementById('cancelLogBtn').style.display = 'none';
     }

@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-07 17:21",
+  "lastUpdated": "2026-09-09 18:40",
   "lastUpdatedBy": "Rob",
   "inventoryData": [
     {
@@ -1093,6 +1093,17 @@
     }
   ],
   "logsData": [
+    {
+      "date": "2026-09-09",
+      "title": "Bitter rot",
+      "type": "Growth & Orchard Status",
+      "tags": [
+        "Freedom"
+      ],
+      "age": "all",
+      "body": "Seeing a ton of bitter rot on Freedom apples. Holding off on picking for now. But want to be aggressive next season.",
+      "loggedBy": "Rob"
+    },
     {
       "date": "2026-09-05",
       "title": "Field Observation",

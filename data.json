@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "2026-09-10 21:44",
-  "lastUpdatedBy": "Rob",
+  "lastUpdated": "2026-09-11 07:43",
+  "lastUpdatedBy": "Wyatt",
   "inventoryData": [
     {
       "cultivar": "Freedom",
@@ -809,7 +809,9 @@
       "defaultYMax": "200"
     }
   ],
-  "activeGraphKeys": [],
+  "activeGraphKeys": [
+    "dia"
+  ],
   "growthData": [
     {
       "date": "2026-07-24",
@@ -1024,7 +1026,7 @@
       "dia": 3.202
     },
     {
-      "date": "2026-09-09",
+      "date": "2026-09-10",
       "tree": "NY-35",
       "loggedBy": "Rob",
       "dia": 3.42

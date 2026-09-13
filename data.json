@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-12 22:46",
+  "lastUpdated": "2026-09-13 10:06",
   "lastUpdatedBy": "Rob",
   "inventoryData": [
     {
@@ -1143,6 +1143,18 @@
     }
   ],
   "logsData": [
+    {
+      "date": "2026-09-13",
+      "title": "Iodine-starch test of ripeness",
+      "type": "Growth & Orchard Status",
+      "tags": [
+        "All Cultivars"
+      ],
+      "age": "all",
+      "body": "For posterity, here is the classic table for iodine-starch tests according to Cornell: https://rvpadmin.cce.cornell.edu/uploads/doc_102.pdf\n\nGenerally we want to be in the realm of 5-7 for taste right off tree, 3-5 for storage.",
+      "photoPath": "photos/1789308339497_IMG_8042.jpeg",
+      "loggedBy": "Rob"
+    },
     {
       "date": "2026-09-12",
       "title": "Ripeness (Freedom)",

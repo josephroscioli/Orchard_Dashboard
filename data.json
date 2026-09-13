@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-12 21:57",
+  "lastUpdated": "2026-09-12 21:58",
   "lastUpdatedBy": "Rob",
   "inventoryData": [
     {
@@ -1143,30 +1143,6 @@
     }
   ],
   "logsData": [
-    {
-      "date": "2026-09-12",
-      "title": "Field Observation",
-      "type": "Growth & Orchard Status",
-      "tags": [
-        "All Cultivars"
-      ],
-      "age": "all",
-      "body": "test2",
-      "photoPath": "photos/1789264616841_Image__8_.jpeg",
-      "loggedBy": "Rob"
-    },
-    {
-      "date": "2026-09-12",
-      "title": "Field Observation",
-      "type": "Growth & Orchard Status",
-      "tags": [
-        "All Cultivars"
-      ],
-      "age": "all",
-      "body": "test",
-      "photoPath": null,
-      "loggedBy": "Rob"
-    },
     {
       "date": "2026-09-09",
       "title": "Bitter rot",

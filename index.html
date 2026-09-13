@@ -1988,11 +1988,17 @@
             var now = new Date();
             state.lastUpdated = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
 
-            // Step 2: Commit updated state (including resolved photo paths) to data.json
+            // Step 2: Create payload clone without temporary staged base64 strings to prevent payload bloat
+            var cleanState = JSON.parse(JSON.stringify(state));
+            cleanState.logsData.forEach(l => {
+                delete l.stagedPhoto;
+            });
+
+            // Step 3: Commit updated state (including resolved photo paths) to data.json
             var res = await fetch(WORKER_URL, {
                 method: "POST",
                 headers: { "Content-Type": "application/json", "X-Orchard-Auth": String(currentUserPin).trim() },
-                body: JSON.stringify({ data: state })
+                body: JSON.stringify({ data: cleanState })
             });
 
             var resData = await res.json().catch(() => ({}));
@@ -2922,17 +2928,17 @@
             var tagBadgesHTML = tags.map(t => `<span class="badge badge-tag">${t}</span>`).join(' ');
 
             var photoHTML = '';
-            if (log.photoPath) {
-                photoHTML = `
-                    <div class="log-photo-container">
-                        <img src="./${log.photoPath}" class="log-photo-thumbnail" onclick="openPhotoModal('./${log.photoPath}')" alt="Log photo thumbnail">
-                    </div>
-                `;
-            } else if (log.stagedPhoto) {
+            if (log.stagedPhoto) {
                 photoHTML = `
                     <div class="log-photo-container">
                         <img src="${log.stagedPhoto.dataUrl}" class="log-photo-thumbnail" onclick="openPhotoModal('${log.stagedPhoto.dataUrl}')" alt="Staged log photo preview">
                         <span class="badge badge-unpushed" style="display:block; margin-top:4px;">Staged (Pending Sync)</span>
+                    </div>
+                `;
+            } else if (log.photoPath) {
+                photoHTML = `
+                    <div class="log-photo-container">
+                        <img src="./${log.photoPath}" class="log-photo-thumbnail" onclick="openPhotoModal('./${log.photoPath}')" alt="Log photo thumbnail">
                     </div>
                 `;
             }
@@ -2989,8 +2995,11 @@
             loggedBy: getActiveAuthorName()
         };
 
-        if (editIndex >= 0 && editIndex < state.logsData.length) state.logsData[editIndex] = entry;
-        else state.logsData.unshift(entry);
+        if (editIndex >= 0 && editIndex < state.logsData.length) {
+            state.logsData[editIndex] = entry;
+        } else {
+            state.logsData.unshift(entry);
+        }
 
         resetLogForm();
         saveState();

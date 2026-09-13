@@ -1968,59 +1968,60 @@ function saveLocalState() {
         return resData.photoPath; // Returns relative path e.g. "photos/123_name.jpg"
     }
 
-    async function saveDashboardFile() {
-        if (!(await verifyRemoteVersion())) return;
+async function saveDashboardFile() {
+    if (!(await verifyRemoteVersion())) return;
 
-        var btn = document.getElementById('save-file-btn');
-        if (!currentUserPin) { await promptPinLogin(); if (!currentUserPin) return; }
-        if (!btn || btn.disabled) return;
+    var btn = document.getElementById('save-file-btn');
+    if (!currentUserPin) { await promptPinLogin(); if (!currentUserPin) return; }
+    if (!btn || btn.disabled) return;
 
-        try {
-            btn.innerText = "⏳ Uploading Photos & Syncing..."; 
-            btn.disabled = true;
+    try {
+        btn.innerText = "⏳ Uploading Photos & Syncing..."; 
+        btn.disabled = true;
 
-            // Step 1: Process and upload any staged images across logsData
-            for (var i = 0; i < state.logsData.length; i++) {
-                var log = state.logsData[i];
-                if (log.stagedPhoto) {
-                    var uploadedPath = await uploadPhotoToWorker(log.stagedPhoto.filename, log.stagedPhoto.base64Data);
-                    log.photoPath = uploadedPath;
-                    delete log.stagedPhoto; // Clear staged object after successful commit
-                }
+        // Step 1: Upload staged images
+        for (var i = 0; i < state.logsData.length; i++) {
+            var log = state.logsData[i];
+            if (log.stagedPhoto && log.stagedPhoto.base64Data) {
+                var uploadedPath = await uploadPhotoToWorker(log.stagedPhoto.filename, log.stagedPhoto.base64Data);
+                log.photoPath = uploadedPath;
+                // Keep dataUrl for local preview continuity, but clear raw base64 payload string
+                delete log.stagedPhoto.base64Data; 
             }
-
-            var now = new Date();
-            state.lastUpdated = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-
-            // Step 2: Create payload clone without temporary staged base64 strings to prevent payload bloat
-            var cleanState = JSON.parse(JSON.stringify(state));
-            cleanState.logsData.forEach(l => {
-                delete l.stagedPhoto;
-            });
-
-            // Step 3: Commit updated state (including resolved photo paths) to data.json
-            var res = await fetch(WORKER_URL, {
-                method: "POST",
-                headers: { "Content-Type": "application/json", "X-Orchard-Auth": String(currentUserPin).trim() },
-                body: JSON.stringify({ data: cleanState })
-            });
-
-            var resData = await res.json().catch(() => ({}));
-            if (!res.ok || resData.error) throw new Error(resData.error || `HTTP ${res.status}`);
-            if (resData.author) {
-                currentUserAuthor = resData.author;
-                state.lastUpdatedBy = resData.author;
-                localStorage.setItem('orchard_active_author', currentUserAuthor);
-            }
-            saveState();
-            btn.innerText = `✅ Committed (${state.lastUpdatedBy})!`;
-        } catch (err) {
-            alert("Sync push failed: " + err.message);
-            btn.innerText = "❌ Sync Failed";
-        } finally {
-            setTimeout(() => { btn.innerText = "💾 Save & Sync"; btn.disabled = false; }, 3000);
         }
+
+        var now = new Date();
+        state.lastUpdated = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+
+        // Step 2: Create payload clone without temporary staged objects to send to data.json
+        var cleanState = JSON.parse(JSON.stringify(state));
+        cleanState.logsData.forEach(l => {
+            delete l.stagedPhoto;
+        });
+
+        // Step 3: Commit cleaned state to data.json
+        var res = await fetch(WORKER_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "X-Orchard-Auth": String(currentUserPin).trim() },
+            body: JSON.stringify({ data: cleanState })
+        });
+
+        var resData = await res.json().catch(() => ({}));
+        if (!res.ok || resData.error) throw new Error(resData.error || `HTTP ${res.status}`);
+        if (resData.author) {
+            currentUserAuthor = resData.author;
+            state.lastUpdatedBy = resData.author;
+            localStorage.setItem('orchard_active_author', currentUserAuthor);
+        }
+        saveState();
+        btn.innerText = `✅ Committed (${state.lastUpdatedBy})!`;
+    } catch (err) {
+        alert("Sync push failed: " + err.message);
+        btn.innerText = "❌ Sync Failed";
+    } finally {
+        setTimeout(() => { btn.innerText = "💾 Save & Sync"; btn.disabled = false; }, 3000);
     }
+}
 
     function renderAll() {
         updateAuthorDisplayUI();
@@ -2931,21 +2932,23 @@ function saveLocalState() {
             card.className = 'card';
             var tagBadgesHTML = tags.map(t => `<span class="badge badge-tag">${t}</span>`).join(' ');
 
-            var photoHTML = '';
-            if (log.stagedPhoto) {
-                photoHTML = `
-                    <div class="log-photo-container">
-                        <img src="${log.stagedPhoto.dataUrl}" class="log-photo-thumbnail" onclick="openPhotoModal('${log.stagedPhoto.dataUrl}')" alt="Staged log photo preview">
-                        <span class="badge badge-unpushed" style="display:block; margin-top:4px;">Staged (Pending Sync)</span>
-                    </div>
-                `;
-            } else if (log.photoPath) {
-                photoHTML = `
-                    <div class="log-photo-container">
-                        <img src="./${log.photoPath}" class="log-photo-thumbnail" onclick="openPhotoModal('./${log.photoPath}')" alt="Log photo thumbnail">
-                    </div>
-                `;
-            }
+var photoHTML = '';
+if (log.stagedPhoto && log.stagedPhoto.dataUrl) {
+    // If we have a local staged dataUrl in memory, always prefer it for instant preview
+    photoHTML = `
+        <div class="log-photo-container">
+            <img src="${log.stagedPhoto.dataUrl}" class="log-photo-thumbnail" onclick="openPhotoModal('${log.stagedPhoto.dataUrl}')" alt="Log photo thumbnail">
+            ${!log.photoPath ? '<span class="badge badge-unpushed" style="display:block; margin-top:4px;">Staged (Pending Sync)</span>' : ''}
+        </div>
+    `;
+} else if (log.photoPath) {
+    // Fall back to server path once loaded/synced
+    photoHTML = `
+        <div class="log-photo-container">
+            <img src="./${log.photoPath}" class="log-photo-thumbnail" onclick="openPhotoModal('./${log.photoPath}')" alt="Log photo thumbnail">
+        </div>
+    `;
+}
 
             card.innerHTML = `
                 <div class="card-title">${log.date} - ${log.title || 'Field Observation'}</div>

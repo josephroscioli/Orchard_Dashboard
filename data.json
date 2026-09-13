@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-12 21:16",
+  "lastUpdated": "2026-09-12 21:17",
   "lastUpdatedBy": "Rob",
   "inventoryData": [
     {
@@ -1143,6 +1143,18 @@
     }
   ],
   "logsData": [
+    {
+      "date": "2026-09-12",
+      "title": "Field Observation",
+      "type": "Growth & Orchard Status",
+      "tags": [
+        "All Cultivars"
+      ],
+      "age": "all",
+      "body": "testa",
+      "photoPath": "photos/1789262210240_Image__8_.jpeg",
+      "loggedBy": "Rob"
+    },
     {
       "date": "2026-09-12",
       "title": "Field Observation",

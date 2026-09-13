@@ -1904,11 +1904,15 @@
         }
     }
 
-    function saveLocalState() {
+function saveLocalState() {
+    try {
         localStorage.setItem('orchard_state_full', JSON.stringify(state));
-        var disp = document.getElementById('last-updated-display');
-        if (disp) disp.innerText = `Last Synced: ${state.lastUpdated} (${state.lastUpdatedBy || 'Rob'})`;
+    } catch (e) {
+        console.warn("Local storage quota exceeded (likely due to staged photo data). Active state remains in memory until sync.", e);
     }
+    var disp = document.getElementById('last-updated-display');
+    if (disp) disp.innerText = `Last Synced: ${state.lastUpdated} (${state.lastUpdatedBy || 'Rob'})`;
+}
 
     function loadLocalState() {
         var stored = localStorage.getItem('orchard_state_full');
@@ -2981,9 +2985,7 @@ async function saveLogEntry() {
     var existingLog = (editIndex >= 0 && editIndex < state.logsData.length) ? state.logsData[editIndex] : null;
 
     var photoPath = existingLog ? (existingLog.photoPath || null) : null;
-
-    // Ensure stagedLogPhoto takes precedence when adding or updating a photo
-    var stagedPhotoObj = stagedLogPhoto || (existingLog ? (existingLog.stagedPhoto || null) : null);
+    var stagedPhotoObj = stagedLogPhoto ? stagedLogPhoto : (existingLog ? (existingLog.stagedPhoto || null) : null);
 
     var entry = {
         date: dateVal, 
@@ -3003,7 +3005,7 @@ async function saveLogEntry() {
         state.logsData.unshift(entry);
     }
 
-    // Save and render BEFORE resetting the form variables
+    // Save state and re-render the view
     saveState();
     resetLogForm();
 }

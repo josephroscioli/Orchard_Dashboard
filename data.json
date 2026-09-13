@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-12 22:06",
+  "lastUpdated": "2026-09-12 22:14",
   "lastUpdatedBy": "Rob",
   "inventoryData": [
     {
@@ -1143,6 +1143,18 @@
     }
   ],
   "logsData": [
+    {
+      "date": "2026-09-12",
+      "title": "Ripeness (Freedom)",
+      "type": "Mature / Bearing",
+      "tags": [
+        "Freedom"
+      ],
+      "age": "all",
+      "body": "Today I pulled several apples and sliced them to do an iodine test.  Photo attached.  On a scale of 1-8, the apple on the top shows a 6-7 (nice and ripe), while the middle one is ~3-4, and the bottom one is ~3.  So we really do need some red ripeness happening all over the apple, but not completely.  Taste test confirms this.",
+      "photoPath": "photos/1789265596092_Image__9_.jpeg",
+      "loggedBy": "Rob"
+    },
     {
       "date": "2026-09-09",
       "title": "Bitter rot",

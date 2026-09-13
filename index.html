@@ -2928,7 +2928,7 @@
             var tagBadgesHTML = tags.map(t => `<span class="badge badge-tag">${t}</span>`).join(' ');
 
             var photoHTML = '';
-            if (log.stagedPhoto) {
+            if (log.stagedPhoto && log.stagedPhoto.dataUrl) {
                 photoHTML = `
                     <div class="log-photo-container">
                         <img src="${log.stagedPhoto.dataUrl}" class="log-photo-thumbnail" onclick="openPhotoModal('${log.stagedPhoto.dataUrl}')" alt="Staged log photo preview">
@@ -2967,46 +2967,45 @@
         if (previewContainer) previewContainer.style.display = 'none';
     }
 
-async function saveLogEntry() {
-    if (!(await verifyRemoteVersion())) return;
-    var dateVal = document.getElementById('newLogDate').value.trim();
-    var titleVal = document.getElementById('newLogTitle').value.trim() || 'Field Observation';
-    var bodyVal = document.getElementById('newLogBody').value.trim();
-    if (!dateVal || !bodyVal) {
-        alert("Please ensure both the Log Date and Log Details fields are filled out.");
-        return;
+    async function saveLogEntry() {
+        if (!(await verifyRemoteVersion())) return;
+        var dateVal = document.getElementById('newLogDate').value.trim();
+        var titleVal = document.getElementById('newLogTitle').value.trim() || 'Field Observation';
+        var bodyVal = document.getElementById('newLogBody').value.trim();
+        if (!dateVal || !bodyVal) {
+            alert("Please ensure both the Log Date and Log Details fields are filled out.");
+            return;
+        }
+
+        var editIndex = parseInt(document.getElementById('editLogIndex').value);
+        var existingLog = (editIndex >= 0 && editIndex < state.logsData.length) ? state.logsData[editIndex] : null;
+
+        var photoPath = existingLog ? (existingLog.photoPath || null) : null;
+        
+        // Ensure active staged photo persists properly to local view
+        var stagedPhotoObj = stagedLogPhoto ? stagedLogPhoto : (existingLog ? (existingLog.stagedPhoto || null) : null);
+
+        var entry = {
+            date: dateVal, 
+            title: titleVal,
+            type: document.getElementById('newLogType').value,
+            tags: getSelectedLogTags(),
+            age: document.getElementById('newLogAge').value,
+            body: bodyVal,
+            photoPath: photoPath,
+            stagedPhoto: stagedPhotoObj,
+            loggedBy: getActiveAuthorName()
+        };
+
+        if (editIndex >= 0 && editIndex < state.logsData.length) {
+            state.logsData[editIndex] = entry;
+        } else {
+            state.logsData.unshift(entry);
+        }
+
+        resetLogForm();
+        saveState();
     }
-
-    var editIndex = parseInt(document.getElementById('editLogIndex').value);
-    var existingLog = (editIndex >= 0 && editIndex < state.logsData.length) ? state.logsData[editIndex] : null;
-
-    var photoPath = existingLog ? (existingLog.photoPath || null) : null;
-    
-    // Explicitly grab stagedLogPhoto if a new file was selected, 
-    // or keep existing stagedPhoto if currently editing
-    var stagedPhotoObj = stagedLogPhoto ? stagedLogPhoto : (existingLog ? (existingLog.stagedPhoto || null) : null);
-
-    var entry = {
-        date: dateVal, 
-        title: titleVal,
-        type: document.getElementById('newLogType').value,
-        tags: getSelectedLogTags(),
-        age: document.getElementById('newLogAge').value,
-        body: bodyVal,
-        photoPath: photoPath,
-        stagedPhoto: stagedPhotoObj,
-        loggedBy: getActiveAuthorName()
-    };
-
-    if (editIndex >= 0 && editIndex < state.logsData.length) {
-        state.logsData[editIndex] = entry;
-    } else {
-        state.logsData.unshift(entry);
-    }
-
-    resetLogForm();
-    saveState();
-}
 
     function editLogRecord(index) {
         var log = state.logsData[index];
@@ -3058,21 +3057,21 @@ async function saveLogEntry() {
         }
     }
 
-function resetLogForm() {
-    document.getElementById('editLogIndex').value = -1;
-    document.getElementById('newLogDate').value = getTodayISO();
-    document.getElementById('newLogTitle').value = '';
-    document.getElementById('newLogBody').value = '';
-    stagedLogPhoto = null; // Clear active staged object memory
-    clearSelectedPhoto();
-    var allCb = document.getElementById('tag_all_cultivars');
-    if (allCb) allCb.checked = false;
-    toggleAllLogCultivars(false);
-    var saveBtn = document.getElementById('saveLogBtn');
-    saveBtn.innerText = 'Add Log Entry';
-    saveBtn.disabled = false;
-    document.getElementById('cancelLogBtn').style.display = 'none';
-}
+    function resetLogForm() {
+        document.getElementById('editLogIndex').value = -1;
+        document.getElementById('newLogDate').value = getTodayISO();
+        document.getElementById('newLogTitle').value = '';
+        document.getElementById('newLogBody').value = '';
+        stagedLogPhoto = null; // Clear active staged object memory
+        clearSelectedPhoto();
+        var allCb = document.getElementById('tag_all_cultivars');
+        if (allCb) allCb.checked = false;
+        toggleAllLogCultivars(false);
+        var saveBtn = document.getElementById('saveLogBtn');
+        saveBtn.innerText = 'Add Log Entry';
+        saveBtn.disabled = false;
+        document.getElementById('cancelLogBtn').style.display = 'none';
+    }
 
     async function addNewMetricFromBuilder() {
         if (!(await verifyRemoteVersion())) return;

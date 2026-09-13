@@ -323,6 +323,7 @@
         .badge-tag { background-color: #e2e8f0; color: #334155; border: 1px solid #cbd5e1; font-weight: 600; text-transform: none; }
         .badge-type { background-color: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; text-transform: uppercase; }
         .badge-area { background-color: #fef3c7; color: #92400e; border: 1px solid #fde68a; text-transform: uppercase; }
+        .badge-unpushed { background-color: #fef08a; color: #854d0e; border: 1px solid #fde047; font-size: 7.5pt; }
         .user-tag { background-color: #e0e7ff; color: #3730a3; padding: 2px 6px; border-radius: 4px; font-size: 8pt; font-weight: bold; }
 
         /* --- PHOTO THUMBNAIL & LIGHTBOX STYLES --- */
@@ -1051,10 +1052,10 @@
                     <textarea id="newLogBody" rows="4" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px; font-family: inherit; font-size: 9.5pt;" placeholder="Enter field log observations and operational findings..."></textarea>
                 </div>
                 <div class="control-group" style="grid-column: 1 / -1;">
-                    <label for="newLogPhoto">Attach Photo (Optional)</label>
+                    <label for="newLogPhoto">Attach Photo (Optional - Staged locally until "Save &amp; Sync")</label>
                     <input type="file" id="newLogPhoto" accept="image/*" style="padding: 4px; background: white;">
                     <div id="photoPreviewContainer" style="margin-top: 6px; display: none; align-items: center; gap: 8px;">
-                        <img id="photoPreviewImg" src="" style="max-height: 60px; border-radius: 4px; border: 1px solid #cbd5e1;">
+                        <img id="photoPreviewImg" src="" style="max-height: 80px; border-radius: 4px; border: 1px solid #cbd5e1;">
                         <button type="button" class="btn-action" style="background-color: #9b2c2c; padding: 2px 6px; font-size: 8pt;" onclick="clearSelectedPhoto()">Remove Photo</button>
                     </div>
                 </div>
@@ -1488,7 +1489,9 @@
         logsData: []
     };
 
-    var pendingLogPhoto = null; // Staging container for photo object during log creation/editing
+    // STAGED PHOTO OBJECT FOR LOG FORM ({ filename, base64Data, dataUrl })
+    var stagedLogPhoto = null;
+
     var mapInstance = null;
     var mapMarkersLayerGroup = null;
     var graphScaleConfig = {};
@@ -1940,39 +1943,25 @@
         state.activeGraphKeys = state.activeGraphKeys.filter(k => activeKeysSet.has(k));
     }
 
-    // HELPER: UPLOAD PHOTO TO GITHUB /photos/ FOLDER VIA WORKER
-    async function uploadPhotoToWorker(fileObj) {
-        return new Promise((resolve, reject) => {
-            var reader = new FileReader();
-            reader.onload = async function(e) {
-                try {
-                    var base64Data = e.target.result.split(',')[1];
-                    var filename = Date.now() + "_" + fileObj.name.replace(/[^a-zA-Z0-9\._-]/g, "_");
-                    
-                    var res = await fetch(WORKER_URL, {
-                        method: "POST",
-                        headers: { 
-                            "Content-Type": "application/json", 
-                            "X-Orchard-Auth": String(currentUserPin).trim() 
-                        },
-                        body: JSON.stringify({ 
-                            action: "upload_photo",
-                            filename: filename,
-                            photoData: base64Data
-                        })
-                    });
-
-                    var resData = await res.json().catch(() => ({}));
-                    if (!res.ok || resData.error) throw new Error(resData.error || "Photo upload failed.");
-                    
-                    resolve(resData.photoPath); // Returns relative path e.g. "photos/123_name.jpg"
-                } catch (err) {
-                    reject(err);
-                }
-            };
-            reader.onerror = function(err) { reject(err); };
-            reader.readAsDataURL(fileObj);
+    // HELPER: UPLOAD STAGED PHOTO TO GITHUB /photos/ FOLDER VIA WORKER
+    async function uploadPhotoToWorker(filename, base64Data) {
+        var res = await fetch(WORKER_URL, {
+            method: "POST",
+            headers: { 
+                "Content-Type": "application/json", 
+                "X-Orchard-Auth": String(currentUserPin).trim() 
+            },
+            body: JSON.stringify({ 
+                action: "upload_photo",
+                filename: filename,
+                photoData: base64Data
+            })
         });
+
+        var resData = await res.json().catch(() => ({}));
+        if (!res.ok || resData.error) throw new Error(resData.error || "Photo upload failed.");
+        
+        return resData.photoPath; // Returns relative path e.g. "photos/123_name.jpg"
     }
 
     async function saveDashboardFile() {
@@ -1983,10 +1972,23 @@
         if (!btn || btn.disabled) return;
 
         try {
+            btn.innerText = "⏳ Uploading Photos & Syncing..."; 
+            btn.disabled = true;
+
+            // Step 1: Process and upload any staged images across logsData
+            for (var i = 0; i < state.logsData.length; i++) {
+                var log = state.logsData[i];
+                if (log.stagedPhoto) {
+                    var uploadedPath = await uploadPhotoToWorker(log.stagedPhoto.filename, log.stagedPhoto.base64Data);
+                    log.photoPath = uploadedPath;
+                    delete log.stagedPhoto; // Clear staged object after successful commit
+                }
+            }
+
             var now = new Date();
             state.lastUpdated = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-            btn.innerText = "⏳ Syncing..."; btn.disabled = true;
 
+            // Step 2: Commit updated state (including resolved photo paths) to data.json
             var res = await fetch(WORKER_URL, {
                 method: "POST",
                 headers: { "Content-Type": "application/json", "X-Orchard-Auth": String(currentUserPin).trim() },
@@ -2919,11 +2921,21 @@
             card.className = 'card';
             var tagBadgesHTML = tags.map(t => `<span class="badge badge-tag">${t}</span>`).join(' ');
 
-            var photoHTML = log.photoPath ? `
-                <div class="log-photo-container">
-                    <img src="./${log.photoPath}" class="log-photo-thumbnail" onclick="openPhotoModal('./${log.photoPath}')" alt="Log photo thumbnail">
-                </div>
-            ` : '';
+            var photoHTML = '';
+            if (log.photoPath) {
+                photoHTML = `
+                    <div class="log-photo-container">
+                        <img src="./${log.photoPath}" class="log-photo-thumbnail" onclick="openPhotoModal('./${log.photoPath}')" alt="Log photo thumbnail">
+                    </div>
+                `;
+            } else if (log.stagedPhoto) {
+                photoHTML = `
+                    <div class="log-photo-container">
+                        <img src="${log.stagedPhoto.dataUrl}" class="log-photo-thumbnail" onclick="openPhotoModal('${log.stagedPhoto.dataUrl}')" alt="Staged log photo preview">
+                        <span class="badge badge-unpushed" style="display:block; margin-top:4px;">Staged (Pending Sync)</span>
+                    </div>
+                `;
+            }
 
             card.innerHTML = `
                 <div class="card-title">${log.date} - ${log.title || 'Field Observation'}</div>
@@ -2942,7 +2954,7 @@
     }
 
     function clearSelectedPhoto() {
-        pendingLogPhoto = null;
+        stagedLogPhoto = null;
         var input = document.getElementById('newLogPhoto');
         if (input) input.value = '';
         var previewContainer = document.getElementById('photoPreviewContainer');
@@ -2959,41 +2971,21 @@
             return;
         }
 
-        var saveBtn = document.getElementById('saveLogBtn');
         var editIndex = parseInt(document.getElementById('editLogIndex').value);
         var existingLog = (editIndex >= 0 && editIndex < state.logsData.length) ? state.logsData[editIndex] : null;
 
         var photoPath = existingLog ? (existingLog.photoPath || null) : null;
-
-        // If a new photo file is selected in input
-        var photoFileInput = document.getElementById('newLogPhoto');
-        if (photoFileInput && photoFileInput.files && photoFileInput.files.length > 0) {
-            if (!currentUserPin) { 
-                await promptPinLogin(); 
-                if (!currentUserPin) return; 
-            }
-            try {
-                saveBtn.innerText = "⏳ Uploading Photo...";
-                saveBtn.disabled = true;
-                photoPath = await uploadPhotoToWorker(photoFileInput.files[0]);
-            } catch (err) {
-                alert("Failed to upload photo: " + err.message);
-                saveBtn.innerText = editIndex >= 0 ? "Update Log Entry" : "Add Log Entry";
-                saveBtn.disabled = false;
-                return;
-            }
-        } else if (pendingLogPhoto === null && existingLog) {
-            // User explicitly cleared photo during edit
-            photoPath = null;
-        }
+        var stagedPhotoObj = stagedLogPhoto ? stagedLogPhoto : (existingLog ? (existingLog.stagedPhoto || null) : null);
 
         var entry = {
-            date: dateVal, title: titleVal,
+            date: dateVal, 
+            title: titleVal,
             type: document.getElementById('newLogType').value,
             tags: getSelectedLogTags(),
             age: document.getElementById('newLogAge').value,
             body: bodyVal,
             photoPath: photoPath,
+            stagedPhoto: stagedPhotoObj,
             loggedBy: getActiveAuthorName()
         };
 
@@ -3016,8 +3008,13 @@
 
         var previewContainer = document.getElementById('photoPreviewContainer');
         var previewImg = document.getElementById('photoPreviewImg');
-        if (log.photoPath) {
-            pendingLogPhoto = log.photoPath;
+
+        if (log.stagedPhoto) {
+            stagedLogPhoto = log.stagedPhoto;
+            previewImg.src = log.stagedPhoto.dataUrl;
+            previewContainer.style.display = 'flex';
+        } else if (log.photoPath) {
+            stagedLogPhoto = null;
             previewImg.src = "./" + log.photoPath;
             previewContainer.style.display = 'flex';
         } else {
@@ -3384,22 +3381,33 @@
         a.click();
     }
 
-    // Photo file selection change listener
+    // Photo file selection change listener (Stage photo locally)
     document.addEventListener('DOMContentLoaded', function() {
         var photoInput = document.getElementById('newLogPhoto');
         if (photoInput) {
             photoInput.addEventListener('change', function(e) {
                 if (e.target.files && e.target.files[0]) {
+                    var file = e.target.files[0];
                     var reader = new FileReader();
                     reader.onload = function(evt) {
+                        var dataUrl = evt.target.result;
+                        var base64Data = dataUrl.split(',')[1];
+                        var cleanFileName = Date.now() + "_" + file.name.replace(/[^a-zA-Z0-9\._-]/g, "_");
+
+                        stagedLogPhoto = {
+                            filename: cleanFileName,
+                            base64Data: base64Data,
+                            dataUrl: dataUrl
+                        };
+
                         var previewImg = document.getElementById('photoPreviewImg');
                         var previewContainer = document.getElementById('photoPreviewContainer');
                         if (previewImg && previewContainer) {
-                            previewImg.src = evt.target.result;
+                            previewImg.src = dataUrl;
                             previewContainer.style.display = 'flex';
                         }
                     };
-                    reader.readAsDataURL(e.target.files[0]);
+                    reader.readAsDataURL(file);
                 }
             });
         }

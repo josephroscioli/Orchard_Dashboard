@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-12 22:37",
+  "lastUpdated": "2026-09-12 22:40",
   "lastUpdatedBy": "Rob",
   "inventoryData": [
     {
@@ -1143,30 +1143,6 @@
     }
   ],
   "logsData": [
-    {
-      "date": "2026-09-12",
-      "title": "Field Observation",
-      "type": "Growth & Orchard Status",
-      "tags": [
-        "All Cultivars"
-      ],
-      "age": "all",
-      "body": "test2",
-      "photoPath": "photos/1789267058800_Image__8_.jpeg",
-      "loggedBy": "Rob"
-    },
-    {
-      "date": "2026-09-12",
-      "title": "Field Observation",
-      "type": "Growth & Orchard Status",
-      "tags": [
-        "All Cultivars"
-      ],
-      "age": "all",
-      "body": "test",
-      "photoPath": null,
-      "loggedBy": "Rob"
-    },
     {
       "date": "2026-09-12",
       "title": "Ripeness (Freedom)",

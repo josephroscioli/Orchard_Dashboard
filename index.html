@@ -2928,10 +2928,11 @@
             var tagBadgesHTML = tags.map(t => `<span class="badge badge-tag">${t}</span>`).join(' ');
 
             var photoHTML = '';
-            if (log.stagedPhoto && log.stagedPhoto.dataUrl) {
+            if (log.stagedPhoto && (log.stagedPhoto.dataUrl || log.stagedPhoto.base64Data)) {
+                var imgSrc = log.stagedPhoto.dataUrl || ("data:image/jpeg;base64," + log.stagedPhoto.base64Data);
                 photoHTML = `
                     <div class="log-photo-container">
-                        <img src="${log.stagedPhoto.dataUrl}" class="log-photo-thumbnail" onclick="openPhotoModal('${log.stagedPhoto.dataUrl}')" alt="Staged log photo preview">
+                        <img src="${imgSrc}" class="log-photo-thumbnail" onclick="openPhotoModal('${imgSrc}')" alt="Staged log photo preview">
                         <span class="badge badge-unpushed" style="display:block; margin-top:4px;">Staged (Pending Sync)</span>
                     </div>
                 `;
@@ -2982,7 +2983,7 @@
 
         var photoPath = existingLog ? (existingLog.photoPath || null) : null;
         
-        // Ensure active staged photo persists properly to local view
+        // Preserve and assign active staged image structure
         var stagedPhotoObj = stagedLogPhoto ? stagedLogPhoto : (existingLog ? (existingLog.stagedPhoto || null) : null);
 
         var entry = {
@@ -3003,8 +3004,9 @@
             state.logsData.unshift(entry);
         }
 
-        resetLogForm();
+        // Cache local state and re-render history list immediately BEFORE clearing form global memory
         saveState();
+        resetLogForm();
     }
 
     function editLogRecord(index) {
@@ -3022,7 +3024,7 @@
 
         if (log.stagedPhoto) {
             stagedLogPhoto = log.stagedPhoto;
-            previewImg.src = log.stagedPhoto.dataUrl;
+            previewImg.src = log.stagedPhoto.dataUrl || ("data:image/jpeg;base64," + log.stagedPhoto.base64Data);
             previewContainer.style.display = 'flex';
         } else if (log.photoPath) {
             stagedLogPhoto = null;
@@ -3062,7 +3064,7 @@
         document.getElementById('newLogDate').value = getTodayISO();
         document.getElementById('newLogTitle').value = '';
         document.getElementById('newLogBody').value = '';
-        stagedLogPhoto = null; // Clear active staged object memory
+        stagedLogPhoto = null;
         clearSelectedPhoto();
         var allCb = document.getElementById('tag_all_cultivars');
         if (allCb) allCb.checked = false;

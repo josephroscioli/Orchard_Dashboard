@@ -1059,12 +1059,6 @@
   "harvestLogsData": [
     {
       "date": "2026-09-13",
-      "cultivar": "NY-35",
-      "quantity": 1,
-      "loggedBy": "Rob"
-    },
-    {
-      "date": "2026-09-13",
       "cultivar": "Freedom",
       "quantity": 1,
       "loggedBy": "Rob"

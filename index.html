@@ -325,6 +325,46 @@
         .badge-area { background-color: #fef3c7; color: #92400e; border: 1px solid #fde68a; text-transform: uppercase; }
         .user-tag { background-color: #e0e7ff; color: #3730a3; padding: 2px 6px; border-radius: 4px; font-size: 8pt; font-weight: bold; }
 
+        /* --- PHOTO THUMBNAIL & LIGHTBOX STYLES --- */
+        .log-photo-container {
+            margin-top: 10px;
+            display: inline-block;
+        }
+        .log-photo-thumbnail {
+            max-width: 120px;
+            max-height: 120px;
+            border-radius: 6px;
+            border: 1px solid #cbd5e1;
+            cursor: pointer;
+            object-fit: cover;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .log-photo-thumbnail:hover {
+            transform: scale(1.03);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        .photo-modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 20000;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .photo-modal-img {
+            max-width: 90vw;
+            max-height: 90vh;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            object-fit: contain;
+        }
+
         .table-responsive { width: 100%; overflow-x: auto; margin-bottom: 16px; }
         table { width: 100%; border-collapse: collapse; font-size: 9pt; text-align: left; }
         th {
@@ -677,6 +717,11 @@
         </ul>
     </div>
 
+    <!-- LIGHTBOX PHOTO MODAL -->
+    <div class="photo-modal-overlay" id="photoModalOverlay" onclick="closePhotoModal()">
+        <img src="" id="photoModalImg" class="photo-modal-img" alt="Full size photo view">
+    </div>
+
     <div class="container">
         <!-- TAB 1: MASTER INVENTORY (DEFAULT HOME TAB) -->
         <div id="inventory" class="tab-content active">
@@ -1004,6 +1049,14 @@
                 <div class="control-group" style="grid-column: 1 / -1;">
                     <label for="newLogBody">Log Details &amp; Observations *</label>
                     <textarea id="newLogBody" rows="4" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px; font-family: inherit; font-size: 9.5pt;" placeholder="Enter field log observations and operational findings..."></textarea>
+                </div>
+                <div class="control-group" style="grid-column: 1 / -1;">
+                    <label for="newLogPhoto">Attach Photo (Optional)</label>
+                    <input type="file" id="newLogPhoto" accept="image/*" style="padding: 4px; background: white;">
+                    <div id="photoPreviewContainer" style="margin-top: 6px; display: none; align-items: center; gap: 8px;">
+                        <img id="photoPreviewImg" src="" style="max-height: 60px; border-radius: 4px; border: 1px solid #cbd5e1;">
+                        <button type="button" class="btn-action" style="background-color: #9b2c2c; padding: 2px 6px; font-size: 8pt;" onclick="clearSelectedPhoto()">Remove Photo</button>
+                    </div>
                 </div>
                 <div class="control-group" style="grid-column: 1 / -1; display: flex; gap: 8px; justify-content: flex-end;">
                     <button class="btn-action" id="saveLogBtn" onclick="saveLogEntry()">Add Log Entry</button>
@@ -1435,6 +1488,7 @@
         logsData: []
     };
 
+    var pendingLogPhoto = null; // Staging container for photo object during log creation/editing
     var mapInstance = null;
     var mapMarkersLayerGroup = null;
     var graphScaleConfig = {};
@@ -1497,6 +1551,21 @@
     function toggleUtilitiesModal(show) {
         var modal = document.getElementById('utilitiesModal');
         if (modal) modal.style.display = show ? 'flex' : 'none';
+    }
+
+    // LIGHTBOX PHOTO MODAL CONTROLLER
+    function openPhotoModal(imgSrc) {
+        var overlay = document.getElementById('photoModalOverlay');
+        var img = document.getElementById('photoModalImg');
+        if (overlay && img) {
+            img.src = imgSrc;
+            overlay.style.display = 'flex';
+        }
+    }
+
+    function closePhotoModal() {
+        var overlay = document.getElementById('photoModalOverlay');
+        if (overlay) overlay.style.display = 'none';
     }
 
     // PRE-ACTION VERSION CHECK WITHOUT AUTO-OVERWRITING STATE
@@ -1652,6 +1721,7 @@
             "Type / Category": l.type,
             "Age Class Filter": l.age || 'all',
             "Cultivar Tags": (l.tags || ["All Cultivars"]).join(", "),
+            "Photo Path": l.photoPath || '',
             "Log Details & Observations": l.body,
             "Logged By": l.loggedBy || 'Rob'
         }));
@@ -1785,7 +1855,6 @@
         if (!state.toolsData) state.toolsData = [];
         if (!state.activeCustomToolTags) state.activeCustomToolTags = [];
 
-        // Dynamic Tag Extraction: Strictly rebuild toolTags exclusively from active tools + temporary active custom tags
         var activeTagsInUse = new Set(state.activeCustomToolTags);
         state.toolsData.forEach(tool => {
             if (tool.tags && Array.isArray(tool.tags)) {
@@ -1866,10 +1935,44 @@
             });
         });
 
-        // Retain metric if it has active measurements OR is in creation status
         state.metricsRegistry = state.metricsRegistry.filter(m => activeMetricKeys.has(m.key) || m.inCreation);
         var activeKeysSet = new Set(state.metricsRegistry.map(m => m.key));
         state.activeGraphKeys = state.activeGraphKeys.filter(k => activeKeysSet.has(k));
+    }
+
+    // HELPER: UPLOAD PHOTO TO GITHUB /photos/ FOLDER VIA WORKER
+    async function uploadPhotoToWorker(fileObj) {
+        return new Promise((resolve, reject) => {
+            var reader = new FileReader();
+            reader.onload = async function(e) {
+                try {
+                    var base64Data = e.target.result.split(',')[1];
+                    var filename = Date.now() + "_" + fileObj.name.replace(/[^a-zA-Z0-9\._-]/g, "_");
+                    
+                    var res = await fetch(WORKER_URL, {
+                        method: "POST",
+                        headers: { 
+                            "Content-Type": "application/json", 
+                            "X-Orchard-Auth": String(currentUserPin).trim() 
+                        },
+                        body: JSON.stringify({ 
+                            action: "upload_photo",
+                            filename: filename,
+                            photoData: base64Data
+                        })
+                    });
+
+                    var resData = await res.json().catch(() => ({}));
+                    if (!res.ok || resData.error) throw new Error(resData.error || "Photo upload failed.");
+                    
+                    resolve(resData.photoPath); // Returns relative path e.g. "photos/123_name.jpg"
+                } catch (err) {
+                    reject(err);
+                }
+            };
+            reader.onerror = function(err) { reject(err); };
+            reader.readAsDataURL(fileObj);
+        });
     }
 
     async function saveDashboardFile() {
@@ -2297,7 +2400,6 @@
         if (!grid) return;
         ensureToolDefaults();
 
-        // Capture current checkbox selections before re-rendering grid
         var currentlyChecked = Array.from(document.querySelectorAll('.tool-tag-cb:checked')).map(cb => cb.value);
 
         grid.innerHTML = state.toolTags.map(tag => {
@@ -2817,12 +2919,19 @@
             card.className = 'card';
             var tagBadgesHTML = tags.map(t => `<span class="badge badge-tag">${t}</span>`).join(' ');
 
+            var photoHTML = log.photoPath ? `
+                <div class="log-photo-container">
+                    <img src="./${log.photoPath}" class="log-photo-thumbnail" onclick="openPhotoModal('./${log.photoPath}')" alt="Log photo thumbnail">
+                </div>
+            ` : '';
+
             card.innerHTML = `
                 <div class="card-title">${log.date} - ${log.title || 'Field Observation'}</div>
                 <div class="card-meta">
                     <span class="user-tag">${authorName}</span> • <span class="badge badge-bearing">${log.type}</span> • Tags: ${tagBadgesHTML}
                 </div>
                 <div class="card-body">${log.body}</div>
+                ${photoHTML}
                 <div style="margin-top: 10px; display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap;">
                     <button class="btn-action" style="background-color: #2b6cb0;" onclick="editLogRecord(${index})">Edit</button>
                     <button class="btn-action" style="background-color: #9b2c2c;" onclick="deleteLogRecord(${index})">Delete</button>
@@ -2830,6 +2939,14 @@
             `;
             container.appendChild(card);
         });
+    }
+
+    function clearSelectedPhoto() {
+        pendingLogPhoto = null;
+        var input = document.getElementById('newLogPhoto');
+        if (input) input.value = '';
+        var previewContainer = document.getElementById('photoPreviewContainer');
+        if (previewContainer) previewContainer.style.display = 'none';
     }
 
     async function saveLogEntry() {
@@ -2842,16 +2959,44 @@
             return;
         }
 
+        var saveBtn = document.getElementById('saveLogBtn');
+        var editIndex = parseInt(document.getElementById('editLogIndex').value);
+        var existingLog = (editIndex >= 0 && editIndex < state.logsData.length) ? state.logsData[editIndex] : null;
+
+        var photoPath = existingLog ? (existingLog.photoPath || null) : null;
+
+        // If a new photo file is selected in input
+        var photoFileInput = document.getElementById('newLogPhoto');
+        if (photoFileInput && photoFileInput.files && photoFileInput.files.length > 0) {
+            if (!currentUserPin) { 
+                await promptPinLogin(); 
+                if (!currentUserPin) return; 
+            }
+            try {
+                saveBtn.innerText = "⏳ Uploading Photo...";
+                saveBtn.disabled = true;
+                photoPath = await uploadPhotoToWorker(photoFileInput.files[0]);
+            } catch (err) {
+                alert("Failed to upload photo: " + err.message);
+                saveBtn.innerText = editIndex >= 0 ? "Update Log Entry" : "Add Log Entry";
+                saveBtn.disabled = false;
+                return;
+            }
+        } else if (pendingLogPhoto === null && existingLog) {
+            // User explicitly cleared photo during edit
+            photoPath = null;
+        }
+
         var entry = {
             date: dateVal, title: titleVal,
             type: document.getElementById('newLogType').value,
             tags: getSelectedLogTags(),
             age: document.getElementById('newLogAge').value,
             body: bodyVal,
+            photoPath: photoPath,
             loggedBy: getActiveAuthorName()
         };
 
-        var editIndex = parseInt(document.getElementById('editLogIndex').value);
         if (editIndex >= 0 && editIndex < state.logsData.length) state.logsData[editIndex] = entry;
         else state.logsData.unshift(entry);
 
@@ -2868,6 +3013,16 @@
         document.getElementById('newLogType').value = log.type;
         document.getElementById('newLogAge').value = log.age || 'all';
         document.getElementById('newLogBody').value = log.body;
+
+        var previewContainer = document.getElementById('photoPreviewContainer');
+        var previewImg = document.getElementById('photoPreviewImg');
+        if (log.photoPath) {
+            pendingLogPhoto = log.photoPath;
+            previewImg.src = "./" + log.photoPath;
+            previewContainer.style.display = 'flex';
+        } else {
+            clearSelectedPhoto();
+        }
 
         var allCb = document.getElementById('tag_all_cultivars');
         if (log.tags && log.tags.includes("All Cultivars")) {
@@ -2899,10 +3054,13 @@
         document.getElementById('newLogDate').value = getTodayISO();
         document.getElementById('newLogTitle').value = '';
         document.getElementById('newLogBody').value = '';
+        clearSelectedPhoto();
         var allCb = document.getElementById('tag_all_cultivars');
         if (allCb) allCb.checked = false;
         toggleAllLogCultivars(false);
-        document.getElementById('saveLogBtn').innerText = 'Add Log Entry';
+        var saveBtn = document.getElementById('saveLogBtn');
+        saveBtn.innerText = 'Add Log Entry';
+        saveBtn.disabled = false;
         document.getElementById('cancelLogBtn').style.display = 'none';
     }
 
@@ -3225,6 +3383,27 @@
         a.download = 'orchard_metrics_2026.csv';
         a.click();
     }
+
+    // Photo file selection change listener
+    document.addEventListener('DOMContentLoaded', function() {
+        var photoInput = document.getElementById('newLogPhoto');
+        if (photoInput) {
+            photoInput.addEventListener('change', function(e) {
+                if (e.target.files && e.target.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function(evt) {
+                        var previewImg = document.getElementById('photoPreviewImg');
+                        var previewContainer = document.getElementById('photoPreviewContainer');
+                        if (previewImg && previewContainer) {
+                            previewImg.src = evt.target.result;
+                            previewContainer.style.display = 'flex';
+                        }
+                    };
+                    reader.readAsDataURL(e.target.files[0]);
+                }
+            });
+        }
+    });
 
     window.onload = function() {
         fetchRepoData();

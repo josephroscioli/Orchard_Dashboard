@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-14 22:06",
+  "lastUpdated": "2026-09-16 19:30",
   "lastUpdatedBy": "Rob",
   "inventoryData": [
     {
@@ -1057,6 +1057,12 @@
     }
   ],
   "harvestLogsData": [
+    {
+      "date": "2026-09-16",
+      "cultivar": "Freedom",
+      "quantity": 8,
+      "loggedBy": "Rob"
+    },
     {
       "date": "2026-09-13",
       "cultivar": "Freedom",

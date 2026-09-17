@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-17 06:39",
+  "lastUpdated": "2026-09-17 07:01",
   "lastUpdatedBy": "Rob",
   "inventoryData": [
     {
@@ -1161,6 +1161,18 @@
     }
   ],
   "logsData": [
+    {
+      "date": "2026-09-17",
+      "title": "Harvest status",
+      "type": "Mature / Bearing",
+      "tags": [
+        "Freedom"
+      ],
+      "age": "all",
+      "body": "Looking more ripe, but still some that are tart. Need more red. I think this weekend we will do a bigger harvest.",
+      "photoPath": "photos/1789642849669_image.jpg",
+      "loggedBy": "Rob"
+    },
     {
       "date": "2026-09-16",
       "title": "Peak ripeness for freedom",

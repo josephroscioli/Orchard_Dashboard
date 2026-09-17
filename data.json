@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-16 20:45",
+  "lastUpdated": "2026-09-16 22:21",
   "lastUpdatedBy": "Rob",
   "inventoryData": [
     {
@@ -810,7 +810,8 @@
     }
   ],
   "activeGraphKeys": [
-    "dia"
+    "dia",
+    "height"
   ],
   "growthData": [
     {

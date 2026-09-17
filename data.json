@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-16 19:30",
+  "lastUpdated": "2026-09-16 20:45",
   "lastUpdatedBy": "Rob",
   "inventoryData": [
     {
@@ -1155,6 +1155,18 @@
     }
   ],
   "logsData": [
+    {
+      "date": "2026-09-16",
+      "title": "Peak ripeness for freedom",
+      "type": "Mature / Bearing",
+      "tags": [
+        "Freedom"
+      ],
+      "age": "all",
+      "body": "This is good ripeness, at this redness level, for Freedom. Has red around most of it.",
+      "photoPath": "photos/1789605934085_IMG_8078.jpeg",
+      "loggedBy": "Rob"
+    },
     {
       "date": "2026-09-13",
       "title": "Iodine-starch test of ripeness",

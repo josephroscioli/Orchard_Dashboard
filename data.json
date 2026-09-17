@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-16 22:21",
+  "lastUpdated": "2026-09-16 22:22",
   "lastUpdatedBy": "Rob",
   "inventoryData": [
     {
@@ -17,7 +17,7 @@
       "bloom": "May 10 - May 20",
       "ripening": "Sep 18 - Oct 2",
       "load": "125-175",
-      "bags": "200",
+      "bags": "201",
       "color": "#1b4332",
       "directives": "Red streaks on yellow background.  High torque risk on thin flexing limbs. ~150 apples remaining post-vacation drop. Pulled damaged/rotting fruit. Watered with 15-gal soak. Watch for bitter rot/sunburn on upper exposed fruit. Monitor main scaffold sag. Trunk barrier deployed."
     },
@@ -810,8 +810,7 @@
     }
   ],
   "activeGraphKeys": [
-    "dia",
-    "height"
+    "dia"
   ],
   "growthData": [
     {

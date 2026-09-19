@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-19 12:54",
+  "lastUpdated": "2026-09-19 17:16",
   "lastUpdatedBy": "Rob",
   "inventoryData": [
     {
@@ -1173,6 +1173,21 @@
     }
   ],
   "logsData": [
+    {
+      "date": "2026-09-19",
+      "title": "Bags location in barn",
+      "type": "Growth & Orchard Status",
+      "tags": [
+        "All Cultivars"
+      ],
+      "age": "all",
+      "body": "Bags are in a stop and shop bag here in the barn. Has canvas, paper, and organza",
+      "photoPath": "photos/1789852547166_506_IMG_8105.jpeg",
+      "photoPaths": [
+        "photos/1789852547166_506_IMG_8105.jpeg"
+      ],
+      "loggedBy": "Rob"
+    },
     {
       "date": "2026-09-19",
       "title": "Freedom still not ripe.",

@@ -1005,7 +1005,6 @@
                             <th>Est. Ripening</th>
                             <th>Est. Load / Yield</th>
                             <th>Bags Hung</th>
-                            <th style="text-align: right;">Actions</th>
                         </tr>
                     </thead>
                     <tbody id="abundanceTableBody"></tbody>
@@ -1270,7 +1269,7 @@
             <h3>1. Export &amp; Archive Options</h3>
             <p style="font-size: 9.5pt; color: #4a5568; margin-top: -4px;">Export active dashboard datasets to structured file formats.</p>
             <div style="display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;">
-                <input type="text" id="archiveSeasonTag" placeholder="e.g. 2026" style="flex: 1; min-width: 120px; padding: 6px 10px; border: 1px solid #cbd5e1; border-radius: 4px;">
+                <input type="text" id="archiveSeasonTag" placeholder="Optional tag (e.g. 2026)" style="flex: 1; min-width: 120px; padding: 6px 10px; border: 1px solid #cbd5e1; border-radius: 4px;">
                 <button class="btn-action" style="background-color: #2f855a;" onclick="archiveCurrentSeason()">📦 Archive JSON</button>
                 <button class="btn-action" style="background-color: #2b6cb0;" onclick="exportDashboardToXLSX()">📊 Export Full Dashboard (.xlsx)</button>
             </div>
@@ -1611,8 +1610,10 @@
     }
 
     function archiveCurrentSeason() {
-        var tag = document.getElementById('archiveSeasonTag').value.trim() || '2026';
-        var fileName = `${tag}_orchard_data.json`;
+        var tagInput = document.getElementById('archiveSeasonTag') ? document.getElementById('archiveSeasonTag').value.trim() : '';
+        var datePrefix = getTodayISO(); // Auto-names by YYYY-MM-DD
+        var fileName = tagInput ? `${datePrefix}_${tagInput}_orchard_data.json` : `${datePrefix}_orchard_data.json`;
+        
         var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state, null, 2));
         var downloadAnchor = document.createElement('a');
         downloadAnchor.setAttribute("href", dataStr);
@@ -2737,12 +2738,6 @@
                 <td>${ripeningDisplay}</td>
                 <td><input type="text" class="abundance-edit-input" value="${item.load}" onchange="updateAbundanceValue(${originalIndex}, this.value)"></td>
                 <td><input type="text" class="abundance-edit-input" style="width: 70px;" value="${item.bags}" onchange="updateBagsValue(${originalIndex}, this.value)"></td>
-                <td style="text-align: right;">
-                    <div class="table-actions-cell">
-                        <button class="btn-action" style="background-color: #2b6cb0;" onclick="editInventoryRecord(${originalIndex})">Edit</button>
-                        <button class="btn-action" style="background-color: #9b2c2c;" onclick="deleteInventoryRecord(${originalIndex})">Delete</button>
-                    </div>
-                </td>
             `;
             tableBody.appendChild(tr);
         });

@@ -713,15 +713,15 @@
             <button class="btn-close-x" onclick="toggleSideMenu(false)">✕</button>
         </div>
         <ul class="side-menu-list">
-            <li class="side-menu-item active" onclick="selectMenuOption('inventory')">📋 Inventory</li>
-            <li class="side-menu-item" onclick="selectMenuOption('growth')">📈 Metrics</li>
-            <li class="side-menu-item" onclick="selectMenuOption('map')">🗺️ Map</li>
-            <li class="side-menu-item" onclick="selectMenuOption('harvest')">🍎 Harvest</li>
-            <li class="side-menu-item" onclick="selectMenuOption('harvest_timeline')">📅 Abundances &amp; Harvest Timeline</li>
-            <li class="side-menu-item" onclick="selectMenuOption('logs')">📝 Logs &amp; Observations</li>
-            <li class="side-menu-item" onclick="selectMenuOption('schedules')">🛡️ Treatment Schedules</li>
-            <li class="side-menu-item" onclick="selectMenuOption('tools')">🔧 Tools</li>
-            <li class="side-menu-item util-item" onclick="selectMenuOption('utilities')">⚙️ Utilities</li>
+            <li class="side-menu-item active" data-tab-id="inventory" onclick="selectMenuOption('inventory')">📋 Inventory</li>
+            <li class="side-menu-item" data-tab-id="growth" onclick="selectMenuOption('growth')">📈 Metrics</li>
+            <li class="side-menu-item" data-tab-id="map" onclick="selectMenuOption('map')">🗺️ Map</li>
+            <li class="side-menu-item" data-tab-id="harvest" onclick="selectMenuOption('harvest')">🍎 Harvest</li>
+            <li class="side-menu-item" data-tab-id="harvest_timeline" onclick="selectMenuOption('harvest_timeline')">📅 Abundances &amp; Harvest Timeline</li>
+            <li class="side-menu-item" data-tab-id="logs" onclick="selectMenuOption('logs')">📝 Logs &amp; Observations</li>
+            <li class="side-menu-item" data-tab-id="schedules" onclick="selectMenuOption('schedules')">🛡️ Treatment Schedules</li>
+            <li class="side-menu-item" data-tab-id="tools" onclick="selectMenuOption('tools')">🔧 Tools</li>
+            <li class="side-menu-item util-item" data-tab-id="utilities" onclick="selectMenuOption('utilities')">⚙️ Utilities</li>
         </ul>
     </div>
 
@@ -1533,11 +1533,12 @@
             return;
         }
 
-        // Highlight selected menu item
+        // Highlight exclusively selected menu item using exact data-tab-id
         document.querySelectorAll('.side-menu-item').forEach(item => {
-            item.classList.remove('active');
-            if (item.getAttribute('onclick') && item.getAttribute('onclick').includes(targetId)) {
+            if (item.getAttribute('data-tab-id') === targetId) {
                 item.classList.add('active');
+            } else {
+                item.classList.remove('active');
             }
         });
 

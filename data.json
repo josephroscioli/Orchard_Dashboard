@@ -1162,22 +1162,6 @@
   ],
   "logsData": [
     {
-      "date": "2026-09-18",
-      "title": "Field Observation",
-      "type": "Growth & Orchard Status",
-      "tags": [
-        "All Cultivars"
-      ],
-      "age": "all",
-      "body": "A",
-      "photoPath": "photos/1789786835506_213_4374b488-f329-4b87-a6a3-0dacdebb4c29.jpeg",
-      "photoPaths": [
-        "photos/1789786835506_213_4374b488-f329-4b87-a6a3-0dacdebb4c29.jpeg",
-        "photos/1789786835507_847_IMG_8081.jpeg"
-      ],
-      "loggedBy": "Rob"
-    },
-    {
       "date": "2026-09-17",
       "title": "Harvest status",
       "type": "Mature / Bearing",

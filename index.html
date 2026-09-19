@@ -225,15 +225,15 @@
             flex-wrap: wrap;
         }
         .filter-label { font-size: 10pt; font-weight: 600; color: #4a5568; }
-        .filter-select {
+        .filter-select, .filter-input {
             padding: 6px 12px;
             font-size: 10pt;
             border-radius: 4px;
             border: 1px solid #cbd5e1;
             background-color: #f8fafc;
             color: #334155;
-            cursor: pointer;
         }
+        .filter-select { cursor: pointer; }
 
         .tab-content {
             display: none;
@@ -327,9 +327,17 @@
         .user-tag { background-color: #e0e7ff; color: #3730a3; padding: 2px 6px; border-radius: 4px; font-size: 8pt; font-weight: bold; }
 
         /* --- PHOTO THUMBNAIL & LIGHTBOX STYLES --- */
-        .log-photo-container {
+        .log-photos-wrapper {
             margin-top: 10px;
-            display: inline-block;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: flex-start;
+        }
+        .log-photo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         .log-photo-thumbnail {
             max-width: 120px;
@@ -709,9 +717,8 @@
             <li class="side-menu-item" onclick="selectMenuOption('growth')">📈 Metrics</li>
             <li class="side-menu-item" onclick="selectMenuOption('map')">🗺️ Map</li>
             <li class="side-menu-item" onclick="selectMenuOption('harvest')">🍎 Harvest</li>
-            <li class="side-menu-item" onclick="selectMenuOption('harvest_timeline')">📅 Harvest Timeline</li>
+            <li class="side-menu-item" onclick="selectMenuOption('harvest_timeline')">📅 Abundances &amp; Harvest Timeline</li>
             <li class="side-menu-item" onclick="selectMenuOption('logs')">📝 Logs &amp; Observations</li>
-            <li class="side-menu-item" onclick="selectMenuOption('abundances')">📊 Abundances</li>
             <li class="side-menu-item" onclick="selectMenuOption('schedules')">🛡️ Treatment Schedules</li>
             <li class="side-menu-item" onclick="selectMenuOption('tools')">🔧 Tools</li>
             <li class="side-menu-item util-item" onclick="selectMenuOption('utilities')">⚙️ Utilities</li>
@@ -970,11 +977,34 @@
         </div>
 
         <div id="harvest_timeline" class="tab-content">
-            <h2>Unified Harvest Matrix &amp; Load Projections</h2>
+            <h2>Crop Abundances &amp; Unified Harvest Matrix</h2>
             <p style="font-size: 10pt; color: #4a5568; margin-bottom: 20px;">
-                Every variety harvest is modeled over a balanced picking architecture based on calendar dates from master inventory ripening specs. The lower plot maps weekly yield totals directly downwards from the central calendar timeline axis.
+                Visualize crop yield spectrums, update active estimated load and bag counts, and trace modeled weekly yields over calendar harvest dates.
             </p>
 
+            <h3>Verified Crop Abundance Spectrum</h3>
+            <div id="abundanceChart" class="chart-container"></div>
+
+            <h3>Edit Cultivar Abundance Values</h3>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Cultivar</th>
+                            <th>Age Class</th>
+                            <th>Est. Ripening</th>
+                            <th>Est. Load / Yield</th>
+                            <th>Bags Hung</th>
+                            <th style="text-align: right;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="abundanceTableBody"></tbody>
+                </table>
+            </div>
+
+            <div id="abundanceBaselineSummary" style="margin-top: 16px; margin-bottom: 24px; font-size: 10pt; color: #4a5568; padding: 12px; background-color: #f1f5f9; border-radius: 6px;"></div>
+
+            <h3>Harvest Matrix &amp; Load Projections</h3>
             <div class="unified-timeline-box">
                 <div id="dynamicTimelineRowsContainer"></div>
 
@@ -1008,6 +1038,9 @@
             <div class="filter-section" style="margin-bottom: 20px;">
                 <span class="filter-label">Filter Logs by Cultivar Tag:</span>
                 <select id="logCultivarFilter" class="filter-select" onchange="renderLogs()"></select>
+                
+                <span class="filter-label" style="margin-left: 12px;">Keyword Search:</span>
+                <input type="text" id="logKeywordSearch" class="filter-input" placeholder="Search text, tags, etc..." oninput="renderLogs()" style="min-width: 200px;">
             </div>
 
             <h3>Add / Edit Field Log Entry</h3>
@@ -1052,12 +1085,9 @@
                     <textarea id="newLogBody" rows="4" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px; font-family: inherit; font-size: 9.5pt;" placeholder="Enter field log observations and operational findings..."></textarea>
                 </div>
                 <div class="control-group" style="grid-column: 1 / -1;">
-                    <label for="newLogPhoto">Attach Photo (Optional - Staged locally until "Save &amp; Sync")</label>
-                    <input type="file" id="newLogPhoto" accept="image/*" style="padding: 4px; background: white;">
-                    <div id="photoPreviewContainer" style="margin-top: 6px; display: none; align-items: center; gap: 8px;">
-                        <img id="photoPreviewImg" src="" style="max-height: 80px; border-radius: 4px; border: 1px solid #cbd5e1;">
-                        <button type="button" class="btn-action" style="background-color: #9b2c2c; padding: 2px 6px; font-size: 8pt;" onclick="clearSelectedPhoto()">Remove Photo</button>
-                    </div>
+                    <label for="newLogPhotos">Attach Photos (Optional - Select multiple; staged locally until "Save &amp; Sync")</label>
+                    <input type="file" id="newLogPhotos" accept="image/*" multiple style="padding: 4px; background: white;">
+                    <div id="photoPreviewContainer" style="margin-top: 8px; display: none; flex-wrap: wrap; gap: 8px; align-items: center;"></div>
                 </div>
                 <div class="control-group" style="grid-column: 1 / -1; display: flex; gap: 8px; justify-content: flex-end;">
                     <button class="btn-action" id="saveLogBtn" onclick="saveLogEntry()">Add Log Entry</button>
@@ -1067,34 +1097,6 @@
 
             <h3>Recorded Logs History</h3>
             <div id="logsContainer"></div>
-        </div>
-
-        <div id="abundances" class="tab-content">
-            <h2>Verified Crop Abundance Spectrum</h2>
-            <p style="font-size: 10pt; color: #4a5568; margin-bottom: 20px;">
-                Visualizing actual yield loads for all cultivars (including non-bearing). Edit values directly in the table below to update the orchard master list and harvest timeline predictions automatically.
-            </p>
-            
-            <div id="abundanceChart" class="chart-container"></div>
-
-            <h3>Edit Cultivar Abundance Values</h3>
-            <div class="table-responsive">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Cultivar</th>
-                            <th>Age Class</th>
-                            <th>Est. Ripening</th>
-                            <th>Est. Load / Yield</th>
-                            <th>Bags Hung</th>
-                            <th style="text-align: right;">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="abundanceTableBody"></tbody>
-                </table>
-            </div>
-
-            <div id="abundanceBaselineSummary" style="margin-top: 24px; font-size: 10pt; color: #4a5568; padding: 12px; background-color: #f1f5f9; border-radius: 6px;"></div>
         </div>
 
         <div id="schedules" class="tab-content">
@@ -1489,8 +1491,8 @@
         logsData: []
     };
 
-    // STAGED PHOTO OBJECT FOR LOG FORM ({ filename, base64Data, dataUrl })
-    var stagedLogPhoto = null;
+    // ARRAY OF STAGED PHOTOS FOR CURRENT LOG FORM [{ filename, base64Data, dataUrl }]
+    var stagedLogPhotos = [];
 
     var mapInstance = null;
     var mapMarkersLayerGroup = null;
@@ -1718,16 +1720,19 @@
         XLSX.utils.book_append_sheet(wb, wsHarvest, "Harvest Logs");
 
         // 6. FIELD LOGS & NOTES TAB
-        var logRows = state.logsData.map(l => ({
-            "Log Date": l.date,
-            "Title": l.title || '',
-            "Type / Category": l.type,
-            "Age Class Filter": l.age || 'all',
-            "Cultivar Tags": (l.tags || ["All Cultivars"]).join(", "),
-            "Photo Path": l.photoPath || '',
-            "Log Details & Observations": l.body,
-            "Logged By": l.loggedBy || 'Rob'
-        }));
+        var logRows = state.logsData.map(l => {
+            var pathsStr = (l.photoPaths && l.photoPaths.length) ? l.photoPaths.join("; ") : (l.photoPath || '');
+            return {
+                "Log Date": l.date,
+                "Title": l.title || '',
+                "Type / Category": l.type,
+                "Age Class Filter": l.age || 'all',
+                "Cultivar Tags": (l.tags || ["All Cultivars"]).join(", "),
+                "Photo Paths": pathsStr,
+                "Log Details & Observations": l.body,
+                "Logged By": l.loggedBy || 'Rob'
+            };
+        });
         var wsLogs = XLSX.utils.json_to_sheet(logRows);
         formatWorksheet(wsLogs, logRows);
         XLSX.utils.book_append_sheet(wb, wsLogs, "Field Logs & Notes");
@@ -1904,15 +1909,15 @@
         }
     }
 
-function saveLocalState() {
-    try {
-        localStorage.setItem('orchard_state_full', JSON.stringify(state));
-    } catch (e) {
-        console.warn("Local storage quota exceeded (likely due to staged photo data). Active state remains in memory until sync.", e);
+    function saveLocalState() {
+        try {
+            localStorage.setItem('orchard_state_full', JSON.stringify(state));
+        } catch (e) {
+            console.warn("Local storage quota exceeded (likely due to staged photo data). Active state remains in memory until sync.", e);
+        }
+        var disp = document.getElementById('last-updated-display');
+        if (disp) disp.innerText = `Last Synced: ${state.lastUpdated} (${state.lastUpdatedBy || 'Rob'})`;
     }
-    var disp = document.getElementById('last-updated-display');
-    if (disp) disp.innerText = `Last Synced: ${state.lastUpdated} (${state.lastUpdatedBy || 'Rob'})`;
-}
 
     function loadLocalState() {
         var stored = localStorage.getItem('orchard_state_full');
@@ -1968,60 +1973,70 @@ function saveLocalState() {
         return resData.photoPath; // Returns relative path e.g. "photos/123_name.jpg"
     }
 
-async function saveDashboardFile() {
-    if (!(await verifyRemoteVersion())) return;
+    async function saveDashboardFile() {
+        if (!(await verifyRemoteVersion())) return;
 
-    var btn = document.getElementById('save-file-btn');
-    if (!currentUserPin) { await promptPinLogin(); if (!currentUserPin) return; }
-    if (!btn || btn.disabled) return;
+        var btn = document.getElementById('save-file-btn');
+        if (!currentUserPin) { await promptPinLogin(); if (!currentUserPin) return; }
+        if (!btn || btn.disabled) return;
 
-    try {
-        btn.innerText = "⏳ Uploading Photos & Syncing..."; 
-        btn.disabled = true;
+        try {
+            btn.innerText = "⏳ Uploading Photos & Syncing..."; 
+            btn.disabled = true;
 
-        // Step 1: Upload staged images
-        for (var i = 0; i < state.logsData.length; i++) {
-            var log = state.logsData[i];
-            if (log.stagedPhoto && log.stagedPhoto.base64Data) {
-                var uploadedPath = await uploadPhotoToWorker(log.stagedPhoto.filename, log.stagedPhoto.base64Data);
-                log.photoPath = uploadedPath;
-                // Keep dataUrl for local preview continuity, but clear raw base64 payload string
-                delete log.stagedPhoto.base64Data; 
+            // Step 1: Upload all staged images across logs
+            for (var i = 0; i < state.logsData.length; i++) {
+                var log = state.logsData[i];
+                if (!log.photoPaths) log.photoPaths = log.photoPath ? [log.photoPath] : [];
+
+                if (log.stagedPhotos && log.stagedPhotos.length > 0) {
+                    for (var j = 0; j < log.stagedPhotos.length; j++) {
+                        var photoObj = log.stagedPhotos[j];
+                        if (photoObj.base64Data) {
+                            var uploadedPath = await uploadPhotoToWorker(photoObj.filename, photoObj.base64Data);
+                            if (!log.photoPaths.includes(uploadedPath)) {
+                                log.photoPaths.push(uploadedPath);
+                            }
+                            delete photoObj.base64Data;
+                        }
+                    }
+                }
+                log.photoPath = log.photoPaths.length > 0 ? log.photoPaths[0] : null;
             }
+
+            var now = new Date();
+            state.lastUpdated = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+
+            // Step 2: Create payload clone without temporary staged objects to send to data.json
+            var cleanState = JSON.parse(JSON.stringify(state));
+            cleanState.logsData.forEach(l => {
+                delete l.stagedPhotos;
+                delete l.stagedPhoto;
+            });
+
+            // Step 3: Commit cleaned state to data.json
+            var res = await fetch(WORKER_URL, {
+                method: "POST",
+                headers: { "Content-Type": "application/json", "X-Orchard-Auth": String(currentUserPin).trim() },
+                body: JSON.stringify({ data: cleanState })
+            });
+
+            var resData = await res.json().catch(() => ({}));
+            if (!res.ok || resData.error) throw new Error(resData.error || `HTTP ${res.status}`);
+            if (resData.author) {
+                currentUserAuthor = resData.author;
+                state.lastUpdatedBy = resData.author;
+                localStorage.setItem('orchard_active_author', currentUserAuthor);
+            }
+            saveState();
+            btn.innerText = `✅ Committed (${state.lastUpdatedBy})!`;
+        } catch (err) {
+            alert("Sync push failed: " + err.message);
+            btn.innerText = "❌ Sync Failed";
+        } finally {
+            setTimeout(() => { btn.innerText = "💾 Save & Sync"; btn.disabled = false; }, 3000);
         }
-
-        var now = new Date();
-        state.lastUpdated = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-
-        // Step 2: Create payload clone without temporary staged objects to send to data.json
-        var cleanState = JSON.parse(JSON.stringify(state));
-        cleanState.logsData.forEach(l => {
-            delete l.stagedPhoto;
-        });
-
-        // Step 3: Commit cleaned state to data.json
-        var res = await fetch(WORKER_URL, {
-            method: "POST",
-            headers: { "Content-Type": "application/json", "X-Orchard-Auth": String(currentUserPin).trim() },
-            body: JSON.stringify({ data: cleanState })
-        });
-
-        var resData = await res.json().catch(() => ({}));
-        if (!res.ok || resData.error) throw new Error(resData.error || `HTTP ${res.status}`);
-        if (resData.author) {
-            currentUserAuthor = resData.author;
-            state.lastUpdatedBy = resData.author;
-            localStorage.setItem('orchard_active_author', currentUserAuthor);
-        }
-        saveState();
-        btn.innerText = `✅ Committed (${state.lastUpdatedBy})!`;
-    } catch (err) {
-        alert("Sync push failed: " + err.message);
-        btn.innerText = "❌ Sync Failed";
-    } finally {
-        setTimeout(() => { btn.innerText = "💾 Save & Sync"; btn.disabled = false; }, 3000);
     }
-}
 
     function renderAll() {
         updateAuthorDisplayUI();
@@ -2923,32 +2938,73 @@ async function saveDashboardFile() {
         container.innerHTML = '';
 
         var selectedCultivar = document.getElementById('logCultivarFilter') ? document.getElementById('logCultivarFilter').value : 'all';
+        var searchKeyword = document.getElementById('logKeywordSearch') ? document.getElementById('logKeywordSearch').value.trim().toLowerCase() : '';
+
         state.logsData.forEach((log, index) => {
             var tags = log.tags || ["All Cultivars"];
+            
+            // Filter 1: Cultivar tag dropdown filter
             if (selectedCultivar !== 'all' && !tags.includes("All Cultivars") && !tags.includes(selectedCultivar)) return;
+
+            // Filter 2: Free-text keyword search filter
+            if (searchKeyword) {
+                var searchableText = [
+                    log.date || '',
+                    log.title || '',
+                    log.type || '',
+                    log.body || '',
+                    log.loggedBy || '',
+                    tags.join(' ')
+                ].join(' ').toLowerCase();
+
+                if (!searchableText.includes(searchKeyword)) return;
+            }
+
             var authorName = (log.loggedBy === 'Joe') ? 'Rob' : (log.loggedBy || 'Rob');
 
             var card = document.createElement('div');
             card.className = 'card';
             var tagBadgesHTML = tags.map(t => `<span class="badge badge-tag">${t}</span>`).join(' ');
 
-var photoHTML = '';
-if (log.stagedPhoto && log.stagedPhoto.dataUrl) {
-    // If we have a local staged dataUrl in memory, always prefer it for instant preview
-    photoHTML = `
-        <div class="log-photo-container">
-            <img src="${log.stagedPhoto.dataUrl}" class="log-photo-thumbnail" onclick="openPhotoModal('${log.stagedPhoto.dataUrl}')" alt="Log photo thumbnail">
-            ${!log.photoPath ? '<span class="badge badge-unpushed" style="display:block; margin-top:4px;">Staged (Pending Sync)</span>' : ''}
-        </div>
-    `;
-} else if (log.photoPath) {
-    // Fall back to server path once loaded/synced
-    photoHTML = `
-        <div class="log-photo-container">
-            <img src="./${log.photoPath}" class="log-photo-thumbnail" onclick="openPhotoModal('./${log.photoPath}')" alt="Log photo thumbnail">
-        </div>
-    `;
-}
+            // Multi-photo rendering logic
+            var photosHTML = '';
+            var photoItems = [];
+
+            if (log.stagedPhotos && log.stagedPhotos.length > 0) {
+                log.stagedPhotos.forEach(p => {
+                    photoItems.push({
+                        url: p.dataUrl,
+                        isStaged: !log.photoPaths || !log.photoPaths.includes(p.filename)
+                    });
+                });
+            }
+
+            if (log.photoPaths && log.photoPaths.length > 0) {
+                log.photoPaths.forEach(path => {
+                    if (!photoItems.some(item => item.url.includes(path))) {
+                        photoItems.push({
+                            url: "./" + path,
+                            isStaged: false
+                        });
+                    }
+                });
+            } else if (log.photoPath && !photoItems.some(item => item.url.includes(log.photoPath))) {
+                photoItems.push({
+                    url: "./" + log.photoPath,
+                    isStaged: false
+                });
+            }
+
+            if (photoItems.length > 0) {
+                var thumbnailsHTML = photoItems.map(item => `
+                    <div class="log-photo-container">
+                        <img src="${item.url}" class="log-photo-thumbnail" onclick="openPhotoModal('${item.url}')" alt="Log photo thumbnail">
+                        ${item.isStaged ? '<span class="badge badge-unpushed" style="display:block; margin-top:4px;">Staged</span>' : ''}
+                    </div>
+                `).join('');
+
+                photosHTML = `<div class="log-photos-wrapper">${thumbnailsHTML}</div>`;
+            }
 
             card.innerHTML = `
                 <div class="card-title">${log.date} - ${log.title || 'Field Observation'}</div>
@@ -2956,7 +3012,7 @@ if (log.stagedPhoto && log.stagedPhoto.dataUrl) {
                     <span class="user-tag">${authorName}</span> • <span class="badge badge-bearing">${log.type}</span> • Tags: ${tagBadgesHTML}
                 </div>
                 <div class="card-body">${log.body}</div>
-                ${photoHTML}
+                ${photosHTML}
                 <div style="margin-top: 10px; display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap;">
                     <button class="btn-action" style="background-color: #2b6cb0;" onclick="editLogRecord(${index})">Edit</button>
                     <button class="btn-action" style="background-color: #9b2c2c;" onclick="deleteLogRecord(${index})">Delete</button>
@@ -2966,52 +3022,81 @@ if (log.stagedPhoto && log.stagedPhoto.dataUrl) {
         });
     }
 
-    function clearSelectedPhoto() {
-        stagedLogPhoto = null;
-        var input = document.getElementById('newLogPhoto');
+    function clearSelectedPhotos() {
+        stagedLogPhotos = [];
+        var input = document.getElementById('newLogPhotos');
         if (input) input.value = '';
         var previewContainer = document.getElementById('photoPreviewContainer');
-        if (previewContainer) previewContainer.style.display = 'none';
+        if (previewContainer) {
+            previewContainer.innerHTML = '';
+            previewContainer.style.display = 'none';
+        }
     }
 
-async function saveLogEntry() {
-    if (!(await verifyRemoteVersion())) return;
-    var dateVal = document.getElementById('newLogDate').value.trim();
-    var titleVal = document.getElementById('newLogTitle').value.trim() || 'Field Observation';
-    var bodyVal = document.getElementById('newLogBody').value.trim();
-    if (!dateVal || !bodyVal) {
-        alert("Please ensure both the Log Date and Log Details fields are filled out.");
-        return;
+    function renderPhotoPreviews() {
+        var previewContainer = document.getElementById('photoPreviewContainer');
+        if (!previewContainer) return;
+
+        if (stagedLogPhotos.length === 0) {
+            previewContainer.innerHTML = '';
+            previewContainer.style.display = 'none';
+            return;
+        }
+
+        previewContainer.style.display = 'flex';
+        previewContainer.innerHTML = stagedLogPhotos.map((p, idx) => `
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+                <img src="${p.dataUrl}" style="max-height: 80px; max-width: 100px; border-radius: 4px; border: 1px solid #cbd5e1; object-fit: cover;">
+                <button type="button" class="btn-action" style="background-color: #9b2c2c; padding: 1px 5px; font-size: 7.5pt;" onclick="removeSingleStagedPhoto(${idx})">Remove</button>
+            </div>
+        `).join('');
     }
 
-    var editIndex = parseInt(document.getElementById('editLogIndex').value);
-    var existingLog = (editIndex >= 0 && editIndex < state.logsData.length) ? state.logsData[editIndex] : null;
-
-    var photoPath = existingLog ? (existingLog.photoPath || null) : null;
-    var stagedPhotoObj = stagedLogPhoto ? stagedLogPhoto : (existingLog ? (existingLog.stagedPhoto || null) : null);
-
-    var entry = {
-        date: dateVal, 
-        title: titleVal,
-        type: document.getElementById('newLogType').value,
-        tags: getSelectedLogTags(),
-        age: document.getElementById('newLogAge').value,
-        body: bodyVal,
-        photoPath: photoPath,
-        stagedPhoto: stagedPhotoObj,
-        loggedBy: getActiveAuthorName()
-    };
-
-    if (editIndex >= 0 && editIndex < state.logsData.length) {
-        state.logsData[editIndex] = entry;
-    } else {
-        state.logsData.unshift(entry);
+    function removeSingleStagedPhoto(idx) {
+        if (idx >= 0 && idx < stagedLogPhotos.length) {
+            stagedLogPhotos.splice(idx, 1);
+            renderPhotoPreviews();
+        }
     }
 
-    // Save state and re-render the view
-    saveState();
-    resetLogForm();
-}
+    async function saveLogEntry() {
+        if (!(await verifyRemoteVersion())) return;
+        var dateVal = document.getElementById('newLogDate').value.trim();
+        var titleVal = document.getElementById('newLogTitle').value.trim() || 'Field Observation';
+        var bodyVal = document.getElementById('newLogBody').value.trim();
+        if (!dateVal || !bodyVal) {
+            alert("Please ensure both the Log Date and Log Details fields are filled out.");
+            return;
+        }
+
+        var editIndex = parseInt(document.getElementById('editLogIndex').value);
+        var existingLog = (editIndex >= 0 && editIndex < state.logsData.length) ? state.logsData[editIndex] : null;
+
+        var photoPaths = existingLog ? (existingLog.photoPaths || (existingLog.photoPath ? [existingLog.photoPath] : [])) : [];
+        var stagedPhotosList = stagedLogPhotos.length > 0 ? [...stagedLogPhotos] : (existingLog ? (existingLog.stagedPhotos || []) : []);
+
+        var entry = {
+            date: dateVal, 
+            title: titleVal,
+            type: document.getElementById('newLogType').value,
+            tags: getSelectedLogTags(),
+            age: document.getElementById('newLogAge').value,
+            body: bodyVal,
+            photoPath: photoPaths.length > 0 ? photoPaths[0] : null,
+            photoPaths: photoPaths,
+            stagedPhotos: stagedPhotosList,
+            loggedBy: getActiveAuthorName()
+        };
+
+        if (editIndex >= 0 && editIndex < state.logsData.length) {
+            state.logsData[editIndex] = entry;
+        } else {
+            state.logsData.unshift(entry);
+        }
+
+        saveState();
+        resetLogForm();
+    }
 
     function editLogRecord(index) {
         var log = state.logsData[index];
@@ -3023,20 +3108,8 @@ async function saveLogEntry() {
         document.getElementById('newLogAge').value = log.age || 'all';
         document.getElementById('newLogBody').value = log.body;
 
-        var previewContainer = document.getElementById('photoPreviewContainer');
-        var previewImg = document.getElementById('photoPreviewImg');
-
-        if (log.stagedPhoto) {
-            stagedLogPhoto = log.stagedPhoto;
-            previewImg.src = log.stagedPhoto.dataUrl;
-            previewContainer.style.display = 'flex';
-        } else if (log.photoPath) {
-            stagedLogPhoto = null;
-            previewImg.src = "./" + log.photoPath;
-            previewContainer.style.display = 'flex';
-        } else {
-            clearSelectedPhoto();
-        }
+        stagedLogPhotos = log.stagedPhotos ? [...log.stagedPhotos] : [];
+        renderPhotoPreviews();
 
         var allCb = document.getElementById('tag_all_cultivars');
         if (log.tags && log.tags.includes("All Cultivars")) {
@@ -3063,21 +3136,20 @@ async function saveLogEntry() {
         }
     }
 
-function resetLogForm() {
-    document.getElementById('editLogIndex').value = -1;
-    document.getElementById('newLogDate').value = getTodayISO();
-    document.getElementById('newLogTitle').value = '';
-    document.getElementById('newLogBody').value = '';
-    stagedLogPhoto = null; // Clear active staged object memory
-    clearSelectedPhoto();
-    var allCb = document.getElementById('tag_all_cultivars');
-    if (allCb) allCb.checked = false;
-    toggleAllLogCultivars(false);
-    var saveBtn = document.getElementById('saveLogBtn');
-    saveBtn.innerText = 'Add Log Entry';
-    saveBtn.disabled = false;
-    document.getElementById('cancelLogBtn').style.display = 'none';
-}
+    function resetLogForm() {
+        document.getElementById('editLogIndex').value = -1;
+        document.getElementById('newLogDate').value = getTodayISO();
+        document.getElementById('newLogTitle').value = '';
+        document.getElementById('newLogBody').value = '';
+        clearSelectedPhotos();
+        var allCb = document.getElementById('tag_all_cultivars');
+        if (allCb) allCb.checked = false;
+        toggleAllLogCultivars(false);
+        var saveBtn = document.getElementById('saveLogBtn');
+        saveBtn.innerText = 'Add Log Entry';
+        saveBtn.disabled = false;
+        document.getElementById('cancelLogBtn').style.display = 'none';
+    }
 
     async function addNewMetricFromBuilder() {
         if (!(await verifyRemoteVersion())) return;
@@ -3399,33 +3471,35 @@ function resetLogForm() {
         a.click();
     }
 
-    // Photo file selection change listener (Stage photo locally)
+    // Photo file selection change listener (Stage photos locally)
     document.addEventListener('DOMContentLoaded', function() {
-        var photoInput = document.getElementById('newLogPhoto');
+        var photoInput = document.getElementById('newLogPhotos');
         if (photoInput) {
             photoInput.addEventListener('change', function(e) {
-                if (e.target.files && e.target.files[0]) {
-                    var file = e.target.files[0];
-                    var reader = new FileReader();
-                    reader.onload = function(evt) {
-                        var dataUrl = evt.target.result;
-                        var base64Data = dataUrl.split(',')[1];
-                        var cleanFileName = Date.now() + "_" + file.name.replace(/[^a-zA-Z0-9\._-]/g, "_");
+                if (e.target.files && e.target.files.length > 0) {
+                    var files = Array.from(e.target.files);
+                    var loadedCount = 0;
 
-                        stagedLogPhoto = {
-                            filename: cleanFileName,
-                            base64Data: base64Data,
-                            dataUrl: dataUrl
+                    files.forEach(file => {
+                        var reader = new FileReader();
+                        reader.onload = function(evt) {
+                            var dataUrl = evt.target.result;
+                            var base64Data = dataUrl.split(',')[1];
+                            var cleanFileName = Date.now() + "_" + Math.floor(Math.random() * 1000) + "_" + file.name.replace(/[^a-zA-Z0-9\._-]/g, "_");
+
+                            stagedLogPhotos.push({
+                                filename: cleanFileName,
+                                base64Data: base64Data,
+                                dataUrl: dataUrl
+                            });
+
+                            loadedCount++;
+                            if (loadedCount === files.length) {
+                                renderPhotoPreviews();
+                            }
                         };
-
-                        var previewImg = document.getElementById('photoPreviewImg');
-                        var previewContainer = document.getElementById('photoPreviewContainer');
-                        if (previewImg && previewContainer) {
-                            previewImg.src = dataUrl;
-                            previewContainer.style.display = 'flex';
-                        }
-                    };
-                    reader.readAsDataURL(file);
+                        reader.readAsDataURL(file);
+                    });
                 }
             });
         }

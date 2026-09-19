@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-18 21:27",
+  "lastUpdated": "2026-09-18 21:29",
   "lastUpdatedBy": "Rob",
   "inventoryData": [
     {
@@ -1161,21 +1161,6 @@
     }
   ],
   "logsData": [
-    {
-      "date": "2026-09-18",
-      "title": "Field Observation",
-      "type": "Growth & Orchard Status",
-      "tags": [
-        "All Cultivars"
-      ],
-      "age": "all",
-      "body": "1",
-      "photoPath": "photos/1789781256026_105_Image__9_.jpeg",
-      "photoPaths": [
-        "photos/1789781256026_105_Image__9_.jpeg"
-      ],
-      "loggedBy": "Rob"
-    },
     {
       "date": "2026-09-17",
       "title": "Harvest status",

@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-18 23:01",
+  "lastUpdated": "2026-09-19 12:54",
   "lastUpdatedBy": "Rob",
   "inventoryData": [
     {
@@ -1058,6 +1058,18 @@
   ],
   "harvestLogsData": [
     {
+      "date": "2026-09-19",
+      "cultivar": "NY-35",
+      "quantity": 4,
+      "loggedBy": "Rob"
+    },
+    {
+      "date": "2026-09-19",
+      "cultivar": "Freedom",
+      "quantity": 1,
+      "loggedBy": "Rob"
+    },
+    {
       "date": "2026-09-17",
       "cultivar": "Freedom",
       "quantity": 8,
@@ -1161,6 +1173,20 @@
     }
   ],
   "logsData": [
+    {
+      "date": "2026-09-19",
+      "title": "Freedom still not ripe.",
+      "type": "Growth & Orchard Status",
+      "tags": [
+        "Freedom",
+        "NY-35"
+      ],
+      "age": "all",
+      "body": "Pulled another freedom that I thought looked on the rip side, but still pretty tart, and seeds were mid-brown. Green was starting to go yellowish.  Pulled 4 NY-35s that looked pretty good. Seed darker brown, still tart.",
+      "photoPath": null,
+      "photoPaths": [],
+      "loggedBy": "Rob"
+    },
     {
       "date": "2026-09-17",
       "title": "Harvest status",

@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-17 07:01",
+  "lastUpdated": "2026-09-18 20:57",
   "lastUpdatedBy": "Rob",
   "inventoryData": [
     {
@@ -1162,6 +1162,22 @@
   ],
   "logsData": [
     {
+      "date": "2026-09-18",
+      "title": "test",
+      "type": "Growth & Orchard Status",
+      "tags": [
+        "All Cultivars"
+      ],
+      "age": "all",
+      "body": "test",
+      "photoPath": "photos/1789779437039_494_Image__9_.jpeg",
+      "photoPaths": [
+        "photos/1789779437039_494_Image__9_.jpeg",
+        "photos/1789779441470_191_Image__4_.jpeg"
+      ],
+      "loggedBy": "Rob"
+    },
+    {
       "date": "2026-09-17",
       "title": "Harvest status",
       "type": "Mature / Bearing",
@@ -1171,7 +1187,10 @@
       "age": "all",
       "body": "Looking more ripe, but still some that are tart. Need more red. I think this weekend we will do a bigger harvest.",
       "photoPath": "photos/1789642849669_image.jpg",
-      "loggedBy": "Rob"
+      "loggedBy": "Rob",
+      "photoPaths": [
+        "photos/1789642849669_image.jpg"
+      ]
     },
     {
       "date": "2026-09-16",
@@ -1183,7 +1202,10 @@
       "age": "all",
       "body": "This is good ripeness, at this redness level, for Freedom. Has red around most of a circumference around it, but still some green/yellow areas",
       "photoPath": "photos/1789605934085_IMG_8078.jpeg",
-      "loggedBy": "Rob"
+      "loggedBy": "Rob",
+      "photoPaths": [
+        "photos/1789605934085_IMG_8078.jpeg"
+      ]
     },
     {
       "date": "2026-09-13",
@@ -1195,7 +1217,10 @@
       "age": "all",
       "body": "For posterity, here is the classic table for iodine-starch tests according to Cornell: https://rvpadmin.cce.cornell.edu/uploads/doc_102.pdf\n\nGenerally we want to be in the realm of 5-7 for taste right off tree, 3-5 for storage.",
       "photoPath": "photos/1789308339497_IMG_8042.jpeg",
-      "loggedBy": "Rob"
+      "loggedBy": "Rob",
+      "photoPaths": [
+        "photos/1789308339497_IMG_8042.jpeg"
+      ]
     },
     {
       "date": "2026-09-12",
@@ -1207,7 +1232,10 @@
       "age": "all",
       "body": "Today I pulled several apples and sliced them to do an iodine test.  Photo attached.  On a scale of 1-8, the apple on the top shows a 6-7 (nice and ripe), while the middle one is ~3-4, and the bottom one is ~3.  So we really do need some red ripeness happening all over the apple, but not completely.  Taste test confirms this.",
       "photoPath": "photos/1789265596092_Image__9_.jpeg",
-      "loggedBy": "Rob"
+      "loggedBy": "Rob",
+      "photoPaths": [
+        "photos/1789265596092_Image__9_.jpeg"
+      ]
     },
     {
       "date": "2026-09-09",
@@ -1218,7 +1246,9 @@
       ],
       "age": "all",
       "body": "Seeing a ton of bitter rot on Freedom apples. Holding off on picking for now. But want to be aggressive next season.",
-      "loggedBy": "Rob"
+      "loggedBy": "Rob",
+      "photoPaths": [],
+      "photoPath": null
     },
     {
       "date": "2026-09-05",
@@ -1231,7 +1261,9 @@
       ],
       "age": "all",
       "body": "Picked 3 NY-35, 2 novamac, 2 freedom. Freedom isn't ready yet, seeds are mid brown, flavor is tart. NY-35 is dark brown, flavor is tart and good. Novamac seems good, coming off tree easily.",
-      "loggedBy": "Rob"
+      "loggedBy": "Rob",
+      "photoPaths": [],
+      "photoPath": null
     },
     {
       "date": "2026-09-03",
@@ -1242,7 +1274,9 @@
       ],
       "age": "all",
       "body": "Picked up a dropped freedom and cut open. Tastes not quite ripe, seeds were light brown.",
-      "loggedBy": "Rob"
+      "loggedBy": "Rob",
+      "photoPaths": [],
+      "photoPath": null
     },
     {
       "date": "2026-09-03",
@@ -1253,7 +1287,9 @@
       ],
       "age": "all",
       "body": "Two bagged novamac are near ripe by taste (almost white by color). Seeds are mid-brown.",
-      "loggedBy": "Rob"
+      "loggedBy": "Rob",
+      "photoPaths": [],
+      "photoPath": null
     },
     {
       "date": "2026-09-01",
@@ -1264,7 +1300,9 @@
       ],
       "age": "all",
       "body": "Another dropped apple on novamac. Ate it, was good, but seeds were still white/tan, not dark brown/black that indicates ripeness. So Sept 1 is too early for this, which should be early-mid Sept.",
-      "loggedBy": "Rob"
+      "loggedBy": "Rob",
+      "photoPaths": [],
+      "photoPath": null
     },
     {
       "date": "2026-08-29",
@@ -1275,7 +1313,9 @@
       ],
       "age": "bearing",
       "body": "First novamac apple!  Dropped a bit early when I touched it. Slightly tarted than I expect but still tasty. Mottled red and green skin, not classic red side / green side like a Mac (yet).",
-      "loggedBy": "Rob"
+      "loggedBy": "Rob",
+      "photoPaths": [],
+      "photoPath": null
     },
     {
       "date": "2026-08-28",
@@ -1287,7 +1327,9 @@
       ],
       "age": "all",
       "body": "Noticing lots of red spot on some apples. Likely pin-prick stings, which have healed up but left a red spot.",
-      "loggedBy": "Rob"
+      "loggedBy": "Rob",
+      "photoPaths": [],
+      "photoPath": null
     },
     {
       "date": "2026-08-28",
@@ -1299,7 +1341,9 @@
       ],
       "age": "bearing",
       "body": "The Novamac has dropped many apples; I am worried about the Novamac. I am concerned because the Novamac has dropped many apples; it makes me paranoid, not knowing what will happen. They were not ripe apples; the tree simply gave up on them. They were relatively large apples. They were almost white. I hypothesize that this may be due to the lack of sunlight. On the other hand, the Galarina is doing great!!!",
-      "loggedBy": "Wyatt"
+      "loggedBy": "Wyatt",
+      "photoPaths": [],
+      "photoPath": null
     },
     {
       "date": "2026-08-28",
@@ -1310,7 +1354,9 @@
       ],
       "age": "all",
       "body": "Two apples on novamac that were in paper bags have fallen off, they're extremely white. For paper-bagged fruit the bags need to come off a few weeks before harvest to get the skins to redden.",
-      "loggedBy": "Rob"
+      "loggedBy": "Rob",
+      "photoPaths": [],
+      "photoPath": null
     },
     {
       "date": "2026-08-22",
@@ -1325,7 +1371,9 @@
       ],
       "age": "bearing",
       "body": "Logged updated fruit diameter measurements (Freedom: 3.0\", Novamac: 2.75\", Galarina: 2.75\", Enterprise: 2.75\", NY-35: 3.25\") and full orchard height benchmark update. Returned from vacation to find 4 Freedom apples dropped and culled a few rotting fruit showing sunburn damage; overall Freedom crop estimated at ~150 ± 25 apples. Freedom fruit showing localized dark, soft spots with premature localized ripening, identified as solar-damaged entry points susceptible to bitter rot (Colletotrichum). Action: Monitoring closely; plan to cull if soft spots expand to avoid secondary spore spread. Applied 15-gallon deep soak to each bearing tree. Refilled perimeter hornet traps (ACV, sugar, water, dish soap); catching some hornets/wasps alongside flies and beetles. No animal damage observed.",
-      "loggedBy": "Joe"
+      "loggedBy": "Joe",
+      "photoPaths": [],
+      "photoPath": null
     },
     {
       "date": "2026-08-16",
@@ -1340,7 +1388,9 @@
       ],
       "age": "bearing",
       "body": "Apples growing well overall with zero active insect or pest issues. Noted a couple of small rotting fruitlets aborted naturally by the tree due to poor early growth. Conducted physical shake test across all bearing trees: dropped ~5 total smaller/underdeveloped apples on Freedom (3 natural, 2 via shake), including 1 showing earlier bottom damage. No additional fruit dislodged on further shaking, confirming remaining canopy crop is securely attached. NY-35 leading in fruit size with initial reddening on sun-exposed surfaces, followed closely by Freedom. Other bearing varieties (Novamac, Galarina, Enterprise) remain smaller and very green. Active robin nest noted in Galarina. Hornet traps actively catching low baseline numbers. Heavy branches remain stable; intentionally leaving limbs un-supported to encourage natural reaction wood and structural strength unless immediate failure risk develops.",
-      "loggedBy": "Joe"
+      "loggedBy": "Joe",
+      "photoPaths": [],
+      "photoPath": null
     },
     {
       "date": "2026-07-24",
@@ -1351,7 +1401,9 @@
       ],
       "age": "all",
       "body": "Logged mid-summer tree heights across all 13 apple trees and recorded fruit diameter benchmarks on bearing varieties: Freedom (2.5\"), NY-35 (2.75\"), Galarina (2.5\"), Novamac (2.5\"), and Enterprise (2.0\"). Deer pressure successfully stabilized following Deer Scram repellent deployment.",
-      "loggedBy": "Joe"
+      "loggedBy": "Joe",
+      "photoPaths": [],
+      "photoPath": null
     },
     {
       "date": "2026-07-05 (Twilight)",
@@ -1371,7 +1423,9 @@
       ],
       "age": "bearing",
       "body": "Successfully distributed the remaining 5 million beneficial nematodes out across the drip lines of all bearing and developing blocks. Strategy executed precisely ahead of a substantial regional rainstorm to ensure ideal moisture film transport structures and immediate soil penetration. Total seasonal soil drench count officially complete at 13 million units.",
-      "loggedBy": "Joe"
+      "loggedBy": "Joe",
+      "photoPaths": [],
+      "photoPath": null
     },
     {
       "date": "2026-07-04",
@@ -1386,7 +1440,9 @@
       ],
       "age": "bearing",
       "body": "Deployed localized crawling insect barriers across bearing trunks. Wrapped lower trunks with a protective base layer of Saran Wrap, topped with a 1-inch band of Tanglefoot positioned ~18 inches up the trunk line to insulate canopies from earwig and ant migration. External structural support posts flagged for observation. Completed comprehensive audit of active non-Freedom bagged fruit: NY-35: 37, Galarina: 20, Novamac: 17, Enterprise: 10 (84 units total).",
-      "loggedBy": "Joe"
+      "loggedBy": "Joe",
+      "photoPaths": [],
+      "photoPath": null
     },
     {
       "date": "Spring 2026",
@@ -1397,7 +1453,9 @@
       ],
       "age": "all",
       "body": "Applied initial baseline spring feeding consisting of 1/2 treatment dose of Tree-Tone and 2/3 dose of Coop Poop (organic calcium amendment).",
-      "loggedBy": "Joe"
+      "loggedBy": "Joe",
+      "photoPaths": [],
+      "photoPath": null
     },
     {
       "date": "Spring 2026",
@@ -1412,7 +1470,9 @@
       ],
       "age": "bearing",
       "body": "Completed 1 protective cover spray of Fertilome and 2 initial baseline preventive applications of Surround WP.",
-      "loggedBy": "Joe"
+      "loggedBy": "Joe",
+      "photoPaths": [],
+      "photoPath": null
     },
     {
       "date": "Spring 2026",
@@ -1423,7 +1483,9 @@
       ],
       "age": "all",
       "body": "Completed initial spring application of beneficial nematodes for early subterranean grub and Curculio pupae suppression.",
-      "loggedBy": "Joe"
+      "loggedBy": "Joe",
+      "photoPaths": [],
+      "photoPath": null
     },
     {
       "date": "2026-06-06",
@@ -1435,7 +1497,9 @@
       ],
       "age": "bearing",
       "body": "Applied heavy high-density Surround WP cover spray (2.5 cups/gallon). Noted Freedom canopy taking the brunt of current Curculio pressure; other varieties clear.",
-      "loggedBy": "Joe"
+      "loggedBy": "Joe",
+      "photoPaths": [],
+      "photoPath": null
     },
     {
       "date": "2026-06-06",
@@ -1447,7 +1511,9 @@
       ],
       "age": "bearing",
       "body": "Conducted targeted manual hand-thinning of the worst curculio-scarred fruitlets to break life cycle prior to June drop fallout.",
-      "loggedBy": "Joe"
+      "loggedBy": "Joe",
+      "photoPaths": [],
+      "photoPath": null
     },
     {
       "date": "2026-06-06",
@@ -1461,7 +1527,9 @@
       ],
       "age": "new",
       "body": "Applied targeted secondary booster dose of Tree-Tone to Black Oxford, Williams' Pride, SnowSweet, and NY 414-1 whips to accelerate structural framework development.",
-      "loggedBy": "Joe"
+      "loggedBy": "Joe",
+      "photoPaths": [],
+      "photoPath": null
     },
     {
       "date": "2026-06-06",
@@ -1472,7 +1540,9 @@
       ],
       "age": "all",
       "body": "Spread fresh organic mulch layers around root zones to protect carbon-rich sandy loam topsoil and lock moisture above shallow water table.",
-      "loggedBy": "Joe"
+      "loggedBy": "Joe",
+      "photoPaths": [],
+      "photoPath": null
     },
     {
       "date": "2026-06-06",
@@ -1483,7 +1553,9 @@
       ],
       "age": "bearing",
       "body": "Discovered an active baby rabbit den directly adjacent to trunk. Confirmed rabbits are nesting completely outside of the fine hardware mesh/wire trunk guard; zero damage, bark completely protected.",
-      "loggedBy": "Joe"
+      "loggedBy": "Joe",
+      "photoPaths": [],
+      "photoPath": null
     },
     {
       "date": "2026-06-11 to 2026-06-13",
@@ -1494,7 +1566,9 @@
       ],
       "age": "bearing",
       "body": "Collected and removed 1-2 lbs of June drop and curculio-marked fruitlets daily (~5-6 lbs total over 3 days) to disrupt the pest reproduction cycle before larval escape.",
-      "loggedBy": "Joe"
+      "loggedBy": "Joe",
+      "photoPaths": [],
+      "photoPath": null
     },
     {
       "date": "2026-06-13",
@@ -1505,7 +1579,9 @@
       ],
       "age": "bearing",
       "body": "Completed precision fruitlet thinning and successfully hand-bagged fruitlets larger than quarter size.",
-      "loggedBy": "Joe"
+      "loggedBy": "Joe",
+      "photoPaths": [],
+      "photoPath": null
     },
     {
       "date": "2026-06-13",
@@ -1520,7 +1596,9 @@
       ],
       "age": "bearing",
       "body": "Emergency deep watering due to extreme heatwave. Hand-watered 10-20 gallons per tree via hose. Noted prominent new shoot drooping on higher-elevation trees; fully recovered post-irrigation.",
-      "loggedBy": "Joe"
+      "loggedBy": "Joe",
+      "photoPaths": [],
+      "photoPath": null
     },
     {
       "date": "2026-06-17",
@@ -1531,7 +1609,9 @@
       ],
       "age": "all",
       "body": "Observed early fruitlet drop. Diagnostic cuts show curculio exit holes. Larvae do not remain in organza bags; they exit through mesh to dive into sandy loam. Confirms necessity of biological soil drenches. Benched generic spray schedules.",
-      "loggedBy": "Joe"
+      "loggedBy": "Joe",
+      "photoPaths": [],
+      "photoPath": null
     },
     {
       "date": "2026-06-18",
@@ -1546,7 +1626,9 @@
       ],
       "age": "all",
       "body": "Completed bulk bagging runs; orchard totals reach ~300 bags hung. 100 organza bags placed in final pass (2/3 on Freedom, 1/3 across Galarina, Novamac, Enterprise). Culled 3 lbs of fruitlets. Breakdown: exactly 50% target crop load reduction, 50% curculio triage damage isolation.",
-      "loggedBy": "Joe"
+      "loggedBy": "Joe",
+      "photoPaths": [],
+      "photoPath": null
     },
     {
       "date": "2026-06-24",
@@ -1557,7 +1639,9 @@
       ],
       "age": "all",
       "body": "Logged nearly 1.0 inch of slow, deep soaking rain across a 48-hour stretch. Sandy loam soil profile is highly saturated, providing excellent structural hydraulic tension and setting up ideal conditions for nematode movement.",
-      "loggedBy": "Joe"
+      "loggedBy": "Joe",
+      "photoPaths": [],
+      "photoPath": null
     },
     {
       "date": "2026-06-25",
@@ -1568,7 +1652,9 @@
       ],
       "age": "all",
       "body": "Observed a single fruitlet drop on Freedom. Performed macro-examination: clean exterior, no curculio stings, or structural pinprick damage found. Determined to be automated load balancing ahead of thermal shifts.",
-      "loggedBy": "Joe"
+      "loggedBy": "Joe",
+      "photoPaths": [],
+      "photoPath": null
     },
     {
       "date": "2026-06-28",
@@ -1579,7 +1665,9 @@
       ],
       "age": "all",
       "body": "Executed full sub-surface soil pre-soak across all blocks to ensure ideal moisture film structures ahead of the primary biological agent application.",
-      "loggedBy": "Joe"
+      "loggedBy": "Joe",
+      "photoPaths": [],
+      "photoPath": null
     },
     {
       "date": "2026-06-29 (Morning)",
@@ -1590,7 +1678,9 @@
       ],
       "age": "all",
       "body": "Weed whacked under-canopy floor across all blocks. Eliminated vegetative cover interception to guarantee direct, immediate soil contact for the nematode drench framework.",
-      "loggedBy": "Joe"
+      "loggedBy": "Joe",
+      "photoPaths": [],
+      "photoPath": null
     },
     {
       "date": "2026-06-29 (Twilight)",
@@ -1601,7 +1691,9 @@
       ],
       "age": "all",
       "body": "Successfully applied 8 million beneficial nematodes (Steinernema carpocapsae) across all 14 tree stations, extending fully out to the drip lines. Provided extra concentration under the high-pressure Freedom block to eliminate burrowing Curculio larvae. Staged remaining 5 million stock in cold storage.",
-      "loggedBy": "Joe"
+      "loggedBy": "Joe",
+      "photoPaths": [],
+      "photoPath": null
     }
   ]
 }

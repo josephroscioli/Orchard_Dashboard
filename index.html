@@ -2008,6 +2008,7 @@
                             if (!log.photoPaths.includes(uploadedPath)) {
                                 log.photoPaths.push(uploadedPath);
                             }
+                            // Keep dataUrl on photoObj so local browser can render immediately while Pages builds
                             delete photoObj.base64Data;
                         }
                     }
@@ -3112,33 +3113,42 @@
             card.className = 'card';
             var tagBadgesHTML = tags.map(t => `<span class="badge badge-tag">${t}</span>`).join(' ');
 
-            // Multi-photo rendering logic
+            // Multi-photo rendering logic (Deduplicated)
             var photosHTML = '';
             var photoItems = [];
 
+            // 1. Render staged items
             if (log.stagedPhotos && log.stagedPhotos.length > 0) {
                 log.stagedPhotos.forEach(p => {
                     photoItems.push({
                         url: p.dataUrl,
-                        isStaged: !log.photoPaths || !log.photoPaths.includes(p.filename)
+                        isStaged: !log.photoPaths || !log.photoPaths.includes(p.filename),
+                        filename: p.filename
                     });
                 });
             }
 
+            // 2. Render synced items from photoPaths (skip if local staged dataUrl is present)
             if (log.photoPaths && log.photoPaths.length > 0) {
                 log.photoPaths.forEach(path => {
-                    if (!photoItems.some(item => item.url.includes(path))) {
+                    var matchesStaged = photoItems.some(item => item.filename && path.includes(item.filename));
+                    if (!matchesStaged) {
                         photoItems.push({
                             url: "./" + path,
-                            isStaged: false
+                            isStaged: false,
+                            filename: path
                         });
                     }
                 });
-            } else if (log.photoPath && !photoItems.some(item => item.url.includes(log.photoPath))) {
-                photoItems.push({
-                    url: "./" + log.photoPath,
-                    isStaged: false
-                });
+            } else if (log.photoPath) {
+                var matchesStaged = photoItems.some(item => item.filename && log.photoPath.includes(item.filename));
+                if (!matchesStaged) {
+                    photoItems.push({
+                        url: "./" + log.photoPath,
+                        isStaged: false,
+                        filename: log.photoPath
+                    });
+                }
             }
 
             if (photoItems.length > 0) {

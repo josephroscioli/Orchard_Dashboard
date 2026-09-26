@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "2026-09-19 17:16",
-  "lastUpdatedBy": "Rob",
+  "lastUpdated": "2026-09-26 10:14",
+  "lastUpdatedBy": "Wyatt",
   "inventoryData": [
     {
       "cultivar": "Freedom",
@@ -1057,6 +1057,30 @@
     }
   ],
   "harvestLogsData": [
+    {
+      "date": "2026-09-25",
+      "cultivar": "NY-35",
+      "quantity": 2,
+      "loggedBy": "Wyatt"
+    },
+    {
+      "date": "2026-09-23",
+      "cultivar": "Freedom",
+      "quantity": 2,
+      "loggedBy": "Wyatt"
+    },
+    {
+      "date": "2026-09-26",
+      "cultivar": "NY-35",
+      "quantity": 5,
+      "loggedBy": "Wyatt"
+    },
+    {
+      "date": "2026-09-26",
+      "cultivar": "Freedom",
+      "quantity": 10,
+      "loggedBy": "Wyatt"
+    },
     {
       "date": "2026-09-19",
       "cultivar": "NY-35",

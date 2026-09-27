@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-27 14:22",
+  "lastUpdated": "2026-09-27 14:23",
   "lastUpdatedBy": "Wyatt",
   "inventoryData": [
     {
@@ -1197,6 +1197,21 @@
     }
   ],
   "logsData": [
+    {
+      "date": "2026-09-26",
+      "title": "Field Observation",
+      "type": "Growth & Orchard Status",
+      "tags": [
+        "All Cultivars"
+      ],
+      "age": "all",
+      "body": "DAD and I picked 10 apples from Freedom and 5 apples from the NY-35! Bitter rot is a BIG problem.",
+      "photoPath": "photos/1790433476530_818_20260926_142447912_iOSpng.png",
+      "photoPaths": [
+        "photos/1790433476530_818_20260926_142447912_iOSpng.png"
+      ],
+      "loggedBy": "Wyatt"
+    },
     {
       "date": "2026-09-19",
       "title": "Bags location in barn",

@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "2026-09-27 15:12",
-  "lastUpdatedBy": "Rob",
+  "lastUpdated": "2026-09-27 18:40",
+  "lastUpdatedBy": "Wyatt",
   "inventoryData": [
     {
       "cultivar": "Freedom",
@@ -1087,6 +1087,18 @@
     }
   ],
   "harvestLogsData": [
+    {
+      "date": "2026-09-27",
+      "cultivar": "Galarina",
+      "quantity": 1,
+      "loggedBy": "Wyatt"
+    },
+    {
+      "date": "2026-09-27",
+      "cultivar": "Freedom",
+      "quantity": 7,
+      "loggedBy": "Wyatt"
+    },
     {
       "date": "2026-09-25",
       "cultivar": "NY-35",

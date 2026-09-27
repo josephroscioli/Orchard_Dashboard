@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-27 15:01",
+  "lastUpdated": "2026-09-27 15:10",
   "lastUpdatedBy": "Rob",
   "inventoryData": [
     {
@@ -779,6 +779,26 @@
         "trunk"
       ],
       "note": "Tie-down straps that go from fence posts to trunk. Crucial for dwarf and semi-dwarf trees.",
+      "loggedBy": "Rob"
+    },
+    {
+      "name": "Sulfur",
+      "type": "treatment",
+      "area": "foliar",
+      "tags": [
+        "fungal"
+      ],
+      "note": "Sulfur takes care of early fungal infections like bitter rot. Need to apply right after petal fall. Can apply with surround. Must only apply when daytime high is below 85F. Apply every 7-10 days until it gets hot.",
+      "loggedBy": "Rob"
+    },
+    {
+      "name": "Gypsum",
+      "type": "treatment",
+      "area": "soil",
+      "tags": [
+        "soil nutrient"
+      ],
+      "note": "Apply 1-2 lbs per tree for calcium, reducing risk of bitter spot.",
       "loggedBy": "Rob"
     }
   ],

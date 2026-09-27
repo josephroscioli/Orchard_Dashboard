@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "2026-09-27 14:23",
-  "lastUpdatedBy": "Wyatt",
+  "lastUpdated": "2026-09-27 15:01",
+  "lastUpdatedBy": "Rob",
   "inventoryData": [
     {
       "cultivar": "Freedom",
@@ -298,7 +298,7 @@
       "tags": [
         "All Cultivars"
       ],
-      "instructions": "Soil Foundation & Base Nutrition: Apply a 1/2 dose of Tree-Tone paired with a 2/3 dose of Coop Poop across all drip lines. Broadcast over mulch to supply organic calcium, nitrogen, and micronutrients early so spring rains wash them down to root depth."
+      "instructions": "Soil Foundation & Base Nutrition: Apply a 1/2 dose of Tree-Tone paired with a 2/3 dose of Coop Poop across all drip lines. Broadcast over mulch to supply organic calcium, nitrogen, and micronutrients early so spring rains wash them down to root depth.  Include 2-5 lbs of gypsum per tree for calcium and 1 lb Langbeinite."
     },
     {
       "phase": "Phase 2: Pre-Bloom & Bloom Phase (April 20 – May 15)",
@@ -485,6 +485,16 @@
         "Williams' Pride (Whip)"
       ],
       "instructions": "Tree Trunk Painting & Hardware Guard Check: Verify white latex/water trunk paint coverage on young whips to block southwest winter sun scald. Ensure wire hardware mesh guards are tight to the ground line to exclude voles."
+    },
+    {
+      "phase": "Phase 3: Petal Fall & Curculio Inundation (May 16 – June 10)",
+      "type": "Pest Defense",
+      "startDate": "2027-05-01",
+      "endDate": "2027-06-30",
+      "tags": [
+        "All Cultivars"
+      ],
+      "instructions": "Apply sulfur AS LONG AS BELOW 85F. Reapply after rainfall through out season. Can apply with Surround."
     }
   ],
   "toolsData": [

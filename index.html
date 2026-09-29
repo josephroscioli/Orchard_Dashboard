@@ -251,7 +251,7 @@
             padding-bottom: 8px;
             margin-bottom: 16px;
         }
-        h2 { font-size: 14pt; color: #1b4332; margin: 0; }
+        h2 { font-size: 14pt; color: #1b4332; margin: 0 0 12px 0; }
         h3 {
             font-size: 12pt;
             color: #2c5282;
@@ -847,9 +847,6 @@
 
         <div id="growth" class="tab-content">
             <h2>Tree Metrics &amp; Time Series Tracking</h2>
-            <p style="font-size: 10pt; color: #4a5568; margin-bottom: 16px;">
-                Interactive visualization and logging of tree growth parameters. Create new metrics, choose which graphs to display, and view observation fields for active logged metrics.
-            </p>
 
             <details class="collapsible-section" id="growthCollapse">
                 <summary>Metric Management &amp; Graph Builder</summary>
@@ -914,10 +911,7 @@
 
         <!-- TREE MAP TAB CONTENT -->
         <div id="map" class="tab-content">
-            <h2>High-Resolution Orchard Satellite Map</h2>
-            <p style="font-size: 10pt; color: #4a5568; margin-bottom: 16px;">
-                Interactive GPS mapping layer displaying individual tree cultivar positions over Google high-resolution satellite imagery. Click any marker for cultivar metrics.
-            </p>
+            <h2>Orchard Map</h2>
             <div class="filter-section" style="margin-bottom: 16px;">
                 <span class="filter-label">Filter Map Markers:</span>
                 <select id="mapCultivarFilter" class="filter-select" onchange="renderMapMarkers()"></select>
@@ -927,9 +921,6 @@
 
         <div id="harvest" class="tab-content">
             <h2>Actual Harvest Logs</h2>
-            <p style="font-size: 10pt; color: #4a5568; margin-bottom: 20px;">
-                Record actual apple harvest abundances. Logs automatically calculate running total "Act. Load" values to compare against estimates.
-            </p>
 
             <h3>Add / Edit Harvest Log</h3>
             <div class="controls-grid" id="harvestFormGrid" style="background: #eef2f7; border: 1px dashed #2b6cb0;">
@@ -986,9 +977,6 @@
 
         <div id="harvest_timeline" class="tab-content">
             <h2>Crop Abundances &amp; Unified Harvest Matrix</h2>
-            <p style="font-size: 10pt; color: #4a5568; margin-bottom: 20px;">
-                Visualize crop yield spectrums, update active estimated load and bag counts, and trace modeled weekly yields over calendar harvest dates.
-            </p>
 
             <h3>Verified Crop Abundance Spectrum</h3>
             <div id="abundanceChart" class="chart-container"></div>
@@ -1108,9 +1096,6 @@
 
         <div id="schedules" class="tab-content">
             <h2>Upcoming Schedules &amp; Management Targets</h2>
-            <p style="font-size: 10pt; color: #4a5568; margin-bottom: 20px;">
-                Strategic biological, chemical, and nutritional workflows grouped dynamically by phase and target window.
-            </p>
 
             <!-- ADD / EDIT SCHEDULE ENTRY FORM -->
             <details class="collapsible-section" id="scheduleCollapse">
@@ -1176,9 +1161,6 @@
         <!-- TOOLS TAB CONTENT -->
         <div id="tools" class="tab-content">
             <h2>Orchard Tools &amp; Equipment Registry</h2>
-            <p style="font-size: 10pt; color: #4a5568; margin-bottom: 20px;">
-                Define and manage mechanical tools, application equipment, treatments, notes, and associated functional tags.
-            </p>
 
             <details class="collapsible-section" id="toolsCollapse">
                 <summary>Add / Edit Tool Entry</summary>

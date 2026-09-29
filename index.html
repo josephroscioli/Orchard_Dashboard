@@ -492,8 +492,6 @@
             white-space: nowrap;
         }
         .btn-action:hover { background-color: #1b4332; }
-        .btn-csv { background-color: #2b6cb0; }
-        .btn-csv:hover { background-color: #2c5282; }
 
         .btn-close-x {
             background: #e53e3e;
@@ -735,7 +733,6 @@
         <div id="inventory" class="tab-content active">
             <div class="section-header-container">
                 <h2>Master Tree Inventory</h2>
-                <button class="btn-action btn-csv" onclick="exportOrchardToCSV()">Export Orchard Metrics (CSV)</button>
             </div>
 
             <details class="collapsible-section" id="inventoryCollapse">
@@ -962,6 +959,7 @@
                     <div class="plot-wrapper" id="weeklyHarvestPlotWrapper" style="height: 380px;">
                         <canvas id="weeklyHarvestChartCanvas"></canvas>
                     </div>
+                    <div class="graph-resize-handle" id="weeklyHarvestPlotWrapper_handle" title="Drag to resize graph height"></div>
                 </div>
             </details>
 
@@ -1242,6 +1240,9 @@
                 </select>
                 <span class="filter-label" style="margin-left: 12px;">Filter Tag:</span>
                 <select id="toolFilterTag" class="filter-select" onchange="renderToolsTable()"></select>
+
+                <span class="filter-label" style="margin-left: 12px;">Keyword Search:</span>
+                <input type="text" id="toolKeywordSearch" class="filter-input" placeholder="Search tools, tags, notes..." oninput="renderToolsTable()" style="min-width: 200px;">
             </div>
             <div class="table-responsive">
                 <table>
@@ -2502,11 +2503,25 @@
         var filterType = document.getElementById('toolFilterType') ? document.getElementById('toolFilterType').value : 'all';
         var filterArea = document.getElementById('toolFilterArea') ? document.getElementById('toolFilterArea').value : 'all';
         var filterTag = document.getElementById('toolFilterTag') ? document.getElementById('toolFilterTag').value : 'all';
+        var searchKeyword = document.getElementById('toolKeywordSearch') ? document.getElementById('toolKeywordSearch').value.trim().toLowerCase() : '';
 
         state.toolsData.forEach((tool, index) => {
             if (filterType !== 'all' && tool.type !== filterType) return;
             if (filterArea !== 'all' && tool.area !== filterArea) return;
             if (filterTag !== 'all' && !(tool.tags || []).includes(filterTag)) return;
+
+            if (searchKeyword) {
+                var searchableText = [
+                    tool.name || '',
+                    tool.type || '',
+                    tool.area || '',
+                    tool.note || '',
+                    tool.loggedBy || '',
+                    (tool.tags || []).join(' ')
+                ].join(' ').toLowerCase();
+
+                if (!searchableText.includes(searchKeyword)) return;
+            }
 
             var tagsBadges = (tool.tags || []).map(t => `<span class="badge badge-tag" style="margin-right:2px; margin-bottom:2px;">${t}</span>`).join('');
             var authorName = tool.loggedBy || 'Rob';
@@ -3029,6 +3044,42 @@
                 }
             }
         });
+
+        // Initialize drag-handle vertical resizing
+        makeHarvestChartResizable('weeklyHarvestPlotWrapper', 'weeklyHarvestPlotWrapper_handle');
+    }
+
+    function makeHarvestChartResizable(wrapperId, handleId) {
+        var wrapper = document.getElementById(wrapperId);
+        var handle = document.getElementById(handleId);
+        if (!wrapper || !handle) return;
+        var startY, startH;
+
+        var onPointerMove = function(e) {
+            var clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            var newH = Math.max(200, startH + (clientY - startY));
+            wrapper.style.height = newH + 'px';
+            if (weeklyHarvestChartInstance) weeklyHarvestChartInstance.resize();
+        };
+
+        var onPointerUp = function() {
+            window.removeEventListener('mousemove', onPointerMove);
+            window.removeEventListener('mouseup', onPointerUp);
+            window.removeEventListener('touchmove', onPointerMove);
+            window.removeEventListener('touchend', onPointerUp);
+        };
+
+        var onPointerDown = function(e) {
+            startY = e.touches ? e.touches[0].clientY : e.clientY;
+            startH = wrapper.offsetHeight;
+            window.addEventListener('mousemove', onPointerMove);
+            window.addEventListener('mouseup', onPointerUp);
+            window.addEventListener('touchmove', onPointerMove, { passive: false });
+            window.addEventListener('touchend', onPointerUp);
+        };
+
+        handle.addEventListener('mousedown', onPointerDown);
+        handle.addEventListener('touchstart', onPointerDown, { passive: false });
     }
 
     async function saveHarvestLog() {
@@ -3610,19 +3661,6 @@
         } else if (tabId === 'harvest') {
             renderWeeklyHarvestChart();
         }
-    }
-
-    function exportOrchardToCSV() {
-        var csv = [];
-        document.querySelectorAll("#orchardTable tr").forEach(row => {
-            var cols = Array.from(row.querySelectorAll("td, th")).slice(0, -1).map(c => `"${c.innerText.replace(/"/g, '""')}"`);
-            csv.push(cols.join(","));
-        });
-        var blob = new Blob([csv.join("\n")], { type: 'text/csv' });
-        var a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = 'orchard_metrics_2026.csv';
-        a.click();
     }
 
     // Photo file selection change listener (Stage photos locally)

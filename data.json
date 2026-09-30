@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-28 07:27",
+  "lastUpdated": "2026-09-30 07:33",
   "lastUpdatedBy": "Wyatt",
   "inventoryData": [
     {
@@ -1087,6 +1087,12 @@
     }
   ],
   "harvestLogsData": [
+    {
+      "date": "2026-09-30",
+      "cultivar": "Freedom",
+      "quantity": 22,
+      "loggedBy": "Wyatt"
+    },
     {
       "date": "2026-09-27",
       "cultivar": "Galarina",

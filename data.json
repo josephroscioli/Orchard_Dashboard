@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-30 07:33",
+  "lastUpdated": "2026-09-30 08:31",
   "lastUpdatedBy": "Wyatt",
   "inventoryData": [
     {
@@ -1246,9 +1246,24 @@
   ],
   "logsData": [
     {
+      "date": "2026-09-30",
+      "title": "Field Observation",
+      "type": "Growth & Orchard Status",
+      "tags": [
+        "Freedom"
+      ],
+      "age": "bearing",
+      "body": "The freedom has produced a LOT of apples. Over the course of the month freedom produced 68 apples. Also the NY-35's apples are not ripe.",
+      "photoPath": "photos/1790771053762_779_20260930_115113221_iOS.png",
+      "photoPaths": [
+        "photos/1790771053762_779_20260930_115113221_iOS.png"
+      ],
+      "loggedBy": "Wyatt"
+    },
+    {
       "date": "2026-09-28",
       "title": "Field Observation",
-      "type": "Growth Metrics",
+      "type": "General Observation",
       "tags": [
         "Freedom",
         "NY-35",
@@ -1256,13 +1271,13 @@
         "Novamac",
         "Galarina"
       ],
-      "age": "all",
+      "age": "bearing",
       "body": "The freedom is producing favorably as well as the NY-35 (Bonkers). The freedom has produced 19 apples so far this week, the NY-35 has produced 7 and the Galarina produced 1! Me and Dad did the iodine test on two apples, and it looked like they had an 80%-60% Flesh stain. We have no more apples on the novamac, The galarina had it's first apples come off! They were not ripe though. The enterprise's apples are small like the Galarina's we will get the Galarina's apples early-mid october, we will get the enterprise's apples mid-late october.",
       "photoPath": "photos/1790592620841_491_20260926_142447912_iOSpng.png",
       "photoPaths": [
         "photos/1790592620841_491_20260926_142447912_iOSpng.png"
       ],
-      "loggedBy": "Rob"
+      "loggedBy": "Wyatt"
     },
     {
       "date": "2026-09-26",

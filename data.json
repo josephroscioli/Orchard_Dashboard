@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "2026-09-30 08:31",
-  "lastUpdatedBy": "Wyatt",
+  "lastUpdated": "2026-09-30 09:14",
+  "lastUpdatedBy": "Rob",
   "inventoryData": [
     {
       "cultivar": "Freedom",
@@ -1245,6 +1245,19 @@
     }
   ],
   "logsData": [
+    {
+      "date": "2026-09-30",
+      "title": "Average weight",
+      "type": "Mature / Bearing",
+      "tags": [
+        "Freedom"
+      ],
+      "age": "bearing",
+      "body": "Average weight across 20 apples picked from Freedom this morning was 7.8 oz (~1/2 lb). So from freedom alone so far we have pulled 40 lbs of apples.",
+      "photoPath": null,
+      "photoPaths": [],
+      "loggedBy": "Rob"
+    },
     {
       "date": "2026-09-30",
       "title": "Field Observation",

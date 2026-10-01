@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-30 09:14",
+  "lastUpdated": "2026-10-01 07:26",
   "lastUpdatedBy": "Rob",
   "inventoryData": [
     {
@@ -1087,6 +1087,18 @@
     }
   ],
   "harvestLogsData": [
+    {
+      "date": "2026-10-01",
+      "cultivar": "NY-35",
+      "quantity": 1,
+      "loggedBy": "Rob"
+    },
+    {
+      "date": "2026-10-01",
+      "cultivar": "Galarina",
+      "quantity": 1,
+      "loggedBy": "Rob"
+    },
     {
       "date": "2026-09-30",
       "cultivar": "Freedom",

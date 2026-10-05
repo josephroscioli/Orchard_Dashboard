@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-10-04 21:40",
+  "lastUpdated": "2026-10-04 21:43",
   "lastUpdatedBy": "Rob",
   "inventoryData": [
     {
@@ -1263,22 +1263,6 @@
     }
   ],
   "logsData": [
-    {
-      "date": "2026-09-28",
-      "title": "Field Observation",
-      "type": "Growth & Orchard Status",
-      "tags": [
-        "All Cultivars"
-      ],
-      "age": "all",
-      "body": "test",
-      "photoPath": "photos/1791164424306_12_13CH4_spec.png",
-      "photoPaths": [
-        "photos/1791164424306_12_13CH4_spec.png",
-        "photos/1791164428807_278_CH3D_spec.png"
-      ],
-      "loggedBy": "Rob"
-    },
     {
       "date": "2026-09-30",
       "title": "Average weight",

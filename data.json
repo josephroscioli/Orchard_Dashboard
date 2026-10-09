@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-10-09 07:34",
+  "lastUpdated": "2026-10-09 07:46",
   "lastUpdatedBy": "Wyatt",
   "inventoryData": [
     {
@@ -1305,6 +1305,19 @@
     }
   ],
   "logsData": [
+    {
+      "date": "2026-10-09",
+      "title": "Field Observation",
+      "type": "Growth & Orchard Status",
+      "tags": [
+        "All Cultivars"
+      ],
+      "age": "all",
+      "body": "The freedom has no more apples, Dad and I picked the rest of freedoms apples today! The Galarina is VERY close to being ripe,it makes me very excited!",
+      "photoPath": null,
+      "photoPaths": [],
+      "loggedBy": "Wyatt"
+    },
     {
       "date": "2026-09-30",
       "title": "Average weight",

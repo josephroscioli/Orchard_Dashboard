@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-10-09 08:02",
+  "lastUpdated": "2026-10-10 13:43",
   "lastUpdatedBy": "Rob",
   "inventoryData": [
     {
@@ -1305,6 +1305,19 @@
     }
   ],
   "logsData": [
+    {
+      "date": "2026-10-10",
+      "title": "Freedom ripeness",
+      "type": "Growth & Orchard Status",
+      "tags": [
+        "Freedom"
+      ],
+      "age": "all",
+      "body": "After eating some of the Freedom apples, the most recent ones are overripe. So this week is too late to pick. I think late Sept is ideal.",
+      "photoPath": null,
+      "photoPaths": [],
+      "loggedBy": "Rob"
+    },
     {
       "date": "2026-10-09",
       "title": "Field Observation",

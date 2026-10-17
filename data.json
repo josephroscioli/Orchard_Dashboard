@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-10-17 15:04",
+  "lastUpdated": "2026-10-17 15:07",
   "lastUpdatedBy": "Wyatt",
   "inventoryData": [
     {
@@ -1130,6 +1130,36 @@
       "tree": "Sansa",
       "loggedBy": "Wyatt",
       "height": 70
+    },
+    {
+      "date": "2026-10-17",
+      "tree": "Sundance",
+      "loggedBy": "Wyatt",
+      "height": 87
+    },
+    {
+      "date": "2026-10-17",
+      "tree": "Black Oxford",
+      "loggedBy": "Wyatt",
+      "height": 85
+    },
+    {
+      "date": "2026-10-17",
+      "tree": "Williams' Pride (Whip)",
+      "loggedBy": "Wyatt",
+      "height": 62
+    },
+    {
+      "date": "2026-10-17",
+      "tree": "SnowSweet",
+      "loggedBy": "Wyatt",
+      "height": 67
+    },
+    {
+      "date": "2026-10-17",
+      "tree": "NY 414-1",
+      "loggedBy": "Wyatt",
+      "height": 68
     }
   ],
   "harvestLogsData": [

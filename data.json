@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-10-17 14:59",
+  "lastUpdated": "2026-10-17 15:04",
   "lastUpdatedBy": "Wyatt",
   "inventoryData": [
     {
@@ -1094,6 +1094,42 @@
       "tree": "Enterprise",
       "loggedBy": "Wyatt",
       "height": 183
+    },
+    {
+      "date": "2026-10-17",
+      "tree": "Novamac",
+      "loggedBy": "Wyatt",
+      "height": 176.5
+    },
+    {
+      "date": "2026-10-17",
+      "tree": "Freedom",
+      "loggedBy": "Wyatt",
+      "height": 139
+    },
+    {
+      "date": "2026-10-17",
+      "tree": "Liberty",
+      "loggedBy": "Wyatt",
+      "height": 93
+    },
+    {
+      "date": "2026-10-17",
+      "tree": "Williams' Pride (Older)",
+      "loggedBy": "Wyatt",
+      "height": 64
+    },
+    {
+      "date": "2026-10-17",
+      "tree": "NY-35",
+      "loggedBy": "Wyatt",
+      "height": 114
+    },
+    {
+      "date": "2026-10-17",
+      "tree": "Sansa",
+      "loggedBy": "Wyatt",
+      "height": 70
     }
   ],
   "harvestLogsData": [

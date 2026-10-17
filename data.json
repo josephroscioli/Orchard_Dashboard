@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-10-17 15:07",
+  "lastUpdated": "2026-10-17 16:06",
   "lastUpdatedBy": "Wyatt",
   "inventoryData": [
     {
@@ -839,7 +839,9 @@
       "defaultYMax": "200"
     }
   ],
-  "activeGraphKeys": [],
+  "activeGraphKeys": [
+    "height"
+  ],
   "growthData": [
     {
       "date": "2026-07-24",

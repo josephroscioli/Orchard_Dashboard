@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-10-14 07:19",
+  "lastUpdated": "2026-10-17 14:59",
   "lastUpdatedBy": "Wyatt",
   "inventoryData": [
     {
@@ -839,9 +839,7 @@
       "defaultYMax": "200"
     }
   ],
-  "activeGraphKeys": [
-    "dia"
-  ],
+  "activeGraphKeys": [],
   "growthData": [
     {
       "date": "2026-07-24",
@@ -1084,9 +1082,33 @@
       "tree": "Freedom",
       "loggedBy": "Rob",
       "dia": 3.44
+    },
+    {
+      "date": "2026-10-17",
+      "tree": "Galarina",
+      "loggedBy": "Wyatt",
+      "height": 176
+    },
+    {
+      "date": "2026-10-17",
+      "tree": "Enterprise",
+      "loggedBy": "Wyatt",
+      "height": 183
     }
   ],
   "harvestLogsData": [
+    {
+      "date": "2026-10-17",
+      "cultivar": "Enterprise",
+      "quantity": 4,
+      "loggedBy": "Wyatt"
+    },
+    {
+      "date": "2026-10-17",
+      "cultivar": "Galarina",
+      "quantity": 6,
+      "loggedBy": "Wyatt"
+    },
     {
       "date": "2026-10-12",
       "cultivar": "Galarina",

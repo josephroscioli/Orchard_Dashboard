@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "2026-10-17 16:09",
-  "lastUpdatedBy": "Wyatt",
+  "lastUpdated": "2026-10-18 15:08",
+  "lastUpdatedBy": "Rob",
   "inventoryData": [
     {
       "cultivar": "Freedom",
@@ -1408,18 +1408,35 @@
   ],
   "logsData": [
     {
+      "date": "2026-10-18",
+      "title": "Harvest windows",
+      "type": "Mature / Bearing",
+      "tags": [
+        "Freedom",
+        "NY-35",
+        "Enterprise",
+        "Novamac",
+        "Galarina"
+      ],
+      "age": "bearing",
+      "body": "Current estimates of harvest windows: \nFreedom: Late September\nNovamac: Early September\nGalarina: Early-mid October\nNY-35: late September/Early October\nEnterprise: mid-October",
+      "photoPath": null,
+      "photoPaths": [],
+      "loggedBy": "Rob"
+    },
+    {
       "date": "2026-10-17",
-      "title": "Field Observation",
-      "type": "Growth & Orchard Status",
+      "title": "Galarina and Enterprise",
+      "type": "Mature / Bearing",
       "tags": [
         "Enterprise",
         "Galarina"
       ],
-      "age": "all",
-      "body": "Average Enterprise Apple weight: 9.5 oz\nAverage Galarina Apple weight: 6.1 oz",
+      "age": "bearing",
+      "body": "The Galarinas are fully picked, mostly smaller in size and particularly hard it by bitter pit - will be a focus of gypsum applications next year.  The Enterprise apples are in very good shape, very little evidence of any damage at all, and very tasty.\n\nAverage Enterprise Apple weight: 9.5 oz\nAverage Galarina Apple weight: 6.1 oz",
       "photoPath": null,
       "photoPaths": [],
-      "loggedBy": "Wyatt"
+      "loggedBy": "Rob"
     },
     {
       "date": "2026-10-12",

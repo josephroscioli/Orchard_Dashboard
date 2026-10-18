@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-10-18 15:08",
+  "lastUpdated": "2026-10-18 15:14",
   "lastUpdatedBy": "Rob",
   "inventoryData": [
     {
@@ -12,10 +12,10 @@
       "lon": -71.336875,
       "bloomStart": "2026-05-10",
       "bloomEnd": "2026-05-20",
-      "ripeningStart": "2026-09-13",
+      "ripeningStart": "2026-09-15",
       "ripeningEnd": "2026-09-30",
       "bloom": "May 10 - May 20",
-      "ripening": "Sep 13 - Sep 30",
+      "ripening": "Sep 15 - Sep 30",
       "load": "125-175",
       "bags": "201",
       "color": "#1b4332",
@@ -50,10 +50,10 @@
       "lon": -71.336907,
       "bloomStart": "2026-05-18",
       "bloomEnd": "2026-05-28",
-      "ripeningStart": "2026-10-23",
-      "ripeningEnd": "2026-11-06",
+      "ripeningStart": "2026-10-10",
+      "ripeningEnd": "2026-10-24",
       "bloom": "May 18 - May 28",
-      "ripening": "Oct 23 - Nov 6",
+      "ripening": "Oct 10 - Oct 24",
       "load": "10",
       "bags": "10",
       "color": "#9b2c2c",

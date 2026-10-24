@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-10-24 12:17",
+  "lastUpdated": "2026-10-24 12:21",
   "lastUpdatedBy": "Rob",
   "inventoryData": [
     {
@@ -1419,6 +1419,19 @@
     }
   ],
   "logsData": [
+    {
+      "date": "2026-10-24",
+      "title": "Final harvest",
+      "type": "Growth & Orchard Status",
+      "tags": [
+        "All Cultivars"
+      ],
+      "age": "all",
+      "body": "Picked last of the enterprises, that's it for the season!  Pies in progress :) .  Pulled the tanglefoot Saran Wrap off all trunks. Minor bumpiness underneath, we'll see if I need to scrub it off.",
+      "photoPath": null,
+      "photoPaths": [],
+      "loggedBy": "Rob"
+    },
     {
       "date": "2026-10-18",
       "title": "Harvest windows",

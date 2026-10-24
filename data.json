@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "2026-10-18 17:50",
-  "lastUpdatedBy": "Rob",
+  "lastUpdated": "2026-10-24 11:27",
+  "lastUpdatedBy": "Wyatt",
   "inventoryData": [
     {
       "cultivar": "Freedom",
@@ -1165,6 +1165,12 @@
     }
   ],
   "harvestLogsData": [
+    {
+      "date": "2026-10-24",
+      "cultivar": "Enterprise",
+      "quantity": 2,
+      "loggedBy": "Wyatt"
+    },
     {
       "date": "2026-10-18",
       "cultivar": "Enterprise",
